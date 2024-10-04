@@ -1,5 +1,5 @@
 import './App.css'
-import LoadingHome from './assets/components/LoadingHome'
+import LoadingHome from './components/LoadingHome'
 
 function App() {
 
