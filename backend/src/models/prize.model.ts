@@ -1,4 +1,4 @@
-import { UUIDV4 } from "sequelize"; // Importar UUIDV4 para generar automáticamente IDs
+import { UUIDV4 } from "sequelize";
 import {
   Table,
   Column,
