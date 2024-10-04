@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getApi } from '../controllers/api.controller';
+import { getApi, getRecord } from '../controllers/api.controller';
 
 const router = Router();
 
-router.get('/api_football', getApi)
+router.get('/api_match', getApi)
+router.get('/api_record', getRecord)
 
 export default router;
