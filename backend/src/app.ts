@@ -1,6 +1,7 @@
 import express from 'express';
-import userRoutes from './routes/user.routes';
+
 import apiRouter from './routes/api.router';
+import userRouter from './routes/user.router';
 
 const app = express();
 
@@ -8,7 +9,7 @@ const app = express();
 app.use(express.json()); // Para parsear JSON
 app.use(express.urlencoded({ extended: true })); // Para parsear URL-encoded
 
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRouter);
 app.use('', apiRouter)
 
 export default app;
