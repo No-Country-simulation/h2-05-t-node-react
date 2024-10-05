@@ -1,11 +1,11 @@
 import './App.css'
-import LoadingHome from './components/LoadingHome'
+import LoadingScreen from './components/layout/LoadingScreen'
 
 function App() {
 
   return (
     <>
-      <LoadingHome />
+      <LoadingScreen />
     </>
   )
 }

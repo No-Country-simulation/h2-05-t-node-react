@@ -1,15 +1,15 @@
 import { useState } from "react"
+import ButtonForm from "../common/ButtonForm"
 import Input from "../common/Input"
 import InputPassword from "../common/InputPassword"
-import ButtonForm from "../common/ButtonForm"
-
 
 const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false)
 
-    const handleShowPassword = () => [
+    const handleShowPassword = () => {
         setShowPassword(!showPassword)
-    ]
+    }
+
     return (
         <form className='flex flex-col mx-auto items-center mt-8 w-[80%]'>
             <div className='w-full text-sm'>

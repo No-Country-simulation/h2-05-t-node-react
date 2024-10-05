@@ -1,8 +1,7 @@
 import { useState } from "react"
+import ButtonForm from "../common/ButtonForm"
 import Input from "../common/Input"
 import InputPassword from "../common/InputPassword"
-import ButtonForm from "../common/ButtonForm"
-
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState({

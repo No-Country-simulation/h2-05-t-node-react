@@ -1,8 +1,7 @@
+import GoogleButton from "../components/auth/GoogleButton"
 import LoginForm from "../components/auth/LoginForm"
 import NavbarAuth from "../components/auth/NavbarAuth"
 import WelcomeMessage from "../components/common/WelcomeMessage"
-import GoogleButton from "../components/auth/GoogleButton"
-
 
 const LoginPage = () => {
   return (

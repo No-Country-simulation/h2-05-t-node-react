@@ -3,7 +3,6 @@ import NavbarAuth from "../components/auth/NavbarAuth"
 import RegisterForm from "../components/auth/RegisterForm"
 import WelcomeMessage from "../components/common/WelcomeMessage"
 
-
 const RegisterPage = () => {
     return (
         <>
