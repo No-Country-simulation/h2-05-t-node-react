@@ -1,12 +1,13 @@
 import { UUIDV4 } from "sequelize";
 import { Table, Column, Model, DataType, ForeignKey } from "sequelize-typescript";
 import { Ranking } from "./ranking.model";
+import { userInterface } from "../interfaces/user.interface";
 //importar Match_record
 @Table({
   tableName: "users",
   timestamps: true,
 })
-export class User extends Model<User> {
+export class User extends Model<User, userInterface> {
   @Column({
     type: DataType.UUID,
     primaryKey: true,
@@ -48,18 +49,21 @@ export class User extends Model<User> {
 
   @Column({
     type: DataType.INTEGER,
+    allowNull: true,
     defaultValue: 0,
   })
   total_predictions!: number;
 
   @Column({
     type: DataType.BOOLEAN,
+    allowNull: true,
     defaultValue: false,
   })
   subscription!: boolean;
 
   @Column({
     type: DataType.DATE,
+    allowNull: true,
     defaultValue: DataType.NOW,
   })
   registration_date!: Date;
@@ -67,7 +71,7 @@ export class User extends Model<User> {
   @ForeignKey(() => Ranking)
   @Column({
     type: DataType.UUID,
-    allowNull: false,
+    allowNull: true,
     onDelete: 'CASCADE'
   })
   ranking_id!:string;

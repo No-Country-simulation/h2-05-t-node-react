@@ -1,3 +1,4 @@
+import { userInterface } from "../interfaces/user.interface";
 import { User } from "../models/user.model";
 
 export const getUsers = async (): Promise<User[]> => {
@@ -22,7 +23,7 @@ export const getUser = async (id: any): Promise<User> => {
   }
 };
 
-export const createUser = async (data: any): Promise<any> => {
+export const createUser = async (data: userInterface): Promise<any> => {
   try {
     const user = await User.create(data);
     if (!user) throw new Error("Usuario no creado");
