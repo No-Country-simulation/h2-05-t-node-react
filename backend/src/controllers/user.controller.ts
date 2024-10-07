@@ -57,6 +57,11 @@ export const deleteOneUser = async (req: Request, res: Response) => {
 export const updateOneUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const data = req.body;
+    if(data.password){
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+      data.password = hashedPassword;
+    }
     const user = await updateUser(id, req.body);
     return HttpResponse.OK(res, user.msg);
   } catch (error) {
@@ -87,7 +92,7 @@ export const login = async (req: Request, res: Response) => {
     if (!isValidPassword) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
-        "Email y contraseña son obligatorios"
+        "Email y/o contraseña invalidos"
       );
     }
     const id = user.id;
@@ -114,15 +119,3 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-/* 
-  id?: string,
-  username: string,
-  email: string,
-  password: string,
-  rol?: string,
-  photo?: string,
-  total_predictions?: number,
-  subscription?: boolean,
-  registration_date?: Date,
-  ranking_id?: string
-*/
