@@ -8,47 +8,47 @@ import {
   getRecords,
   getTeam,
 } from "../services/api.service";
+import { httpResponse } from "../utils/enumsErrors";
 
+const HttpResponse = new httpResponse();
 dotenv.config();
 
 export const getMatchApi = async (
   req: Request,
   res: Response
-): Promise<void> => {
+) => {
   try {
     const { from, to, league } = req.query;
 
     const result = await getMatch(from, to, league);
     if (!result) {
-      res
-        .status(result.status)
-        .send(`Error fetching data: ${result.statusText}`);
-      return;
+      return HttpResponse.INVALID_TYPE_ERROR(
+        res,
+        `Error fetching data: ${result.statusText}`
+      );
     }
-    res.status(200).json(result);
+    return HttpResponse.OK(res, result);
   } catch (error) {
-    console.error("Error fetching API data:", error);
-    res.status(500).send("Error fetching API data.");
+    return HttpResponse.Error(res, (error as Error).message);
   }
 };
 
-export const getRecord = async (req: Request, res: Response): Promise<void> => {
+export const getRecord = async (req: Request, res: Response) => {
   try {
     const { to, league, team_a, team_b } = req.query;
 
     const result = await getRecords(to, league, team_a, team_b);
 
     if (!result) {
-      res
-        .status(result.status)
-        .send(`Error fetching data: ${result.statusText}`);
-      return;
+      return HttpResponse.INVALID_TYPE_ERROR(
+        res,
+        `Error fetching data: ${result.statusText}`
+      );
     }
 
-    res.status(200).json(result);
+    return HttpResponse.OK(res, result);
   } catch (error) {
-    console.error("Error fetching API data:", error);
-    res.status(500).send("Error fetching API data.");
+    return HttpResponse.Error(res, (error as Error).message);
   }
 };
 
@@ -56,15 +56,14 @@ export const getCountriesApi = async (req: Request, res: Response) => {
   try {
     const result = await getCountries();
     if (!result) {
-      res
-        .status(result.status)
-        .send(`Error fetching data: ${result.statusText}`);
-      return;
+      return HttpResponse.INVALID_TYPE_ERROR(
+        res,
+        `Error fetching data: ${result.statusText}`
+      );
     }
-    res.status(200).json(result);
+    return HttpResponse.OK(res, result);
   } catch (error) {
-    console.error("Error fetching API data:", error);
-    res.status(500).send("Error fetching API data.");
+    return HttpResponse.Error(res, (error as Error).message);
   }
 };
 
@@ -73,15 +72,14 @@ export const getLeagueApi = async (req: Request, res: Response) => {
     const { id } = req.query;
     const result = await getLeague(id);
     if (!result) {
-      res
-        .status(result.status)
-        .send(`Error fetching data: ${result.statusText}`);
-      return;
+      return HttpResponse.INVALID_TYPE_ERROR(
+        res,
+        `Error fetching data: ${result.statusText}`
+      );
     }
-    res.status(200).json(result);
+    return HttpResponse.OK(res, result);
   } catch (error) {
-    console.error("Error fetching API data:", error);
-    res.status(500).send("Error fetching API data.");
+    return HttpResponse.Error(res, (error as Error).message);
   }
 };
 
@@ -90,15 +88,14 @@ export const getTeamApi = async (req: Request, res: Response) => {
     const { id } = req.query;
     const result = await getTeam(id);
     if (!result) {
-      res
-        .status(result.status)
-        .send(`Error fetching data: ${result.statusText}`);
-      return;
+      return HttpResponse.INVALID_TYPE_ERROR(
+        res,
+        `Error fetching data: ${result.statusText}`
+      );
     }
-    res.status(200).json(result);
+    return HttpResponse.OK(res, result);
   } catch (error) {
-    console.error("Error fetching API data:", error);
-    res.status(500).send("Error fetching API data.");
+    return HttpResponse.Error(res, (error as Error).message);
   }
 };
 
@@ -108,14 +105,13 @@ export const getPlayerApi = async (req: Request, res: Response) => {
     const result = await getPlayer(id, tid);
 
     if (!result) {
-      res
-        .status(result.status)
-        .send(`Error fetching data: ${result.statusText}`);
-      return;
+      return HttpResponse.INVALID_TYPE_ERROR(
+        res,
+        `Error fetching data: ${result.statusText}`
+      );
     }
-    res.status(200).json(result);
+    return HttpResponse.OK(res, result);
   } catch (error) {
-    console.error("Error fetching API data:", error);
-    res.status(500).send("Error fetching API data.");
+    return HttpResponse.Error(res, (error as Error).message);
   }
 };
