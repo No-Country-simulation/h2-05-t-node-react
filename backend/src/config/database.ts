@@ -17,7 +17,7 @@ const sequelize = new Sequelize({
   password: process.env.DB_PASSWORD || 'password',
   host: process.env.DB_HOST || 'localhost',
   dialect: 'mysql',
- models: [User, Match, League, PredictionInfo, Prediction, Ranking, Prize, predictionRecord]
+  models: [User, Match, League, PredictionInfo, Prediction, Ranking, Prize, predictionRecord]
 });
 
 export default sequelize;

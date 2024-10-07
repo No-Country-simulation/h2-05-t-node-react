@@ -164,20 +164,18 @@ export const getPlayer = async (id:any, tid:any) => {
       },
     });
     const result = await response.json();
-
-    const filteredResults = result.map((item:any)=>({
-      teram_players: {
-        player_name: item.players.player_name,
-        player_image: item.players.player_image,
-        player_number: item.players.player_number,
-        player_type: item.players.player_type,
-        player_age: item.players.player_age,
-        player_goals: item.players.player_goals,
-        player_assists: item.players.player_assists,
-        player_red_cards: item.players.player_red_cards
-      }
-      
-    }))
+    const filteredResults = result.map((item: any) => ({
+      team_players: item.players.map((player: any) => ({
+        player_name: player.player_name,
+        player_image: player.player_image,
+        player_number: player.player_number,
+        player_type: player.player_type,
+        player_age: player.player_age,
+        player_goals: player.player_goals,
+        player_assists: player.player_assists,
+        player_red_cards: player.player_red_cards
+      }))
+    }));
     return filteredResults;
   } catch (error) {
     throw new Error(`Error al obtener el usuario: ${(error as Error).message}`);
