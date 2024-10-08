@@ -2,7 +2,7 @@ import { predictionInterface } from "../interfaces/prediction.interface";
 import {
   createPrediction,
   deletePrediction,
-  getOnePrediction,
+  getPrediction,
   getPredictions,
   updatePrediction,
 } from "../services/prediction.service";
@@ -22,10 +22,10 @@ export const getAllPredictions = async (req: Request, res: Response) => {
   }
 };
 
-export const getPrediction = async (req: Request, res: Response) => {
+export const getOnePrediction = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const prediction = await getOnePrediction(id);
+    const prediction = await getPrediction(id);
     if (!prediction)
       return HttpResponse.DATA_BASE_ERROR(res, "Predicción no encontrada");
     return HttpResponse.OK(res, prediction);

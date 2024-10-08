@@ -1,3 +1,4 @@
+import { predictionInterface } from "../interfaces/prediction.interface";
 import { Prediction } from "../models/prediction.model";
 import { predictionRecord } from "../models/predictionRecord.model";
 
@@ -13,7 +14,7 @@ export const getPredictions = async (): Promise<Prediction[]> => {
   }
 };
 
-export const getOnePrediction = async (id: any): Promise<Prediction> => {
+export const getPrediction = async (id: any): Promise<Prediction> => {
   try {
     const prediction = await Prediction.findOne(id);
     if (!prediction) throw new Error("Predicción no encontrados");
@@ -25,7 +26,7 @@ export const getOnePrediction = async (id: any): Promise<Prediction> => {
   }
 };
 
-export const createPrediction = async (data: any): Promise<any> => {
+export const createPrediction = async (data: predictionInterface): Promise<any> => {
   try {
     const prediction = await Prediction.create(data);
     if (!prediction) throw new Error("Predicción no creado");
@@ -41,7 +42,7 @@ export const createPrediction = async (data: any): Promise<any> => {
     return { msg: "Predicción creado" };
   } catch (error) {
     throw new Error(
-      `Error al obtener las Predicciones: ${(error as Error).message}`
+      `Error al crear la Predicción: ${(error as Error).message}`
     );
   }
 };
@@ -49,11 +50,11 @@ export const createPrediction = async (data: any): Promise<any> => {
 export const deletePrediction = async (id: any) => {
   try {
     const prediction = await Prediction.destroy({ where: { id: id } });
-    if (!prediction) throw new Error("Predicción no creado");
-    return { msg: "Predicción creado" };
+    if (!prediction) throw new Error("Predicción no eliminada");
+    return { msg: "Predicción eliminada" };
   } catch (error) {
     throw new Error(
-      `Error al obtener la Predicción: ${(error as Error).message}`
+      `Error al eliminar la Predicción: ${(error as Error).message}`
     );
   }
 };
@@ -65,7 +66,7 @@ export const updatePrediction = async (id: any, data: any): Promise<any> => {
     return { msg: "Predicción actualizado" };
   } catch (error) {
     throw new Error(
-      `Error al eliminar la Predicción: ${(error as Error).message}`
+      `Error al actualizado la Predicción: ${(error as Error).message}`
     );
   }
 };

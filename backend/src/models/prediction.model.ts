@@ -16,12 +16,13 @@ import {
   ForeignKey,
 } from "sequelize-typescript";
 import { User } from "./user.model";
+import { predictionInterface } from "../interfaces/prediction.interface";
 
 @Table({
   tableName: "bets",
   timestamps: true,
 })
-export class Prediction extends Model<Prediction> {
+export class Prediction extends Model<Prediction, predictionInterface> {
   @Column({
     type: DataType.STRING,
     primaryKey: true,
