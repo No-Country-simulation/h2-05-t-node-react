@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 
 export const userValidator = [
-    body("username").notEmpty().withMessage("El nombre de usuario es obligatorio"),
-    body("email")
+  body("username")
+    .notEmpty()
+    .withMessage("El nombre de usuario es obligatorio"),
+  body("email")
     .isEmail()
     .withMessage("Formato de correo invalido")
     .notEmpty()
@@ -17,10 +19,14 @@ export const userValidator = [
     .withMessage("Debe contener al menos un caracter especial"),
 ];
 
-export const handleUserValidationErrors = (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  };
+export const handleUserValidationErrors = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};

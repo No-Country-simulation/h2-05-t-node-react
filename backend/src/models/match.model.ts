@@ -35,13 +35,13 @@ export class Match extends Model<Match> {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   result!: string;
 
   @Column({
     type: DataType.ENUM('scheduled', 'in_progress', 'completed'),
-    allowNull: false,
+    allowNull: true,
   })
   status!: string;
 

@@ -181,3 +181,33 @@ export const getPlayer = async (id:any, tid:any) => {
     throw new Error(`Error al obtener el usuario: ${(error as Error).message}`);
   }
 }
+
+export const getPOnePlayer = async (name:any) => {
+  try {
+    const baseUrl = process.env.API_URL;
+    const url = `${baseUrl}get_players&player_name=${name}&APIkey=${process.env.API_KEY_APIFOOTBALL}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const result = await response.json();
+    const filteredResults = result.map((item:any)=>({
+      player_id: item.player_key,
+      player_name: item.player_name,
+      player_country: item.player_country,
+      player_image: item.player_image,
+      player_number: item.player_number,
+      player_type: item.player_type,
+      player_age: item.player_age,
+      player_goals: item.player_goals,
+      player_team: item.team_name,
+      player_rating: item.player_rating
+    }))
+    return filteredResults;
+  } catch (error) {
+    throw new Error(`Error al obtener el usuario: ${(error as Error).message}`);
+  }
+}

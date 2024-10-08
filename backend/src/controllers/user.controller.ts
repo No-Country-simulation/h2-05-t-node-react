@@ -16,6 +16,7 @@ const HttpResponse = new httpResponse();
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await getUsers();
+    if(!users) return HttpResponse.DATA_BASE_ERROR(res, 'Usuarios no encontrados');
     return HttpResponse.OK(res, users);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
@@ -26,6 +27,7 @@ export const getOneUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const user = await getUser(id);
+    if(!user) return HttpResponse.DATA_BASE_ERROR(res, 'Usuario no encontrado');
     return HttpResponse.OK(res, user);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
@@ -38,6 +40,7 @@ export const createOneUser = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     data.password = hashedPassword;
     const user = await createUser(data);
+    if(!user) return HttpResponse.DATA_BASE_ERROR(res, 'Error al cargar los datos');
     return HttpResponse.OK(res, user.msg);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
@@ -48,6 +51,7 @@ export const deleteOneUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const user = await deleteUser(id);
+    if(!user) return HttpResponse.DATA_BASE_ERROR(res, 'Error al eliminar el usuario');
     return HttpResponse.OK(res, user.msg);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
@@ -63,6 +67,7 @@ export const updateOneUser = async (req: Request, res: Response) => {
       data.password = hashedPassword;
     }
     const user = await updateUser(id, req.body);
+    if(!user) return HttpResponse.DATA_BASE_ERROR(res, 'Error al actualizar el usuario');
     return HttpResponse.OK(res, user.msg);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);

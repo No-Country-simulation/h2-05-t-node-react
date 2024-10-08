@@ -45,7 +45,7 @@ export class Prediction extends Model<Prediction> {
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     defaultValue: 1,
   })
   bet_points!: number;
@@ -65,7 +65,7 @@ export class Prediction extends Model<Prediction> {
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     defaultValue: 0,
   })
   total_points!: number;
