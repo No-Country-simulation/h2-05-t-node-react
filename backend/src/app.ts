@@ -6,6 +6,8 @@ import apiRouter from './routes/api.routes';
 import userRouter from './routes/user.routes';
 import { errorHandler } from './middlewares/errorHandler';
 import cors from "cors"
+import matchRouter from './routes/match.router';
+import predictionRouter from './routes/prediction.router';
 
 const app = express();
 
@@ -21,6 +23,8 @@ app.use(express.urlencoded({ extended: true })); // Para parsear URL-encoded
 
 app.use('/auth', authRoutes);
 app.use('/api/users', userRouter);
+app.use('/api/match', matchRouter);
+app.use('/api/prediction', predictionRouter);
 app.use('', apiRouter)
 
 export default app;

@@ -5,6 +5,7 @@ import {
   getLeague,
   getMatch,
   getPlayer,
+  getPOnePlayer,
   getRecords,
   getTeam,
 } from "../services/api.service";
@@ -103,6 +104,23 @@ export const getPlayerApi = async (req: Request, res: Response) => {
   try {
     const { id, tid } = req.query;
     const result = await getPlayer(id, tid);
+
+    if (!result) {
+      return HttpResponse.INVALID_TYPE_ERROR(
+        res,
+        `Error fetching data: ${result.statusText}`
+      );
+    }
+    return HttpResponse.OK(res, result);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+};
+
+export const getOnePlayerApi = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.query;
+    const result = await getPOnePlayer(name);
 
     if (!result) {
       return HttpResponse.INVALID_TYPE_ERROR(
