@@ -53,4 +53,10 @@ export class Match extends Model<Match, matchInterface> {
     onDelete: 'CASCADE'
   })
   lige_id!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  id_apiMatch!: string
 }
