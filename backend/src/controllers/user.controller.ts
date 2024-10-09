@@ -10,6 +10,7 @@ import {
 } from "../services/user.service";
 import { httpResponse } from "../utils/enumsErrors";
 import { userInterface } from "../interfaces/user.interface";
+import { User } from "../models/user.model";
 
 const HttpResponse = new httpResponse();
 
@@ -78,7 +79,8 @@ export const login = async (req: Request, res: Response) => {
   try {
     const JWT_KEY = process.env.JWT_KEY;
     const { email, password }: { email: string; password: string } = req.body;
-
+    console.log(req.body);
+    
     if (!(email && password)) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
@@ -86,7 +88,9 @@ export const login = async (req: Request, res: Response) => {
       );
     }
 
-    const user = await getUser(email);
+    const user = await User.findOne({where:{email:email}});
+    console.log(user);
+    
     if (!user) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
@@ -94,10 +98,11 @@ export const login = async (req: Request, res: Response) => {
       );
     }
     const isValidPassword = await bcrypt.compare(password, user.password);
+    
     if (!isValidPassword) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
-        "Email y/o contraseña invalidos"
+        "contraseña invalidos"
       );
     }
     const id = user.id;
