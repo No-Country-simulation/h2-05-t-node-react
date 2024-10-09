@@ -6,4 +6,5 @@ export interface matchInterface {
   result?: string;
   status?: string;
   lige_id: string;
+  id_apiMatch?: string;
 }
