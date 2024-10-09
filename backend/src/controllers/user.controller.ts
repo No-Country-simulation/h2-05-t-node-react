@@ -35,6 +35,9 @@ export const getOneUser = async (req: Request, res: Response) => {
 export const createOneUser = async (req: Request, res: Response) => {
   try {
     const data = req.body as userInterface;
+    if (typeof data.password !== 'string') {
+      return HttpResponse.Error(res, 'Password must be a string');
+    }
     const hashedPassword = await bcrypt.hash(data.password, 10);
     data.password = hashedPassword;
     const user = await createUser(data);
@@ -100,7 +103,6 @@ export const login = async (req: Request, res: Response) => {
       expiresIn: "24h",
     });
     const response = {
-      token,
       user: {
         id: user.id,
         name: user.username,
@@ -113,6 +115,12 @@ export const login = async (req: Request, res: Response) => {
         ranking_id: user.ranking_id,
       },
     };
+      // Configurar la cookie con el token
+      res.cookie(process.env.PASS_COOKIE as string, token, {
+        maxAge: 1000 * 60 * 60, // 1 hora
+        httpOnly: false,
+        sameSite: 'none',
+      });
     return HttpResponse.OK(res, response);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);

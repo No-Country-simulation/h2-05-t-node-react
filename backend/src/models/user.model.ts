@@ -30,7 +30,7 @@ export class User extends Model<User, userInterface> {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   password!: string;
 
@@ -68,13 +68,19 @@ export class User extends Model<User, userInterface> {
   })
   registration_date!: Date;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  googleId!: string;
+
   @ForeignKey(() => Ranking)
   @Column({
     type: DataType.UUID,
     allowNull: true,
     onDelete: 'CASCADE'
   })
-  ranking_id!:string;
+  ranking_id!: string;
 
 /*   @Column({
     type: DataType.STRING,
