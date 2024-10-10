@@ -8,12 +8,13 @@ import {
 } from "sequelize-typescript";
 import { Match } from "./match.model";
 import { Prediction } from "./prediction.model";
+import { predictionInfo } from "../interfaces/predictionInfo.interface";
 
 @Table({
   tableName: "prediction_info",
   timestamps: true,
 })
-export class PredictionInfo extends Model<PredictionInfo> {
+export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   @Column({
     type: DataType.UUID,
     defaultValue: UUIDV4,
@@ -36,10 +37,10 @@ export class PredictionInfo extends Model<PredictionInfo> {
   prediction_id!: string; 
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.ENUM("win_a", "win_b", 'draw'),
     allowNull: false
   })
-  predicion!: string;
+  prediction!: string;
 
   @Column({
     type: DataType.INTEGER,

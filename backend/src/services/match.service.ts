@@ -27,7 +27,7 @@ export const CreateOneMatch = async (data: matchInterface) => {
   try {
     const match = await Match.create(data);
     if (!match) throw new Error("Partido no creado");
-    return { msg: "Partido creado" };
+    return match;
   } catch (error) {
     throw new Error(`Error al crear el partido: ${(error as Error).message}`);
   }

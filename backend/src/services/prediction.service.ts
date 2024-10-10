@@ -39,7 +39,7 @@ export const createPrediction = async (data: predictionInterface): Promise<any> 
     };
     const predRecord = await predictionRecord.create(dataRecord);
     if (!predRecord) throw new Error("Registro no creado");
-    return { msg: "Predicción creado" };
+    return prediction;
   } catch (error) {
     throw new Error(
       `Error al crear la Predicción: ${(error as Error).message}`
