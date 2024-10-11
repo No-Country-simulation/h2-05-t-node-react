@@ -10,8 +10,8 @@ const Leagues = () => {
     const [selectedOption, setSelectedOption] = useState('');
 
     return (
-        <section>
-            <div className="w-[90%] mx-auto mt-5">
+        <section className="w-[90%] mx-auto">
+            <div className="mt-5">
                 <div className="flex justify-between items-center">
                     <p className="capitalize font-medium ms-1">{selectedOption || 'ligas'}</p>
                     <ButtonForm text='Mis predicciones' />
@@ -20,7 +20,7 @@ const Leagues = () => {
                 <Dropdown options={options} selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
             </div>
 
-            <div className="w-[90%] shadow-soft mx-auto mt-1">
+            <div className="shadow-soft mt-1">
                 <MatchList />
             </div>
         </section>

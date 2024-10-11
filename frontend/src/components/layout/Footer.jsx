@@ -9,8 +9,8 @@ const Footer = () => {
     const [active, setActive] = useState('partidos')
 
     return (
-        <footer className="flex flex-col text-xs font-medium tracking-tight text-center">
-            <ul className="flex justify-between px-10 pt-4 pb-5 w-full bg-blue-500 rounded-t-lg">
+        <footer className="flex justify-center mt-5 text-xs font-medium tracking-tight text-center">
+            <ul className="flex gap-11 px-10 pt-4 pb-5 w-full bg-blue-500 rounded-t-lg">
                 <li onClick={() => setActive('scout players')} className='flex flex-col items-center cursor-pointer'>
                     <ScoutIcon active={active} />
                     <p className={`mt-2.5 text-white ${active === 'scout players' ? '' : 'text-opacity-30'}`}>Scout players</p>
