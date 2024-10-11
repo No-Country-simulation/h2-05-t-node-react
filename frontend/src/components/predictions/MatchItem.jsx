@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ArrowIcon from "../../assets/icons/ArrowIcon";
+import MatchDetail from "./MatchDetail";
 
 const MatchItem = ({ index, item }) => {
     const [openIndexes, setOpenIndexes] = useState([]);
@@ -26,10 +27,10 @@ const MatchItem = ({ index, item }) => {
                     </span>
                 </button>
             </div>
+
+    
             <div className={`overflow-hidden transition-max-height duration-300 ease-in-out ${openIndexes.includes(index) ? 'max-h-80' : 'max-h-0'}`}>
-                <div className="p-5 bg-[#F3F4F5]">
-                    <p className="text-center text-blue-500 italic">EN PROGRESO</p>
-                </div>
+                    <MatchDetail />
             </div>
         </div>
     )
