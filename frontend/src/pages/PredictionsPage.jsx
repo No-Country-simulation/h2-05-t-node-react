@@ -1,12 +1,13 @@
 import Leagues from "../components/predictions/Leagues"
-
+import Header from "../components/predictions/Header"
+import Search from "../components/predictions/Search"
 const PredictionsPage = () => {
     return (
-        <main>
-            <h1 className="text-center mt-5">AGREGAR HEADER</h1>
-
+        <main className="pt-[147px]">
+            <Header />
+            <Search />
             <Leagues />
         </main>
-    )
+    );
 }
-export default PredictionsPage
+export default PredictionsPage;

@@ -1,3 +1,4 @@
+// Header.js
 import React, { useState, useEffect, useRef } from 'react';
 import line1 from '../../assets/img/line-1.svg';
 import group954 from '../../assets/img/group-954.png';
@@ -13,11 +14,13 @@ const Header = () => {
     setCurrentDate(new Date());
     setSelectedDate(new Date());
   }, []);
+
   // Función para cambiar el estado y mostrar/ocultar el calendario
   const toggleCalendar = () => {
     setShowCalendar(!showCalendar);
-    console.log("Click")
+    console.log("Click");
   };
+
   // Genera las fechas necesarias para mostrar
   const generateDates = (baseDate, offset) => {
     const newDate = new Date(baseDate);
@@ -52,7 +55,6 @@ const Header = () => {
   useEffect(() => {
     scrollToCenter(); // Centrar hoy cuando se monta el componente
   }, [scrollRef]);
-  
 
   return (
     <header className="fixed w-full h-[147px] top-0 left-0 bg-transparent">
@@ -105,13 +107,15 @@ const Header = () => {
         </div>
       </div>
 
-        {/* Renderiza el calendario cuando `showCalendar` sea verdadero */}
-
-        <div>
+      {/* Renderiza el calendario cuando `showCalendar` sea verdadero */}
+      <div>
         {showCalendar && (
           <div className="absolute top-[150px] left-[50%] transform -translate-x-1/2 bg-white shadow-md p-4 rounded-md z-50">
-            {/* Ejemplo de un componente de calendario. Reemplaza con el tuyo */}
-            <Calendar />
+            <Calendar 
+              inline 
+              value={selectedDate} 
+              onChange={(e) => setSelectedDate(e.value)} 
+            />
           </div>
         )}
       </div>

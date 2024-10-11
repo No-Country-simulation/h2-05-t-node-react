@@ -1,15 +1,19 @@
-
 import React, { useState } from "react";
 import { Calendar } from 'primereact/calendar';
 
-export default function InlineDemo() {
+const InlineCalendar = ({ onDateSelect }) => {
     const [date, setDate] = useState(null);
 
-    return (
-        <div className="card flex justify-content-center">
-            <Calendar value={date} onChange={(e) => setDate(e.value)} inline showWeek />
-        </div>
+    const handleDateChange = (e) => {
+        setDate(e.value);
+        onDateSelect(e.value); // Llamamos a la función pasada como prop para enviar la fecha seleccionada al componente padre
+    };
 
-    )
-}
-        
+    return (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-white z-50">
+            <Calendar value={date} onChange={handleDateChange} />
+        </div>
+    );
+};
+
+export default InlineCalendar;
