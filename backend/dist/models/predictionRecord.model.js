@@ -9,14 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.predictionRecord = void 0;
+exports.PredictionRecord = void 0;
 const sequelize_1 = require("sequelize");
 const sequelize_typescript_1 = require("sequelize-typescript");
-const user_model_1 = require("./user.model");
 const prediction_model_1 = require("./prediction.model");
-let predictionRecord = class predictionRecord extends sequelize_typescript_1.Model {
+let PredictionRecord = class PredictionRecord extends sequelize_typescript_1.Model {
 };
-exports.predictionRecord = predictionRecord;
+exports.PredictionRecord = PredictionRecord;
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.UUID,
@@ -24,16 +23,7 @@ __decorate([
         primaryKey: true,
     }),
     __metadata("design:type", String)
-], predictionRecord.prototype, "id", void 0);
-__decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => user_model_1.User),
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.UUID,
-        allowNull: false,
-        onDelete: "CASCADE",
-    }),
-    __metadata("design:type", String)
-], predictionRecord.prototype, "user_id", void 0);
+], PredictionRecord.prototype, "id", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => prediction_model_1.Prediction),
     (0, sequelize_typescript_1.Column)({
@@ -42,11 +32,22 @@ __decorate([
         onDelete: "CASCADE",
     }),
     __metadata("design:type", String)
-], predictionRecord.prototype, "prediction_id", void 0);
-exports.predictionRecord = predictionRecord = __decorate([
+], PredictionRecord.prototype, "prediction_id", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.DATE,
+        allowNull: false,
+    }),
+    __metadata("design:type", Date)
+], PredictionRecord.prototype, "timestamp", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => prediction_model_1.Prediction),
+    __metadata("design:type", prediction_model_1.Prediction)
+], PredictionRecord.prototype, "prediction", void 0);
+exports.PredictionRecord = PredictionRecord = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "predictionRecord",
         timestamps: true,
     })
-], predictionRecord);
+], PredictionRecord);
 //# sourceMappingURL=predictionRecord.model.js.map

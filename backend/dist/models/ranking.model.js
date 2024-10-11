@@ -29,7 +29,7 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.UUID,
         allowNull: false,
-        onDelete: 'CASCADE'
+        onDelete: "CASCADE",
     }),
     __metadata("design:type", String)
 ], Ranking.prototype, "user_id", void 0);
@@ -56,6 +56,10 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Ranking.prototype, "division", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User),
+    __metadata("design:type", user_model_1.User)
+], Ranking.prototype, "user", void 0);
 exports.Ranking = Ranking = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "ranking",

@@ -44,7 +44,7 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
-        allowNull: false
+        allowNull: false,
     }),
     __metadata("design:type", String)
 ], PredictionInfo.prototype, "predicion", void 0);
@@ -67,10 +67,14 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.BOOLEAN,
-        defaultValue: true
+        defaultValue: true,
     }),
     __metadata("design:type", Boolean)
 ], PredictionInfo.prototype, "status", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => prediction_model_1.Prediction),
+    __metadata("design:type", prediction_model_1.Prediction)
+], PredictionInfo.prototype, "prediction", void 0);
 exports.PredictionInfo = PredictionInfo = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "prediction_info",

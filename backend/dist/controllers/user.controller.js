@@ -17,10 +17,13 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_service_1 = require("../services/user.service");
 const enumsErrors_1 = require("../utils/enumsErrors");
+const user_model_1 = require("../models/user.model");
 const HttpResponse = new enumsErrors_1.httpResponse();
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield (0, user_service_1.getUsers)();
+        if (!users)
+            return HttpResponse.DATA_BASE_ERROR(res, 'Usuarios no encontrados');
         return HttpResponse.OK(res, users);
     }
     catch (error) {
@@ -32,6 +35,8 @@ const getOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const { id } = req.params;
         const user = yield (0, user_service_1.getUser)(id);
+        if (!user)
+            return HttpResponse.DATA_BASE_ERROR(res, 'Usuario no encontrado');
         return HttpResponse.OK(res, user);
     }
     catch (error) {
@@ -48,6 +53,8 @@ const createOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const hashedPassword = yield bcrypt_1.default.hash(data.password, 10);
         data.password = hashedPassword;
         const user = yield (0, user_service_1.createUser)(data);
+        if (!user)
+            return HttpResponse.DATA_BASE_ERROR(res, 'Error al cargar los datos');
         return HttpResponse.OK(res, user.msg);
     }
     catch (error) {
@@ -59,6 +66,8 @@ const deleteOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { id } = req.params;
         const user = yield (0, user_service_1.deleteUser)(id);
+        if (!user)
+            return HttpResponse.DATA_BASE_ERROR(res, 'Error al eliminar el usuario');
         return HttpResponse.OK(res, user.msg);
     }
     catch (error) {
@@ -75,6 +84,8 @@ const updateOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             data.password = hashedPassword;
         }
         const user = yield (0, user_service_1.updateUser)(id, req.body);
+        if (!user)
+            return HttpResponse.DATA_BASE_ERROR(res, 'Error al actualizar el usuario');
         return HttpResponse.OK(res, user.msg);
     }
     catch (error) {
@@ -86,23 +97,24 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const JWT_KEY = process.env.JWT_KEY;
         const { email, password } = req.body;
+        console.log(req.body);
         if (!(email && password)) {
             return HttpResponse.INVALID_TYPE_ERROR(res, "Email y contraseña son obligatorios");
         }
-        const user = yield (0, user_service_1.getUser)(email);
+        const user = yield user_model_1.User.findOne({ where: { email: email } });
+        console.log(user);
         if (!user) {
             return HttpResponse.INVALID_TYPE_ERROR(res, "Email y contraseña son obligatorios");
         }
         const isValidPassword = yield bcrypt_1.default.compare(password, user.password);
         if (!isValidPassword) {
-            return HttpResponse.INVALID_TYPE_ERROR(res, "Email y/o contraseña invalidos");
+            return HttpResponse.INVALID_TYPE_ERROR(res, "contraseña invalidos");
         }
         const id = user.id;
         const token = jsonwebtoken_1.default.sign({ email, id }, JWT_KEY, {
             expiresIn: "24h",
         });
         const response = {
-            token,
             user: {
                 id: user.id,
                 name: user.username,
@@ -112,9 +124,14 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 total_predictions: user.total_predictions,
                 subscription: user.subscription,
                 registration_date: user.registration_date,
-                ranking_id: user.ranking_id,
             },
         };
+        // Configurar la cookie con el token
+        res.cookie(process.env.PASS_COOKIE, token, {
+            maxAge: 1000 * 60 * 60, // 1 hora
+            httpOnly: false,
+            sameSite: 'none',
+        });
         return HttpResponse.OK(res, response);
     }
     catch (error) {

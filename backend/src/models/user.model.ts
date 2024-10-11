@@ -4,7 +4,6 @@ import {
   Column,
   Model,
   DataType,
-  ForeignKey,
   HasOne,
   HasMany,
 } from "sequelize-typescript";
@@ -114,5 +113,5 @@ export class User extends Model<User, userInterface> {
   // Relación 1 a muchos con Prediction
   @HasMany(() => Prediction)
   predictions!: Prediction[];
-  
+
 }

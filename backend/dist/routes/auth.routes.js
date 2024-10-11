@@ -14,5 +14,6 @@ router.get("/google", passport_1.default.authenticate("google", { scope: ["profi
 router.get("/google/callback", passport_1.default.authenticate("google", { session: false }), auth_controller_1.authController.googleAuthCallback);
 // Ruta protegida que verifica el token
 router.get("/verify-token", auth_controller_1.authController.verifyToken);
+router.post('/logout', auth_controller_1.authController.logout);
 exports.default = router;
 //# sourceMappingURL=auth.routes.js.map

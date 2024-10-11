@@ -122,7 +122,6 @@ export const login = async (req: Request, res: Response) => {
         total_predictions: user.total_predictions,
         subscription: user.subscription,
         registration_date: user.registration_date,
-        ranking_id: user.ranking_id,
       },
     };
       // Configurar la cookie con el token

@@ -13,6 +13,7 @@ exports.User = void 0;
 const sequelize_1 = require("sequelize");
 const sequelize_typescript_1 = require("sequelize-typescript");
 const ranking_model_1 = require("./ranking.model");
+const prediction_model_1 = require("./prediction.model");
 //importar Match_record
 let User = class User extends sequelize_typescript_1.Model {
 };
@@ -21,7 +22,7 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.UUID,
         primaryKey: true,
-        defaultValue: sequelize_1.UUIDV4
+        defaultValue: sequelize_1.UUIDV4,
     }),
     __metadata("design:type", String)
 ], User.prototype, "id", void 0);
@@ -51,7 +52,7 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
         allowNull: false,
-        defaultValue: 'Usuario'
+        defaultValue: "Usuario",
     }),
     __metadata("design:type", String)
 ], User.prototype, "rol", void 0);
@@ -94,14 +95,13 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "googleId", void 0);
 __decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => ranking_model_1.Ranking),
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.UUID,
-        allowNull: true,
-        onDelete: 'CASCADE'
-    }),
-    __metadata("design:type", String)
-], User.prototype, "ranking_id", void 0);
+    (0, sequelize_typescript_1.HasOne)(() => ranking_model_1.Ranking),
+    __metadata("design:type", ranking_model_1.Ranking)
+], User.prototype, "ranking", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => prediction_model_1.Prediction),
+    __metadata("design:type", Array)
+], User.prototype, "predictions", void 0);
 exports.User = User = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "users",
