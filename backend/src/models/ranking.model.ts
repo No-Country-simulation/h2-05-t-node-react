@@ -5,6 +5,7 @@ import {
   Model,
   DataType,
   ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { User } from "./user.model";
 
@@ -24,7 +25,7 @@ export class Ranking extends Model<Ranking> {
   @Column({
     type: DataType.UUID,
     allowNull: false,
-    onDelete: 'CASCADE'
+    onDelete: "CASCADE",
   })
   user_id!: string;
 
@@ -47,4 +48,7 @@ export class Ranking extends Model<Ranking> {
     defaultValue: 1,
   })
   division!: number;
+
+  @BelongsTo(() => User)
+  user!: User;
 }
