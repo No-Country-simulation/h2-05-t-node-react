@@ -1,6 +1,6 @@
 import { predictionInterface } from "../interfaces/prediction.interface";
 import { Prediction } from "../models/prediction.model";
-import { predictionRecord } from "../models/predictionRecord.model";
+import { PredictionRecord } from "../models/predictionRecord.model";
 
 export const getPredictions = async (): Promise<Prediction[]> => {
   try {
@@ -37,7 +37,7 @@ export const createPrediction = async (data: predictionInterface): Promise<any> 
       user_id: prediction.user_id,
       prediction_id: prediction.id,
     };
-    const predRecord = await predictionRecord.create(dataRecord);
+    const predRecord = await PredictionRecord.create(dataRecord);
     if (!predRecord) throw new Error("Registro no creado");
     return { msg: "Predicción creado" };
   } catch (error) {

@@ -4,7 +4,8 @@ import {
   Column,
   Model,
   DataType,
-  ForeignKey
+  ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { Match } from "./match.model";
 import { Prediction } from "./prediction.model";
@@ -33,11 +34,11 @@ export class PredictionInfo extends Model<PredictionInfo> {
     type: DataType.UUID,
     allowNull: false,
   })
-  prediction_id!: string; 
+  prediction_id!: string;
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
   })
   predicion!: string;
 
@@ -57,8 +58,11 @@ export class PredictionInfo extends Model<PredictionInfo> {
 
   @Column({
     type: DataType.BOOLEAN,
-    defaultValue: true
+    defaultValue: true,
   })
-  status!: boolean
+  status!: boolean;
 
+  // Relación muchos a 1 con Prediction
+  @BelongsTo(() => Prediction)
+  prediction!: Prediction;
 }

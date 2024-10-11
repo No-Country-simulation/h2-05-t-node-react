@@ -14,9 +14,13 @@ import {
   Model,
   DataType,
   ForeignKey,
+  HasMany,
+  BelongsTo,
 } from "sequelize-typescript";
 import { User } from "./user.model";
 import { predictionInterface } from "../interfaces/prediction.interface";
+import { PredictionInfo } from "./prediction_info.model";
+import { PredictionRecord } from "./predictionRecord.model";
 
 @Table({
   tableName: "bets",
@@ -34,7 +38,7 @@ export class Prediction extends Model<Prediction, predictionInterface> {
   @Column({
     type: DataType.UUID,
     allowNull: false,
-    onDelete: 'CASCADE'
+    onDelete: "CASCADE",
   })
   user_id!: string;
 
@@ -59,10 +63,10 @@ export class Prediction extends Model<Prediction, predictionInterface> {
   date!: Date;
 
   @Column({
-    type: DataType.BOOLEAN,
+    type: DataType.STRING,
     allowNull: false,
   })
-  status!: boolean;
+  status!: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -70,4 +74,16 @@ export class Prediction extends Model<Prediction, predictionInterface> {
     defaultValue: 0,
   })
   total_points!: number;
+
+  // Relación muchos a 1 con User
+  @BelongsTo(() => User)
+  user!: User;
+
+  // Relación 1 a muchos con PredictionDetail
+  @HasMany(() => PredictionInfo)
+  PredictionInfos!: PredictionInfo[];
+
+  // Relación 1 a muchos con PredictionRecord
+  @HasMany(() => PredictionRecord)
+  records!: PredictionRecord[];
 }

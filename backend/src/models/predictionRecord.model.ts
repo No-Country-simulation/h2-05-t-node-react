@@ -5,29 +5,21 @@ import {
   Model,
   DataType,
   ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
-import { User } from "./user.model";
 import { Prediction } from "./prediction.model";
 
 @Table({
   tableName: "predictionRecord",
   timestamps: true,
 })
-export class predictionRecord extends Model<predictionRecord> {
+export class PredictionRecord extends Model<PredictionRecord> {
   @Column({
     type: DataType.UUID,
     defaultValue: UUIDV4,
     primaryKey: true,
   })
   id!: string;
-
-  @ForeignKey(() => User)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-    onDelete: "CASCADE",
-  })
-  user_id!: string;
 
   @ForeignKey(() => Prediction)
   @Column({
@@ -36,4 +28,13 @@ export class predictionRecord extends Model<predictionRecord> {
     onDelete: "CASCADE",
   })
   prediction_id!: string;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+  })
+  timestamp!: Date;
+
+  @BelongsTo(() => Prediction)
+  prediction!: Prediction;
 }
