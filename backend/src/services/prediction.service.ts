@@ -1,6 +1,8 @@
 import { predictionInterface } from "../interfaces/prediction.interface";
 import { Prediction } from "../models/prediction.model";
 import { predictionRecord } from "../models/predictionRecord.model";
+import { UserPredictions } from "../models/UserPredictions.model";
+import { Op } from 'sequelize';
 
 export const getPredictions = async (): Promise<Prediction[]> => {
   try {
@@ -67,6 +69,30 @@ export const updatePrediction = async (id: any, data: any): Promise<any> => {
   } catch (error) {
     throw new Error(
       `Error al actualizado la Predicción: ${(error as Error).message}`
+    );
+  }
+};
+
+export const userOnePrediction = async (id: any): Promise<any> => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    console.log(today);
+    
+
+    const prediction = await UserPredictions.findAll({
+      where: {
+        user_id: id,
+        date: {
+          [Op.eq]: today
+        }
+      }
+    });
+
+    if (!prediction || prediction.length === 0) throw new Error("Predicción no encontrada");
+    return prediction;
+  } catch (error) {
+    throw new Error(
+      `Error al obtener la predicción: ${(error as Error).message}`
     );
   }
 };

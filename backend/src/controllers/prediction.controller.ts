@@ -9,9 +9,11 @@ import {
   getPrediction,
   getPredictions,
   updatePrediction,
+  userOnePrediction,
 } from "../services/prediction.service";
 import { httpResponse } from "../utils/enumsErrors";
 import { Request, Response } from "express";
+import { canCreatePrediction } from "../utils/predictions";
 
 const HttpResponse = new httpResponse();
 
@@ -43,6 +45,13 @@ export const getOnePrediction = async (req: Request, res: Response) => {
 export const createOnePrediction = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+
+    const userId = data.user_id;
+
+    // Verificar si el usuario puede hacer una predicción hoy
+    const canCreate = await canCreatePrediction(userId, res);
+    if (!canCreate) return; // Si no puede crear una predicción, ya se envió la respuesta
+
     //crear prediccion
     const dataPrediction: predictionInterface = {
       user_id: data.user_id,
@@ -54,6 +63,7 @@ export const createOnePrediction = async (req: Request, res: Response) => {
     if (!prediction) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
     }
+
     //Crear partido
     const dataMatch: matchInterface = {
       team_a: data.team_a,
@@ -61,8 +71,8 @@ export const createOnePrediction = async (req: Request, res: Response) => {
       match_date: data.match_date,
       status: data.status,
       id_apiMatch: data.id_apiMatch,
-      league_id: data.league_id
-    }
+      league_id: data.league_id,
+    };
     const match = await CreateOneMatch(dataMatch);
     if (!match) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
@@ -74,13 +84,17 @@ export const createOnePrediction = async (req: Request, res: Response) => {
       prediction: data.prediction,
       fee: data.fee,
       prediction_date: data.date,
-      status: data.status
-    }
+      status: data.status,
+    };
     const predictionInfo = await PredictionInfo.create(dataPredictionInfo);
     if (!predictionInfo) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
     }
-    return HttpResponse.OK(res, {match: match, prediction: prediction, prediction_info: predictionInfo  });
+    return HttpResponse.OK(res, {
+      match: match,
+      prediction: prediction,
+      prediction_info: predictionInfo,
+    });
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }
@@ -103,6 +117,20 @@ export const updateOnePrediction = async (req: Request, res: Response) => {
     const { id } = req.params;
     const data = req.body;
     const prediction = await updatePrediction(id, data);
+    if (!prediction) {
+      return HttpResponse.DATA_BASE_ERROR(res, "Error al actualizar predición");
+    }
+    return HttpResponse.OK(res, prediction);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+};
+
+export const userPredictions = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const prediction = await userOnePrediction(id);
+
     if (!prediction) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al actualizar predición");
     }
