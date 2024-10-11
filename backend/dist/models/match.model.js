@@ -49,14 +49,14 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
-        allowNull: false,
+        allowNull: true,
     }),
     __metadata("design:type", String)
 ], Match.prototype, "result", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.ENUM('scheduled', 'in_progress', 'completed'),
-        allowNull: false,
+        allowNull: true,
     }),
     __metadata("design:type", String)
 ], Match.prototype, "status", void 0);
@@ -69,6 +69,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Match.prototype, "lige_id", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false,
+    }),
+    __metadata("design:type", String)
+], Match.prototype, "id_apiMatch", void 0);
 exports.Match = Match = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "matches",

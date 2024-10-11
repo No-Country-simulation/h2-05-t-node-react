@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPlayer = exports.getTeam = exports.getLeague = exports.getCountries = exports.getRecords = exports.getMatch = void 0;
+exports.getPOnePlayer = exports.getPlayer = exports.getTeam = exports.getLeague = exports.getCountries = exports.getRecords = exports.getMatch = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const getMatch = (from, to, league) => __awaiter(void 0, void 0, void 0, function* () {
@@ -177,4 +177,34 @@ const getPlayer = (id, tid) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getPlayer = getPlayer;
+const getPOnePlayer = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const baseUrl = process.env.API_URL;
+        const url = `${baseUrl}get_players&player_name=${name}&APIkey=${process.env.API_KEY_APIFOOTBALL}`;
+        const response = yield fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const result = yield response.json();
+        const filteredResults = result.map((item) => ({
+            player_id: item.player_key,
+            player_name: item.player_name,
+            player_country: item.player_country,
+            player_image: item.player_image,
+            player_number: item.player_number,
+            player_type: item.player_type,
+            player_age: item.player_age,
+            player_goals: item.player_goals,
+            player_team: item.team_name,
+            player_rating: item.player_rating
+        }));
+        return filteredResults;
+    }
+    catch (error) {
+        throw new Error(`Error al obtener el usuario: ${error.message}`);
+    }
+});
+exports.getPOnePlayer = getPOnePlayer;
 //# sourceMappingURL=api.service.js.map

@@ -9,5 +9,6 @@ router.get('/api_country', api_controller_1.getCountriesApi);
 router.get('/api_league', api_controller_1.getLeagueApi);
 router.get('/api_team', api_controller_1.getTeamApi);
 router.get('/api_players', api_controller_1.getPlayerApi);
+router.get('/api_Oneplayers', api_controller_1.getOnePlayerApi);
 exports.default = router;
 //# sourceMappingURL=api.routes.js.map

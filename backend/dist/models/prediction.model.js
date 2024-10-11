@@ -21,12 +21,14 @@ exports.Prediction = void 0;
 const sequelize_1 = require("sequelize");
 const sequelize_typescript_1 = require("sequelize-typescript");
 const user_model_1 = require("./user.model");
+const prediction_info_model_1 = require("./prediction_info.model");
+const predictionRecord_model_1 = require("./predictionRecord.model");
 let Prediction = class Prediction extends sequelize_typescript_1.Model {
 };
 exports.Prediction = Prediction;
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
+        type: sequelize_typescript_1.DataType.UUID,
         primaryKey: true,
         defaultValue: sequelize_1.UUIDV4,
     }),
@@ -37,7 +39,7 @@ __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.UUID,
         allowNull: false,
-        onDelete: 'CASCADE'
+        onDelete: "CASCADE",
     }),
     __metadata("design:type", String)
 ], Prediction.prototype, "user_id", void 0);
@@ -51,7 +53,7 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
-        allowNull: false,
+        allowNull: true,
         defaultValue: 1,
     }),
     __metadata("design:type", Number)
@@ -66,19 +68,31 @@ __decorate([
 ], Prediction.prototype, "date", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.BOOLEAN,
+        type: sequelize_typescript_1.DataType.STRING,
         allowNull: false,
     }),
-    __metadata("design:type", Boolean)
+    __metadata("design:type", String)
 ], Prediction.prototype, "status", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
-        allowNull: false,
+        allowNull: true,
         defaultValue: 0,
     }),
     __metadata("design:type", Number)
 ], Prediction.prototype, "total_points", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User),
+    __metadata("design:type", user_model_1.User)
+], Prediction.prototype, "user", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => prediction_info_model_1.PredictionInfo),
+    __metadata("design:type", Array)
+], Prediction.prototype, "PredictionInfos", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => predictionRecord_model_1.PredictionRecord),
+    __metadata("design:type", Array)
+], Prediction.prototype, "records", void 0);
 exports.Prediction = Prediction = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "bets",

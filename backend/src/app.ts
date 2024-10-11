@@ -20,7 +20,7 @@ app.use(passport.initialize());
 
 // Middlewares globales
 app.use(express.json()); // Para parsear JSON
-app.use(express.urlencoded({ extended: true })); // Para parsear URL-encoded
+app.use(express.urlencoded({ extended: false })); // Para parsear URL-encoded
 
 app.use("/auth", authRoutes);
 app.use("/auth", rankingRoutes);

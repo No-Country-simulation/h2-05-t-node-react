@@ -15,12 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authController = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 //import { authService } from '../services/auth.service';
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 class AuthController {
     // Después de que Google autentica al usuario
     googleAuthCallback(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = req.user;
-            const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+            const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.JWT_KEY, {
                 expiresIn: '1h',
             });
             res.json({ token });
@@ -43,6 +45,11 @@ class AuthController {
             }
         });
     }
+    logout(req, res) {
+        res.clearCookie(process.env.PASS_COOKIE);
+        res.status(200).redirect('http://localhost:5173');
+    }
+    ;
 }
 exports.authController = new AuthController();
 //# sourceMappingURL=auth.controller.js.map
