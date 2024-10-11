@@ -65,7 +65,7 @@ export const deletePrediction = async (id: any) => {
 };
 
 export const updatePrediction = async (
-  id: any,
+  id: string,
   updateData: any
 ): Promise<any> => {
   try {

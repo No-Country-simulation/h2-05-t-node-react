@@ -57,10 +57,10 @@ export class PredictionInfo extends Model<PredictionInfo> {
   prediction_date!: Date;
 
   @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: true,
+    type: DataType.STRING,
+    defaultValue: "pending",
   })
-  status!: boolean;
+  status!: string;
 
   // Relación muchos a 1 con Prediction
   @BelongsTo(() => Prediction)

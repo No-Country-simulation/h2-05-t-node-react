@@ -28,7 +28,7 @@ let Prediction = class Prediction extends sequelize_typescript_1.Model {
 exports.Prediction = Prediction;
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
+        type: sequelize_typescript_1.DataType.UUID,
         primaryKey: true,
         defaultValue: sequelize_1.UUIDV4,
     }),

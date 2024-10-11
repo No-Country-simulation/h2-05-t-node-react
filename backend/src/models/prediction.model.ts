@@ -28,7 +28,7 @@ import { PredictionRecord } from "./predictionRecord.model";
 })
 export class Prediction extends Model<Prediction, predictionInterface> {
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     primaryKey: true,
     defaultValue: UUIDV4,
   })
@@ -81,7 +81,7 @@ export class Prediction extends Model<Prediction, predictionInterface> {
 
   // Relación 1 a muchos con PredictionDetail
   @HasMany(() => PredictionInfo)
-  PredictionInfos!: PredictionInfo[];
+  predictionInfos!: PredictionInfo[];
 
   // Relación 1 a muchos con PredictionRecord
   @HasMany(() => PredictionRecord)
