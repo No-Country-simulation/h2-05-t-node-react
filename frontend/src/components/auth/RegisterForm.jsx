@@ -1,7 +1,8 @@
 import { useState } from "react"
-import ButtonForm from "../common/ButtonForm"
+import ButtonForm from "../common/Button"
 import Input from "../common/Input"
 import InputPassword from "../common/InputPassword"
+import Button from "../common/Button"
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState({
@@ -31,7 +32,7 @@ const RegisterForm = () => {
                 <InputPassword htmlFor='repeatedPassword' text='Repetir contraseña' id='repeatedPassword' showPassword={showPassword.repeatedPassword} handleShowPassword={() => handleShowPassword('repeatedPassword')} />
             </div>
 
-            <ButtonForm text='Registrarse' />
+            <Button>Registrarse</Button>
         </form>
     )
 }

@@ -1,7 +1,8 @@
 import { useState } from "react"
-import ButtonForm from "../common/ButtonForm"
+import ButtonForm from "../common/Button"
 import Input from "../common/Input"
 import InputPassword from "../common/InputPassword"
+import Button from "../common/Button"
 
 const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false)
@@ -19,9 +20,9 @@ const LoginForm = () => {
                 <InputPassword htmlFor='password' text='Contraseña' id='password' showPassword={showPassword} handleShowPassword={handleShowPassword} />
             </div>
 
-            <a href="#" className='mt-3.5 mb-8 text-sm text-center text-blue-500 underline'>¿Olvidaste tu contraseña?</a>
+            <a href="#" className='mt-3.5 mb-8 text-sm text-center text-blue underline'>¿Olvidaste tu contraseña?</a>
 
-            <ButtonForm text='Iniciar sesión' />
+            <Button>Iniciar sesión</Button>
         </form>
     )
 }
