@@ -1,13 +1,11 @@
-import Leagues from "../components/predictions/Leagues"
-import Header from "../components/predictions/Header"
-import Search from "../components/predictions/Search"
+import HeaderPredictions from "../components/predictions/HeaderPredictions"
+
 const PredictionsPage = () => {
     return (
-        <main className="pt-[147px]">
-            <Header />
-            <Search />
-            <Leagues />
+        <main>
+            <HeaderPredictions />
+
         </main>
-    );
+    )
 }
-export default PredictionsPage;
+export default PredictionsPage
