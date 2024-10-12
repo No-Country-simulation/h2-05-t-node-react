@@ -1,8 +1,10 @@
-import ButtonForm from "../common/ButtonForm"
+import ButtonForm from "../common/Button"
 import '../../App.css';
 import { useState } from "react";
 import Dropdown from "../common/Dropdown";
 import MatchList from "./MatchList";
+import Button from "../common/Button";
+import { Link } from "react-router-dom";
 
 const options = ['Ligas', 'Horario', 'Trending']
 
@@ -14,7 +16,9 @@ const Leagues = () => {
             <div className="mt-5">
                 <div className="flex justify-between items-center">
                     <p className="capitalize font-medium ms-1">{selectedOption || 'ligas'}</p>
-                    <ButtonForm text='Mis predicciones' />
+                    <Link to='/predictions'>
+                        <Button>Mis predicciones</Button>
+                    </Link>
                 </div>
 
                 <Dropdown options={options} selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
