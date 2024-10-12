@@ -2,7 +2,7 @@ import union from '../../assets/img/union.svg';
 
 const Search = () => {
   return (
-    <div className="flex justify-center mt-4"> {/* Agrega un margen superior y centra el contenido */}
+    <div className="flex justify-center mt-4"> 
       <div className="flex w-[351px] items-center gap-[17px] relative">
         <div className="relative w-[353px] h-[38px] mr-[-2.00px]">
           <div className="relative w-[351px] h-[38px] bg-[#efeff0] rounded-[9px] border border-solid border-[#7676801f]">
