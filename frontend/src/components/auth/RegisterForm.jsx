@@ -1,14 +1,22 @@
 import { useState } from "react"
-import ButtonForm from "../common/Button"
 import Input from "../common/Input"
 import InputPassword from "../common/InputPassword"
 import Button from "../common/Button"
 
+const initialFormValues = {
+    username: '',
+    emailOrPhone: '',
+    password: '',
+}
+
 const RegisterForm = () => {
+    const [formValues, setFormValues] = useState(initialFormValues)
+    const [repeatedPassword, setRepeatedPassword] = useState('')
     const [showPassword, setShowPassword] = useState({
         password: false,
         repeatedPassword: false
     })
+    const [error, setError] = useState({})
 
     const handleShowPassword = (name) => {
         setShowPassword(prevState => ({
@@ -17,23 +25,74 @@ const RegisterForm = () => {
         }))
     }
 
+    const handleValidation = () => {
+        let newErrors = {}
+
+        if (!formValues.username) {
+            newErrors.username = 'El nombre de usuario es obligatorio.'
+        }
+
+        if (!formValues.emailOrPhone) {
+            newErrors.emailOrPhone = 'El email o teléfono es obligatorio.'
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.emailOrPhone) && !/^\d{10}$/.test(formValues.emailOrPhone)) {
+            newErrors.emailOrPhone = 'Debes ingresar un email válido o un teléfono de 10 dígitos.'
+        }
+
+        if (!formValues.password) {
+            newErrors.password = 'La contraseña es obligatoria.'
+        } else if (formValues.password.length < 8) {
+            newErrors.password = 'La contraseña debe tener al menos 8 caracteres.'
+        }
+
+        if (!repeatedPassword) {
+            newErrors.repeatedPassword = 'Debes repetir la contraseña.'
+        } else if (repeatedPassword !== formValues.password) {
+            newErrors.repeatedPassword = 'Las contraseñas no coinciden.'
+        }
+
+        setError(newErrors)
+
+        return Object.keys(newErrors).length === 0
+    }
+
+    const handleChange = (e) => {
+        setFormValues({
+            ...formValues,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        const isValid = handleValidation()
+
+        if (!isValid) return
+
+        console.log(formValues)
+    }
+
     return (
-        <form className='flex flex-col mx-auto items-center mt-8 w-[80%]'>
+        <form onSubmit={handleSubmit} className='flex flex-col mx-auto items-center mt-8 w-[80%]'>
             <div className='w-full text-sm'>
-                <Input htmlFor='username' text='Nombre de usuario' id='username' />
+                <Input autoFocus name='username' handleChange={handleChange} value={formValues.username} htmlFor='username' text='Nombre de usuario' id='username' />
+                {error.username && <p className="text-red-500 text-sm mt-1">{error.username}</p>}
             </div>
             <div className='w-full text-sm mt-4'>
-                <Input htmlFor='emailOrPhone' text='Ingresa tu email o teléfono' id='emailOrPhone' />
+                <Input name='emailOrPhone' handleChange={handleChange} value={formValues.emailOrPhone} htmlFor='emailOrPhone' text='Ingresa tu email o teléfono' id='emailOrPhone' />
+                {error.emailOrPhone && <p className="text-red-500 text-sm mt-1">{error.emailOrPhone}</p>}
             </div>
             <div className='w-full text-sm mt-4'>
-                <InputPassword htmlFor='password' text='Contraseña' id='password' showPassword={showPassword.password} handleShowPassword={() => handleShowPassword('password')} />
+                <InputPassword name='password' handleChange={handleChange} value={formValues.password} htmlFor='password' text='Contraseña' id='password' showPassword={showPassword.password} handleShowPassword={() => handleShowPassword('password')} />
+                {error.password && <p className="text-red-500 text-sm mt-1">{error.password}</p>}
             </div>
             <div className='w-full text-sm mt-4 mb-8'>
-                <InputPassword htmlFor='repeatedPassword' text='Repetir contraseña' id='repeatedPassword' showPassword={showPassword.repeatedPassword} handleShowPassword={() => handleShowPassword('repeatedPassword')} />
+                <InputPassword name='repeatedPassword' handleChange={e => setRepeatedPassword(e.target.value)} value={repeatedPassword} htmlFor='repeatedPassword' text='Repetir contraseña' id='repeatedPassword' showPassword={showPassword.repeatedPassword} handleShowPassword={() => handleShowPassword('repeatedPassword')} />
+                {error.repeatedPassword && <p className="text-red-500 text-sm mt-1">{error.repeatedPassword}</p>}
             </div>
 
             <Button>Registrarse</Button>
         </form>
     )
 }
+
 export default RegisterForm
