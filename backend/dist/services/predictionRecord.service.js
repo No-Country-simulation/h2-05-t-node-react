@@ -13,7 +13,6 @@ exports.predictionHistoryByUser = void 0;
 const sequelize_1 = require("sequelize");
 const prediction_model_1 = require("../models/prediction.model");
 const predictionRecord_model_1 = require("../models/predictionRecord.model");
-// Filtrar el historial de predicciones de un usuario con paginación y filtros
 const predictionHistoryByUser = (userId, filters) => __awaiter(void 0, void 0, void 0, function* () {
     const { status, startDate, endDate, page = 1 } = filters;
     const limit = 10; // Máximo de 10 resultados por página

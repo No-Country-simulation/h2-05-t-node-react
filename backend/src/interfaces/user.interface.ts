@@ -9,5 +9,4 @@ export interface userInterface {
   subscription?: boolean,
   registration_date?: Date,
   googleId?: Date,
-  ranking_id?: string
 }

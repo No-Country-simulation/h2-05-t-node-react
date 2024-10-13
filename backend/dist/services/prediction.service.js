@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePrediction = exports.deletePrediction = exports.createPrediction = exports.getPrediction = exports.getPredictions = void 0;
 const prediction_model_1 = require("../models/prediction.model");
 const predictionRecord_model_1 = require("../models/predictionRecord.model");
-const ranking_model_1 = require("../models/ranking.model");
+//import { Ranking } from "../models/ranking.model";
+const ranking_service_1 = require("./ranking.service");
 const getPredictions = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const prediction = yield prediction_model_1.Prediction.findAll();
@@ -83,14 +84,9 @@ const updatePrediction = (id, updateData) => __awaiter(void 0, void 0, void 0, f
         yield prediction.update(updateData);
         // Verificar si la predicción ha cambiado a "win" cambiar por el estada usado
         if (updateData.status === "win" && previousStatus !== "win") {
-            // Obtener el ranking del usuario asociado
-            const ranking = yield ranking_model_1.Ranking.findOne({
-                where: { user_id: prediction.user_id },
-            });
-            if (ranking) {
-                // Sumar los puntos al ranking
-                ranking.points += prediction.total_points;
-                yield ranking.save();
+            const point = (0, ranking_service_1.addPoints)(id, prediction.total_points);
+            if (!point) {
+                throw new Error("No se pudo añadir los puntos a la clasificación");
             }
         }
         // Actualizar registro en el historial de predicciones

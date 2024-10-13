@@ -62,7 +62,7 @@ function addPoints(userId, points) {
         }
         catch (error) {
             yield transaction.rollback();
-            throw error; // Maneja el error de forma adecuada
+            throw error;
         }
     });
 }

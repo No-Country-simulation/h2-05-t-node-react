@@ -36,7 +36,6 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
-        allowNull: false,
         defaultValue: 0,
     }),
     __metadata("design:type", Number)
@@ -44,20 +43,16 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-    }),
-    __metadata("design:type", Number)
-], Ranking.prototype, "position", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.INTEGER,
-        defaultValue: 1,
+        defaultValue: 4,
     }),
     __metadata("design:type", Number)
 ], Ranking.prototype, "division", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User),
+    (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User, {
+        foreignKey: "user_id",
+        onDelete: "CASCADE",
+        hooks: true,
+    }),
     __metadata("design:type", user_model_1.User)
 ], Ranking.prototype, "user", void 0);
 exports.Ranking = Ranking = __decorate([
