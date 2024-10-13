@@ -51,6 +51,6 @@ export async function addPoints(userId: string, points: number) {
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
-      throw error; // Maneja el error de forma adecuada
+      throw error; 
     }
   }

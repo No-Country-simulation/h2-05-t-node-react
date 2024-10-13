@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.deleteUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
+exports.updateUser = exports.deleteUser = exports.populateRankingForExistingUsers = exports.createUser = exports.getUser = exports.getUsers = void 0;
+const ranking_model_1 = require("../models/ranking.model");
 const user_model_1 = require("../models/user.model");
 const getUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -25,7 +26,15 @@ const getUsers = () => __awaiter(void 0, void 0, void 0, function* () {
 exports.getUsers = getUsers;
 const getUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield user_model_1.User.findOne(id);
+        const user = yield user_model_1.User.findOne({
+            where: { id },
+            include: [
+                {
+                    model: ranking_model_1.Ranking,
+                    attributes: ["points", "division"],
+                },
+            ],
+        });
         if (!user)
             throw new Error("Usuario no encontrado");
         return user;
@@ -40,6 +49,12 @@ const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
         const user = yield user_model_1.User.create(data);
         if (!user)
             throw new Error("Usuario no creado");
+        // Crear un registro en la tabla de Ranking con 0 puntos por defecto
+        yield ranking_model_1.Ranking.create({
+            user_id: user.id, // Usa el ID del usuario recién creado
+            points: 0, // Puntos iniciales (opcional)
+            division: 4, // División inicial (opcional)
+        });
         return { msg: "Usuario creado" };
     }
     catch (error) {
@@ -47,6 +62,37 @@ const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.createUser = createUser;
+const populateRankingForExistingUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Obtener todos los usuarios que no tienen un registro en la tabla Ranking
+        const usersWithoutRanking = yield user_model_1.User.findAll({
+            include: [
+                {
+                    model: ranking_model_1.Ranking,
+                    required: false, // Esto asegura que también traiga usuarios sin ranking
+                },
+            ],
+            where: { "$Ranking.user_id$": null }, // Solo usuarios sin ranking
+        });
+        // Crear un ranking para cada usuario sin uno
+        for (const user of usersWithoutRanking) {
+            if (!user.id) {
+                throw new Error("El user_id no está definido");
+            }
+            // Crear el registro en Ranking sin casting
+            yield ranking_model_1.Ranking.create({
+                user_id: user.id, // Usa el ID del usuario recién creado
+                points: 0, // Puntos iniciales (opcional)
+                division: 4, // División inicial (opcional)
+            });
+        }
+        console.log("Ranking inicializado para usuarios existentes.");
+    }
+    catch (error) {
+        console.error(`Error al inicializar el ranking: ${error.message}`);
+    }
+});
+exports.populateRankingForExistingUsers = populateRankingForExistingUsers;
 const deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield user_model_1.User.destroy({ where: { id: id } });

@@ -27,6 +27,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const getOneUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    
+    if (!id || typeof id !== 'string') {
+      return HttpResponse.INVALID_TYPE_ERROR(res, 'ID de usuario no válido');
+    }
     const user = await getUser(id);
     if(!user) return HttpResponse.DATA_BASE_ERROR(res, 'Usuario no encontrado');
     return HttpResponse.OK(res, user);

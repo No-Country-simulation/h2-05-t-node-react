@@ -21,7 +21,7 @@ export class User extends Model<User, userInterface> {
     primaryKey: true,
     defaultValue: UUIDV4,
   })
-  id?: string;
+  id!: string;
 
   @Column({
     type: DataType.STRING,

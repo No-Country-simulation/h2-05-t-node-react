@@ -1,7 +1,8 @@
 import { predictionInterface } from "../interfaces/prediction.interface";
 import { Prediction } from "../models/prediction.model";
 import { PredictionRecord } from "../models/predictionRecord.model";
-import { Ranking } from "../models/ranking.model";
+//import { Ranking } from "../models/ranking.model";
+import { addPoints } from "./ranking.service";
 
 export const getPredictions = async (): Promise<Prediction[]> => {
   try {
@@ -83,15 +84,9 @@ export const updatePrediction = async (
 
     // Verificar si la predicción ha cambiado a "win" cambiar por el estada usado
     if (updateData.status === "win" && previousStatus !== "win") {
-      // Obtener el ranking del usuario asociado
-      const ranking = await Ranking.findOne({
-        where: { user_id: prediction.user_id },
-      });
-
-      if (ranking) {
-        // Sumar los puntos al ranking
-        ranking.points += prediction.total_points;
-        await ranking.save();
+      const point=addPoints(id, prediction.total_points)
+      if(!point){
+        throw new Error("No se pudo añadir los puntos a la clasificación")
       }
     }
     // Actualizar registro en el historial de predicciones
