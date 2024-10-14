@@ -86,8 +86,6 @@ export const login = async (req: Request, res: Response) => {
   try {
     const JWT_KEY = process.env.JWT_KEY;
     const { email, password }: { email: string; password: string } = req.body;
-    console.log(req.body);
-    
     if (!(email && password)) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
@@ -96,8 +94,6 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const user = await User.findOne({where:{email:email}});
-    console.log(user);
-    
     if (!user) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
@@ -117,6 +113,7 @@ export const login = async (req: Request, res: Response) => {
       expiresIn: "24h",
     });
     const response = {
+      token: token,
       user: {
         id: user.id,
         name: user.username,
