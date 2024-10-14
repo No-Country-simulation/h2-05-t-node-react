@@ -18,9 +18,9 @@ dotenv.config();
 
 export const getMatchApi = async (req: Request, res: Response) => {
   try {
-    const { from, to, league } = req.query;
+    const { from, to, match_id, league } = req.query;
 
-    const result = await getMatch(from, to, league);
+    const result = await getMatch(from, to, match_id, league);
     if (!result) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,

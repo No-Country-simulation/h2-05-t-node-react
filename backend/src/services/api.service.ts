@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 
 dotenv.config();
-/* const newUrl = 'https://apiv3.apifootball.com/?action=get_events&from=2024-10-15&to=2024-10-15&APIkey=de69952c46df638a94823e1de7d5ecfa9bab945489bccff2fdd1c38bd0b6f432' */
+
 export const getAllMatches = async (from: any, to: any) => {
   try {
     const baseUrl = process.env.API_URL;
@@ -39,13 +39,24 @@ export const getAllMatches = async (from: any, to: any) => {
   }
 };
 
-export const getMatch = async (from: any, to: any, league: any) => {
+export const getMatch = async (
+  from: any,
+  to: any,
+  match_id: any,
+  league: any
+) => {
   try {
+    let url: any;
     const baseUrl = process.env.API_URL;
-
-    const url = `${baseUrl}get_predictions&from=${from}&to=${to}&APIkey=${
-      process.env.API_KEY_APIFOOTBALL || ""
-    }&league_id=${league}`;
+    if (league) {
+      url = `${baseUrl}get_predictions&from=${from}&to=${to}&APIkey=${
+        process.env.API_KEY_APIFOOTBALL || ""
+      }&league_id=${league}`;
+    } else {
+      url = `${baseUrl}get_predictions&from=${from}&to=${to}&APIkey=${
+        process.env.API_KEY_APIFOOTBALL || ""
+      }&match_id=${match_id}`;
+    }
 
     const response = await fetch(url, {
       method: "GET",
@@ -58,6 +69,10 @@ export const getMatch = async (from: any, to: any, league: any) => {
 
     const result = await response.json();
     const filteredResults = result.map((item: any) => ({
+      country_name: item.country_name,
+      country_id: item.country_id,
+      league_id: item.league_id,
+      league_name: item.league_name,
       match_id: item.match_id,
       match_date: item.match_date,
       hometeam_id: item.match_hometeam_id,
@@ -110,6 +125,10 @@ export const getRecords = async (
     });
 
     const filteredResults = record.map((item: any) => ({
+      country_name: item.country_name,
+      country_id: item.country_id,
+      league_id: item.league_id,
+      league_name: item.league_name,
       match_id: item.match_id,
       match_date: item.match_date,
       hometeam_id: item.match_hometeam_id,
