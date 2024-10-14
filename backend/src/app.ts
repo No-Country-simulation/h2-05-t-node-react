@@ -9,6 +9,7 @@ import rankingRoutes from "./routes/ranking.routes";
 import { errorHandler } from "./middlewares/errorHandler";
 import cors from "cors";
 import predictionRouter from "./routes/prediction.routes";
+import './cron/adjustPredictionsCron';
 
 const app = express();
 
