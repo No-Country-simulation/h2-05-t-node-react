@@ -20,16 +20,14 @@ const LoginForm = () => {
     const handleValidation = () => {
         let newErrors = {}
 
-        if (!formValues.emailOrPhone) {
+        if (!formValues.emailOrPhone || !formValues.emailOrPhone.trim()) {
             newErrors.emailOrPhone = 'El email o teléfono es obligatorio.'
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.emailOrPhone) && !/^\d{10}$/.test(formValues.emailOrPhone)) {
             newErrors.emailOrPhone = 'Debes ingresar un email válido o un teléfono de 10 dígitos.'
         }
 
-        if (!formValues.password) {
+        if (!formValues.password || !formValues.password.trim()) {
             newErrors.password = 'La contraseña es obligatoria.'
-        } else if (formValues.password.length < 8) {
-            newErrors.password = 'La contraseña debe tener al menos 8 caracteres.'
         }
 
         setError(newErrors)

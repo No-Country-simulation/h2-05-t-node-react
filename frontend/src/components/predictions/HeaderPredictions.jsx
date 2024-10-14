@@ -21,7 +21,7 @@ const HeaderPredictions = () => {
                     <div className="w-[35%] text-regular flex justify-end">
                         <span className="w-[110px] lg:w-full text-secondary">¿Te quedaste sin predicciones?</span>
                     </div>
-                    <Button>Compras predicciones</Button>
+                    <Button>Comprar predicciones</Button>
                 </div>
             </div>
         </section>

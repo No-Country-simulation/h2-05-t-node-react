@@ -28,7 +28,7 @@ const RegisterForm = () => {
     const handleValidation = () => {
         let newErrors = {}
 
-        if (!formValues.username) {
+        if (!formValues.username || !formValues.username.trim()) {
             newErrors.username = 'El nombre de usuario es obligatorio.'
         }
 
@@ -38,7 +38,7 @@ const RegisterForm = () => {
             newErrors.emailOrPhone = 'Debes ingresar un email válido o un teléfono de 10 dígitos.'
         }
 
-        if (!formValues.password) {
+        if (!formValues.password || !formValues.password.trim()) {
             newErrors.password = 'La contraseña es obligatoria.'
         } else if (formValues.password.length < 8) {
             newErrors.password = 'La contraseña debe tener al menos 8 caracteres.'
