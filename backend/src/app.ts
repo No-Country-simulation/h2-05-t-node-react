@@ -1,25 +1,32 @@
-import express from 'express';
-import './cron/adjustPredictionsCron';
-import apiRouter from './routes/api.router';
-import userRouter from './routes/user.router';
-import { errorHandler } from './middlewares/errorHandler';
-import cors from "cors"
-import matchRouter from './routes/match.router';
-import predictionRouter from './routes/prediction.router';
-import futurePredictionRouter from './routes/futurePrediction.router';
+import express from "express";
+import passport from "passport";
+import "./config/passportConfig";
+import authRoutes from "./routes/auth.routes";
+import apiRoutes from "./routes/api.routes";
+import userRoutes from "./routes/user.routes";
+import matchRoutes from "./routes/match.routes";
+import rankingRoutes from "./routes/ranking.routes";
+import { errorHandler } from "./middlewares/errorHandler";
+import cors from "cors";
+import predictionRouter from "./routes/prediction.routes";
 
 const app = express();
 
 app.use(errorHandler);
-app.use(cors())
+app.use(cors());
+
+// Inicializar Passport
+app.use(passport.initialize());
 
 // Middlewares globales
 app.use(express.json()); // Para parsear JSON
-app.use(express.urlencoded({ extended: true })); // Para parsear URL-encoded
+app.use(express.urlencoded({ extended: false })); // Para parsear URL-encoded
 
-app.use('/api/users', userRouter);
-app.use('/api/match', matchRouter);
-app.use('/api/prediction', predictionRouter, futurePredictionRouter);
-app.use('', apiRouter)
+app.use("/auth", authRoutes);
+app.use("/auth", rankingRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/match", matchRoutes);
+app.use("/api/prediction", predictionRouter);
+app.use("", apiRoutes);
 
 export default app;

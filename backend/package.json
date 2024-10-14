@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "dev": "tsc && nodemon --exec ts-node src/server.ts",
     "start": "nodemon --watch src --exec ts-node src/server.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +21,9 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
     "node-cron": "^3.0.3",
+    "nodemon": "^3.1.7",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "sequelize": "^6.37.3",
     "sequelize-typescript": "^2.1.6"
   },
@@ -30,8 +34,10 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.5.5",
     "@types/node-cron": "^3.0.11",
+    "@types/passport": "^1.0.16",
+    "@types/passport-google-oauth20": "^2.0.16",
     "@types/sequelize": "^4.28.20",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   }
 }

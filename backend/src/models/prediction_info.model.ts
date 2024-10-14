@@ -4,7 +4,8 @@ import {
   Column,
   Model,
   DataType,
-  ForeignKey
+  ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { Match } from "./match.model";
 import { Prediction } from "./prediction.model";
@@ -34,7 +35,7 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
     type: DataType.UUID,
     allowNull: false,
   })
-  prediction_id!: string; 
+  prediction_id!: string;
 
   @Column({
     type: DataType.ENUM("win_a", "win_b", 'draw'),
@@ -57,9 +58,12 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   prediction_date!: Date;
 
   @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: true
+    type: DataType.STRING,
+    defaultValue: "pending",
   })
-  status!: boolean
+  status!: string;
 
+  // Relación muchos a 1 con Prediction
+  @BelongsTo(() => Prediction)
+  prediction!: Prediction;
 }

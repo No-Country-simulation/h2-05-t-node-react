@@ -7,11 +7,15 @@ import { Prediction } from '../models/prediction.model';
 import { User } from '../models/user.model';
 import { Ranking } from '../models/ranking.model';
 import { Prize } from '../models/prize.model';
-import { predictionRecord } from '../models/predictionRecord.model';
+import { PredictionRecord } from '../models/predictionRecord.model';
 import { FuturePredictions } from '../models/FuturePredictions.model';
 import { UserPredictions } from '../models/UserPredictions.model';
 
 dotenv.config();
+
+if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_HOST) {
+  throw new Error('Faltan variables de entorno para la configuración de la base de datos.');
+}
 
 const sequelize = new Sequelize({
   database: process.env.DB_NAME || 'mydb',
@@ -19,8 +23,23 @@ const sequelize = new Sequelize({
   password: process.env.DB_PASSWORD || 'password',
   host: process.env.DB_HOST || 'localhost',
   dialect: 'mysql',
-  models: [User, Match, League, PredictionInfo, Prediction, Ranking, Prize, predictionRecord, FuturePredictions, UserPredictions]
+  models: [User, Match, League, PredictionInfo, Prediction, Ranking, Prize, PredictionRecord, FuturePredictions, UserPredictions]
 });
+
+// Relacionar los modelos
+User.hasOne(Ranking);
+Ranking.belongsTo(User);
+
+User.hasMany(Prediction);
+Prediction.belongsTo(User);
+
+Prediction.hasMany(PredictionInfo);
+PredictionInfo.belongsTo(Prediction);
+
+Prediction.hasMany(PredictionRecord);
+PredictionRecord.belongsTo(Prediction);
+
+
 
 export default sequelize;
  

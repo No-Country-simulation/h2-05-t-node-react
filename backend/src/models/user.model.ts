@@ -1,7 +1,15 @@
 import { UUIDV4 } from "sequelize";
-import { Table, Column, Model, DataType, ForeignKey } from "sequelize-typescript";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  HasOne,
+  HasMany,
+} from "sequelize-typescript";
 import { Ranking } from "./ranking.model";
 import { userInterface } from "../interfaces/user.interface";
+import { Prediction } from "./prediction.model";
 //importar Match_record
 @Table({
   tableName: "users",
@@ -11,7 +19,7 @@ export class User extends Model<User, userInterface> {
   @Column({
     type: DataType.UUID,
     primaryKey: true,
-    defaultValue: UUIDV4
+    defaultValue: UUIDV4,
   })
   id?: string;
 
@@ -30,14 +38,14 @@ export class User extends Model<User, userInterface> {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   password!: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    defaultValue: 'Usuario'
+    defaultValue: "Usuario",
   })
   rol!: string;
 
@@ -68,15 +76,21 @@ export class User extends Model<User, userInterface> {
   })
   registration_date!: Date;
 
-  @ForeignKey(() => Ranking)
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  googleId!: string;
+
+  /*   @ForeignKey(() => Ranking)
   @Column({
     type: DataType.UUID,
     allowNull: true,
     onDelete: 'CASCADE'
   })
-  ranking_id!:string;
+  ranking_id!: string; */
 
-/*   @Column({
+  /*   @Column({
     type: DataType.STRING,
     references: {
       model: 'match_recod',
@@ -85,11 +99,19 @@ export class User extends Model<User, userInterface> {
   })
   match_recod_id!: string; */
 
-/*   @ForeignKey(() => Match_recod)  // Establece la clave foránea hacia el modelo 'League'
+  /*   @ForeignKey(() => Match_recod)  // Establece la clave foránea hacia el modelo 'League'
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
   match_recod_id!: string; */
-}
 
+  // relación 1 a 1 con Ranking
+  @HasOne(() => Ranking)
+  ranking!: Ranking;
+
+  // Relación 1 a muchos con Prediction
+  @HasMany(() => Prediction)
+  predictions!: Prediction[];
+
+}
