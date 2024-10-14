@@ -1,10 +1,48 @@
 import dotenv from "dotenv";
 
 dotenv.config();
+/* const newUrl = 'https://apiv3.apifootball.com/?action=get_events&from=2024-10-15&to=2024-10-15&APIkey=de69952c46df638a94823e1de7d5ecfa9bab945489bccff2fdd1c38bd0b6f432' */
+export const getAllMatches = async (from: any, to: any) => {
+  try {
+    const baseUrl = process.env.API_URL;
+    const url = `${baseUrl}get_events&from=${from}&to=${to}&APIkey=${
+      process.env.API_KEY_APIFOOTBALL || ""
+    }`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response) throw new Error("Error al obtener datos");
+
+    const result = await response.json();
+    const filteredResults = result.map((item: any) => ({
+      match_id: item.match_id,
+      match_date: item.match_date,
+      hometeam_id: item.match_hometeam_id,
+      homeTeam: item.match_hometeam_name,
+      awayteam_id: item.match_awayteam_id,
+      awayTeam: item.match_awayteam_name,
+      hometeam_score: item.match_hometeam_score,
+      awayteam_score: item.match_awayteam_score,
+      home_prob: item.prob_HW,
+      draw_prob: item.prob_D,
+      away_prob: item.prob_AW,
+    }));
+
+    return filteredResults;
+  } catch (error) {
+    throw new Error(`Error al obtener el usuario: ${(error as Error).message}`);
+  }
+};
 
 export const getMatch = async (from: any, to: any, league: any) => {
   try {
     const baseUrl = process.env.API_URL;
+
     const url = `${baseUrl}get_predictions&from=${from}&to=${to}&APIkey=${
       process.env.API_KEY_APIFOOTBALL || ""
     }&league_id=${league}`;
@@ -19,7 +57,6 @@ export const getMatch = async (from: any, to: any, league: any) => {
     if (!response) throw new Error("Error al obtener datos");
 
     const result = await response.json();
-
     const filteredResults = result.map((item: any) => ({
       match_id: item.match_id,
       match_date: item.match_date,
@@ -109,7 +146,7 @@ export const getCountries = async () => {
   }
 };
 
-export const getLeague = async (id:any) => {
+export const getLeague = async (id: any) => {
   try {
     const baseUrl = process.env.API_URL;
     const url = `${baseUrl}get_leagues&country_id=${id}&APIkey=${process.env.API_KEY_APIFOOTBALL}`;
@@ -125,9 +162,9 @@ export const getLeague = async (id:any) => {
   } catch (error) {
     throw new Error(`Error al obtener el usuario: ${(error as Error).message}`);
   }
-}
+};
 
-export const getTeam = async (id:any) => {
+export const getTeam = async (id: any) => {
   try {
     const baseUrl = process.env.API_URL;
     const url = `${baseUrl}get_teams&league_id=${id}&APIkey=${process.env.API_KEY_APIFOOTBALL}`;
@@ -140,19 +177,19 @@ export const getTeam = async (id:any) => {
     });
     const result = await response.json();
 
-    const filteredResults = result.map((item:any)=>({
+    const filteredResults = result.map((item: any) => ({
       team_id: item.team_key,
       team_name: item.team_name,
       team_country: item.team_country,
-      team_logo: item.team_badge
-    }))
+      team_logo: item.team_badge,
+    }));
     return filteredResults;
   } catch (error) {
     throw new Error(`Error al obtener el usuario: ${(error as Error).message}`);
   }
-}
+};
 
-export const getPlayer = async (id:any, tid:any) => {
+export const getPlayer = async (id: any, tid: any) => {
   try {
     const baseUrl = process.env.API_URL;
     const url = `${baseUrl}get_teams&league_id=${id}&team_id=${tid}&APIkey=${process.env.API_KEY_APIFOOTBALL}`;
@@ -173,16 +210,16 @@ export const getPlayer = async (id:any, tid:any) => {
         player_age: player.player_age,
         player_goals: player.player_goals,
         player_assists: player.player_assists,
-        player_red_cards: player.player_red_cards
-      }))
+        player_red_cards: player.player_red_cards,
+      })),
     }));
     return filteredResults;
   } catch (error) {
     throw new Error(`Error al obtener el usuario: ${(error as Error).message}`);
   }
-}
+};
 
-export const getPOnePlayer = async (name:any) => {
+export const getPOnePlayer = async (name: any) => {
   try {
     const baseUrl = process.env.API_URL;
     const url = `${baseUrl}get_players&player_name=${name}&APIkey=${process.env.API_KEY_APIFOOTBALL}`;
@@ -194,7 +231,7 @@ export const getPOnePlayer = async (name:any) => {
       },
     });
     const result = await response.json();
-    const filteredResults = result.map((item:any)=>({
+    const filteredResults = result.map((item: any) => ({
       player_id: item.player_key,
       player_name: item.player_name,
       player_country: item.player_country,
@@ -204,10 +241,10 @@ export const getPOnePlayer = async (name:any) => {
       player_age: item.player_age,
       player_goals: item.player_goals,
       player_team: item.team_name,
-      player_rating: item.player_rating
-    }))
+      player_rating: item.player_rating,
+    }));
     return filteredResults;
   } catch (error) {
     throw new Error(`Error al obtener el usuario: ${(error as Error).message}`);
   }
-}
+};

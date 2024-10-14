@@ -5,7 +5,7 @@ import {
   Model,
   DataType,
   ForeignKey,
-  BelongsTo,
+  
 } from "sequelize-typescript";
 import { Match } from "./match.model";
 import { Prediction } from "./prediction.model";
@@ -31,7 +31,6 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   match_id!: string;
 
   @ForeignKey(() => Prediction)
-  @BelongsTo(() => Prediction)
   @Column({
     type: DataType.UUID,
     allowNull: false,
