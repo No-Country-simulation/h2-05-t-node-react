@@ -66,10 +66,10 @@ __decorate([
 ], PredictionInfo.prototype, "prediction_date", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.BOOLEAN,
-        defaultValue: true,
+        type: sequelize_typescript_1.DataType.STRING,
+        defaultValue: "pending",
     }),
-    __metadata("design:type", Boolean)
+    __metadata("design:type", String)
 ], PredictionInfo.prototype, "status", void 0);
 __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => prediction_model_1.Prediction),

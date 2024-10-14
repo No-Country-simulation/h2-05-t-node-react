@@ -3,7 +3,6 @@ import { Prediction } from "../models/prediction.model";
 import { PredictionRecord } from "../models/predictionRecord.model";
 import { HistoryFilterOptions } from "../interfaces/prediction.interface";
 
-// Filtrar el historial de predicciones de un usuario con paginación y filtros
 export const predictionHistoryByUser = async (
   userId: string,
   filters: HistoryFilterOptions

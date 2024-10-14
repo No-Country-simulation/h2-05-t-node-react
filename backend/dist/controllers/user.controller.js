@@ -34,6 +34,9 @@ exports.getAllUsers = getAllUsers;
 const getOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || typeof id !== 'string') {
+            return HttpResponse.INVALID_TYPE_ERROR(res, 'ID de usuario no válido');
+        }
         const user = yield (0, user_service_1.getUser)(id);
         if (!user)
             return HttpResponse.DATA_BASE_ERROR(res, 'Usuario no encontrado');

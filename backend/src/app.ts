@@ -10,6 +10,9 @@ import { errorHandler } from "./middlewares/errorHandler";
 import cors from "cors";
 import predictionRouter from "./routes/prediction.routes";
 import './cron/adjustPredictionsCron';
+import predictionRecordRoutes from "./routes/predictionRecord.routes";
+import swaggerConfig from "./config/swaggerConfig";
+
 
 const app = express();
 
@@ -19,12 +22,16 @@ app.use(cors());
 // Inicializar Passport
 app.use(passport.initialize());
 
+// Configurar Swagger
+swaggerConfig(app);
+
 // Middlewares globales
 app.use(express.json()); // Para parsear JSON
 app.use(express.urlencoded({ extended: false })); // Para parsear URL-encoded
 
 app.use("/auth", authRoutes);
-app.use("/auth", rankingRoutes);
+app.use("/api/ranking", rankingRoutes);
+app.use("/api/", predictionRecordRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/match", matchRoutes);
 app.use("/api/prediction", predictionRouter);

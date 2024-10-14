@@ -88,7 +88,7 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.HasMany)(() => prediction_info_model_1.PredictionInfo),
     __metadata("design:type", Array)
-], Prediction.prototype, "PredictionInfos", void 0);
+], Prediction.prototype, "predictionInfos", void 0);
 __decorate([
     (0, sequelize_typescript_1.HasMany)(() => predictionRecord_model_1.PredictionRecord),
     __metadata("design:type", Array)

@@ -1,19 +1,21 @@
 import { UUIDV4 } from "sequelize";
 import {
   Table,
-  Column,
   Model,
   DataType,
+  Column,
   ForeignKey,
   BelongsTo,
 } from "sequelize-typescript";
 import { User } from "./user.model";
+import { RankingAttributes } from "../interfaces/ranking.interface";
 
 @Table({
   tableName: "ranking",
   timestamps: true,
 })
-export class Ranking extends Model<Ranking> {
+export class Ranking extends Model<Ranking,RankingAttributes>
+ {
   @Column({
     type: DataType.UUID,
     primaryKey: true,
@@ -31,24 +33,20 @@ export class Ranking extends Model<Ranking> {
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
     defaultValue: 0,
   })
   points!: number;
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  })
-  position!: number;
-
-  @Column({
-    type: DataType.INTEGER,
-    defaultValue: 1,
+    defaultValue: 4,
   })
   division!: number;
 
-  @BelongsTo(() => User)
+  @BelongsTo(() => User, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    hooks: true,
+  })
   user!: User;
 }
