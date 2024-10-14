@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage"
 import MatchesPage from './pages/MatchesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PredictionsPage from './pages/PredictionsPage';
+import MatchesCompletedPage from './pages/MatchesCompletedPage';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/matches" element={<MatchesPage />} />
+          <Route path="/matches-completed" element={<MatchesCompletedPage />} />
           <Route path="/predictions" element={<PredictionsPage />} />
           <Route path="*" element={<NotFoundPage />} />
      
