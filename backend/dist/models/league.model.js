@@ -37,6 +37,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], League.prototype, "country", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        allowNull: false,
+    }),
+    __metadata("design:type", Number)
+], League.prototype, "id_apiLeague", void 0);
 exports.League = League = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "leagues",

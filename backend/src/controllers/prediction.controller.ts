@@ -1,19 +1,13 @@
-import { matchInterface } from "../interfaces/match.interface";
-import { predictionInterface } from "../interfaces/prediction.interface";
-import { predictionInfo } from "../interfaces/predictionInfo.interface";
-import { PredictionInfo } from "../models/prediction_info.model";
 import { CreateOneMatch } from "../services/match.service";
 import {
-  createPrediction,
+  createPredictions,
   deletePrediction,
   getPrediction,
   getPredictions,
   updatePrediction,
-  userOnePrediction,
 } from "../services/prediction.service";
 import { httpResponse } from "../utils/enumsErrors";
 import { Request, Response } from "express";
-import { canCreatePrediction } from "../utils/predictions";
 
 const HttpResponse = new httpResponse();
 
@@ -42,59 +36,43 @@ export const getOnePrediction = async (req: Request, res: Response) => {
   }
 };
 
-export const createOnePrediction = async (req: Request, res: Response) => {
+export const postCreatePrediction = async (req: Request, res: Response) => {
   try {
     const data = req.body;
-
-    const userId = data.user_id;
-
-    // Verificar si el usuario puede hacer una predicción hoy
-    const canCreate = await canCreatePrediction(userId, res);
-    if (!canCreate) return; // Si no puede crear una predicción, ya se envió la respuesta
-
-    //crear prediccion
-    const dataPrediction: predictionInterface = {
-      user_id: data.user_id,
-      type: data.type,
-      date: data.date,
-      status: data.status,
-    };
-    const prediction = await createPrediction(dataPrediction);
-    if (!prediction) {
+    /*   (
+      user: User,
+      predictions: {
+        match_id: string;
+        predictionType: "match" | "player";
+        selectedPredictionType: "win_home" | "win_away" | "draw" | "player";
+        fee: number;
+        quotaType: "daily" | "future";
+        date: Date;
+      }[],
+      type: "simple" | "chained",
+      match: {
+        team_a: team_a,
+        team_b: team_b,
+        match_date: match_date,
+        status: status,
+        id_apiMatch: id_apiMatch,
+        league_id: league_id,
+    ) */
+    const predictions = await createPredictions(
+      data.user,
+      data.predictions,
+      data.type
+    );
+    if (!predictions) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
     }
 
     //Crear partido
-    const dataMatch: matchInterface = {
-      team_a: data.team_a,
-      team_b: data.team_b,
-      match_date: data.match_date,
-      status: data.status,
-      id_apiMatch: data.id_apiMatch,
-      league_id: data.league_id,
-    };
-    const match = await CreateOneMatch(dataMatch);
+    const match = await CreateOneMatch(data.match);
     if (!match) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
     }
-    //Crear la informacion de la prediccion
-    const dataPredictionInfo: predictionInfo = {
-      match_id: match.id,
-      prediction_id: prediction.id,
-      prediction: data.prediction,
-      fee: data.fee,
-      prediction_date: data.date,
-      status: data.status,
-    };
-    const predictionInfo = await PredictionInfo.create(dataPredictionInfo);
-    if (!predictionInfo) {
-      return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
-    }
-    return HttpResponse.OK(res, {
-      match: match,
-      prediction: prediction,
-      prediction_info: predictionInfo,
-    });
+    return HttpResponse.OK(res, "Prediccion creada con exito");
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }
@@ -126,7 +104,7 @@ export const updateOnePrediction = async (req: Request, res: Response) => {
   }
 };
 
-export const userPredictions = async (req: Request, res: Response) => {
+/* export const userPredictions = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const prediction = await userOnePrediction(id);
@@ -139,3 +117,15 @@ export const userPredictions = async (req: Request, res: Response) => {
     return HttpResponse.Error(res, (error as Error).message);
   }
 };
+
+// Endpoint para usar una predicción futura con un día pasado desde el front-end
+export const createFuturePrediction = async (req: Request, res: Response) => {
+  try {
+    const userId = req.body.user_id;
+    const futureDate = req.body.future_date; // El día futuro pasado desde el front-end
+    await handleFuturePrediction(userId, futureDate, res);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+};
+ */

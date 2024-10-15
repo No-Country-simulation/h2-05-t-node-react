@@ -1,4 +1,4 @@
-
+/* 
 import { Op } from 'sequelize';
 import { httpResponse } from './enumsErrors';
 import { UserPredictions } from '../models/UserPredictions.model';
@@ -82,3 +82,4 @@ export const canCreatePrediction = async (userId: string, res: any) => {
 
   return true;  // El usuario puede crear una predicción
 };
+ */

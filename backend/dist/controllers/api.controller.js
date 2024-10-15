@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOnePlayerApi = exports.getPlayerApi = exports.getTeamApi = exports.getLeagueApi = exports.getCountriesApi = exports.getRecord = exports.getMatchApi = void 0;
+exports.getOnePlayerApi = exports.getPlayerApi = exports.getTeamApi = exports.getLeagueApi = exports.getCountriesApi = exports.getRecord = exports.getAllMatchesApi = exports.getMatchApi = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const api_service_1 = require("../services/api.service");
 const enumsErrors_1 = require("../utils/enumsErrors");
@@ -20,8 +20,8 @@ const HttpResponse = new enumsErrors_1.httpResponse();
 dotenv_1.default.config();
 const getMatchApi = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { from, to, league } = req.query;
-        const result = yield (0, api_service_1.getMatch)(from, to, league);
+        const { from, to, match_id, league } = req.query;
+        const result = yield (0, api_service_1.getMatch)(from, to, match_id, league);
         if (!result) {
             return HttpResponse.INVALID_TYPE_ERROR(res, `Error fetching data: ${result.statusText}`);
         }
@@ -32,6 +32,22 @@ const getMatchApi = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getMatchApi = getMatchApi;
+const getAllMatchesApi = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const from = req.query.from;
+        const to = req.query.to;
+        const { match_id, league } = req.query;
+        const matches = yield (0, api_service_1.getAllMatches)(from, to, match_id, league);
+        if (!matches) {
+            return HttpResponse.INVALID_TYPE_ERROR(res, `Error fetching data: Matches not found`);
+        }
+        return HttpResponse.OK(res, matches);
+    }
+    catch (error) {
+        return HttpResponse.Error(res, error.message);
+    }
+});
+exports.getAllMatchesApi = getAllMatchesApi;
 const getRecord = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { to, league, team_a, team_b } = req.query;

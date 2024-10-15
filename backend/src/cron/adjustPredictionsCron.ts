@@ -1,28 +1,36 @@
 import cron from "node-cron";
-import { getUsers } from "../services/user.service"; // Asume que tienes una función para obtener todos los usuarios
-import { adjustFuturePredictionsIfNeeded } from "../utils/futurePrediction";
+import { PredictionQuota } from "../models/predictionQuota.model";
 
-// Cron job que se ejecuta diariamente a la medianoche
-cron.schedule("0 0 * * *", async () => {
-  console.log("Ajustando predicciones futuras para todos los usuarios...");
 
-  try {
-    // Obtener todos los usuarios
-    const users = await getUsers();
+// Ejecutar todos los días a la medianoche
+cron.schedule('0 0 * * *', async () => {
+  const today = new Date(); // Fecha actual
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1); // Obtenemos el día siguiente
 
-    if (!users) {
-      throw new Error("Usuarios no encontrados");
+  // Resetear predicciones diarias a 5 para todos los usuarios
+  await PredictionQuota.update({ daily_predictions_left: 5 }, {
+    where: {
+      date: today, // Solo para el día de hoy
+    },
+  });
+
+  // Ajustar las predicciones futuras que ya se hicieron para mañana
+  const futureQuotas = await PredictionQuota.findAll({
+    where: {
+      date: tomorrow, // Encontrar cuotas para mañana
+    },
+  });
+
+  // Restar las futuras del número total de predicciones diarias para mañana
+  for (const quota of futureQuotas) {
+    if (quota.future_predictions_left < 2) {
+      const usedFutures = 2 - quota.future_predictions_left;
+      quota.daily_predictions_left -= usedFutures;
+      if (quota.daily_predictions_left < 0) {
+        quota.daily_predictions_left = 0;
+      }
+      await quota.save();
     }
-
-    for (const user of users) {
-      // Ajustar las predicciones futuras para cada usuario si es necesario
-      await adjustFuturePredictionsIfNeeded(user.id!);
-    }
-
-    console.log("Predicciones futuras ajustadas correctamente.");
-  } catch (error) {
-    console.error("Error al ajustar predicciones futuras:", error);
   }
 });
-
-console.log("Cron ejecutandose");

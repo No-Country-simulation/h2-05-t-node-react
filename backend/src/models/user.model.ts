@@ -82,30 +82,6 @@ export class User extends Model<User, userInterface> {
   })
   googleId!: string;
 
-  /*   @ForeignKey(() => Ranking)
-  @Column({
-    type: DataType.UUID,
-    allowNull: true,
-    onDelete: 'CASCADE'
-  })
-  ranking_id!: string; */
-
-  /*   @Column({
-    type: DataType.STRING,
-    references: {
-      model: 'match_recod',
-      key: 'match_recod_id'
-    }
-  })
-  match_recod_id!: string; */
-
-  /*   @ForeignKey(() => Match_recod)  // Establece la clave foránea hacia el modelo 'League'
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  match_recod_id!: string; */
-
   // relación 1 a 1 con Ranking
   @HasOne(() => Ranking)
   ranking!: Ranking;

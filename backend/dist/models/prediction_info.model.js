@@ -43,11 +43,25 @@ __decorate([
 ], PredictionInfo.prototype, "prediction_id", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
-        allowNull: false,
+        type: sequelize_typescript_1.DataType.ENUM("match", "player"),
+        allowNull: false
     }),
     __metadata("design:type", String)
-], PredictionInfo.prototype, "predicion", void 0);
+], PredictionInfo.prototype, "predictionType", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.ENUM("daily", "future"),
+        allowNull: false
+    }),
+    __metadata("design:type", String)
+], PredictionInfo.prototype, "predictionQuotaType", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.ENUM("win_home", "win_away", 'draw', 'player'),
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], PredictionInfo.prototype, "selectedPredictionType", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,

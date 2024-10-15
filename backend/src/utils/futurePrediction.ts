@@ -1,18 +1,18 @@
-import { httpResponse } from "./enumsErrors";
-import { FuturePredictions } from "../models/FuturePredictions.model";
-import { Op } from "sequelize";
-import { UserPredictions } from "../models/UserPredictions.model";
+//import { httpResponse } from "./enumsErrors";
+//import { FuturePredictions } from "../models/FuturePredictions.model";
+//import { Op } from "sequelize";
+//import { UserPredictions } from "../models/UserPredictions.model";
 
-
+/* 
 const MAX_FUTURE_PREDICTIONS = 2;
 const MAX_PREDICTIONS_PER_DAY = 5;
 
-const HttpResponse = new httpResponse();
+const HttpResponse = new httpResponse(); */
 /**
  * Función para manejar la creación de predicciones futuras con el día específico pasado desde el front-end.
  * Se asegura de que no haya más de una predicción futura pendiente.
  */
-export const handleFuturePrediction = async (
+/* export const handleFuturePrediction = async (
   userId: string,
   futureDate: string,
   res: any
@@ -130,3 +130,4 @@ export const adjustFuturePredictionsIfNeeded = async (userId: string) => {
     console.log('No hay predicciones futuras pendientes para ajustar.');
     return false;  // No se necesitó ajuste
   };
+ */

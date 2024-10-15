@@ -13,6 +13,7 @@ const user_model_1 = require("../models/user.model");
 const ranking_model_1 = require("../models/ranking.model");
 const prize_model_1 = require("../models/prize.model");
 const predictionRecord_model_1 = require("../models/predictionRecord.model");
+const predictionQuota_model_1 = require("../models/predictionQuota.model");
 dotenv_1.default.config();
 if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_HOST) {
     throw new Error('Faltan variables de entorno para la configuración de la base de datos.');
@@ -23,7 +24,7 @@ const sequelize = new sequelize_typescript_1.Sequelize({
     password: process.env.DB_PASSWORD || 'password',
     host: process.env.DB_HOST || 'localhost',
     dialect: 'mysql',
-    models: [user_model_1.User, match_model_1.Match, league_model_1.League, prediction_info_model_1.PredictionInfo, prediction_model_1.Prediction, ranking_model_1.Ranking, prize_model_1.Prize, predictionRecord_model_1.PredictionRecord]
+    models: [user_model_1.User, match_model_1.Match, league_model_1.League, prediction_info_model_1.PredictionInfo, prediction_model_1.Prediction, ranking_model_1.Ranking, prize_model_1.Prize, predictionRecord_model_1.PredictionRecord, predictionQuota_model_1.PredictionQuota]
 });
 // Relacionar los modelos
 user_model_1.User.hasOne(ranking_model_1.Ranking);
@@ -34,5 +35,7 @@ prediction_model_1.Prediction.hasMany(prediction_info_model_1.PredictionInfo);
 prediction_info_model_1.PredictionInfo.belongsTo(prediction_model_1.Prediction);
 prediction_model_1.Prediction.hasMany(predictionRecord_model_1.PredictionRecord);
 predictionRecord_model_1.PredictionRecord.belongsTo(prediction_model_1.Prediction);
+user_model_1.User.hasMany(predictionQuota_model_1.PredictionQuota);
+predictionQuota_model_1.PredictionQuota.belongsTo(user_model_1.User);
 exports.default = sequelize;
 //# sourceMappingURL=database.js.map

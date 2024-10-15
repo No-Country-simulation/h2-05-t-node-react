@@ -8,8 +8,7 @@ import { User } from '../models/user.model';
 import { Ranking } from '../models/ranking.model';
 import { Prize } from '../models/prize.model';
 import { PredictionRecord } from '../models/predictionRecord.model';
-import { FuturePredictions } from '../models/FuturePredictions.model';
-import { UserPredictions } from '../models/UserPredictions.model';
+import { PredictionQuota } from '../models/predictionQuota.model';
 
 dotenv.config();
 
@@ -23,7 +22,7 @@ const sequelize = new Sequelize({
   password: process.env.DB_PASSWORD || 'password',
   host: process.env.DB_HOST || 'localhost',
   dialect: 'mysql',
-  models: [User, Match, League, PredictionInfo, Prediction, Ranking, Prize, PredictionRecord, FuturePredictions, UserPredictions]
+  models: [User, Match, League, PredictionInfo, Prediction, Ranking, Prize, PredictionRecord, PredictionQuota]
 });
 
 // Relacionar los modelos
@@ -38,6 +37,9 @@ PredictionInfo.belongsTo(Prediction);
 
 Prediction.hasMany(PredictionRecord);
 PredictionRecord.belongsTo(Prediction);
+
+User.hasMany(PredictionQuota);
+PredictionQuota.belongsTo(User);
 
 
 

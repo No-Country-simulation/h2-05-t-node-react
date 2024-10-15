@@ -40,7 +40,7 @@ const CreateOneMatch = (data) => __awaiter(void 0, void 0, void 0, function* () 
         const match = yield match_model_1.Match.create(data);
         if (!match)
             throw new Error("Partido no creado");
-        return { msg: "Partido creado" };
+        return match;
     }
     catch (error) {
         throw new Error(`Error al crear el partido: ${error.message}`);
