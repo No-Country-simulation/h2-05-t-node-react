@@ -83,3 +83,9 @@ Este proyecto expone una serie de endpoints para obtener información sobre part
 - **Parámetros:**
   - `name` (string, obligatorio): Nombre del jugador.
 
+## Ejemplos de Uso
+
+1. **Obtener información de partidos entre dos fechas:**
+
+   ```bash
+   GET /api_match?from=2023-10-01&to=2023-10-15&league=666
