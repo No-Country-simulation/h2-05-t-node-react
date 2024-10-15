@@ -21,6 +21,36 @@ export const predicionValidator = [
     .withMessage("El estatus es obligatorio")
     .isBoolean()
     .withMessage('El estatus es un booleano'),
+    body('team_a')
+    .notEmpty()
+    .trim()
+    .withMessage("El equipo local es obligatorio"),
+    body('team_b')
+    .notEmpty()
+    .trim()
+    .withMessage("El equipo visitante es obligatorio"),
+    body('match_date')
+    .notEmpty()
+    .trim()
+    .withMessage("La fecha del partido es obligatoria")
+    .isDate({ format: 'YYYY-MM-DD' })
+    .withMessage('La fecha debe ser válida'),
+    body('id_apiMatch')
+    .notEmpty()
+    .trim()
+    .withMessage("El id de la api es obligatorio"),
+    body('league_id')
+    .notEmpty()
+    .trim()
+    .withMessage("El id de la liga es obligatorio"),
+    body('prediction')
+    .notEmpty()
+    .trim()
+    .withMessage("La predicción es obligatoria"),
+    body('fee')
+    .notEmpty()
+    .trim()
+    .withMessage("El fee es obligatorio"),
 ]
 
 export const handleUserValidationErrors = (

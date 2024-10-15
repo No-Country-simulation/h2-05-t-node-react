@@ -9,7 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const database_1 = __importDefault(require("./config/database"));
 dotenv_1.default.config();
 const PORT = process.env.PORT || 3000;
-database_1.default.sync({ alter: true }) // false para no sobrescribir tablas
+database_1.default.sync({ alter: false }) // false para no sobrescribir tablas
     .then(() => {
     console.log('Base de datos sincronizada');
     app_1.default.listen(PORT, () => {

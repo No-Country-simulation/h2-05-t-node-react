@@ -8,12 +8,16 @@ import {
   BelongsTo,
 } from "sequelize-typescript";
 import { Prediction } from "./prediction.model";
+import { predictionRecordInterface } from "../interfaces/predictionRecord.interface";
 
 @Table({
   tableName: "predictionRecord",
   timestamps: true,
 })
-export class PredictionRecord extends Model<PredictionRecord> {
+export class PredictionRecord extends Model<
+  PredictionRecord,
+  predictionRecordInterface
+> {
   @Column({
     type: DataType.UUID,
     defaultValue: UUIDV4,
@@ -28,6 +32,13 @@ export class PredictionRecord extends Model<PredictionRecord> {
     onDelete: "CASCADE",
   })
   prediction_id!: string;
+
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    onDelete: "CASCADE",
+  })
+  user_id!: string;
 
   @Column({
     type: DataType.DATE,

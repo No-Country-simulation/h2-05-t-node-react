@@ -24,4 +24,10 @@ export class League extends Model<League> {
     allowNull: false,
   })
   country!: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  id_apiLeague!: number;
 }

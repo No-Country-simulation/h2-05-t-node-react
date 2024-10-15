@@ -23,7 +23,7 @@ const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const users = yield (0, user_service_1.getUsers)();
         if (!users)
-            return HttpResponse.DATA_BASE_ERROR(res, 'Usuarios no encontrados');
+            return HttpResponse.DATA_BASE_ERROR(res, "Usuarios no encontrados");
         return HttpResponse.OK(res, users);
     }
     catch (error) {
@@ -34,12 +34,12 @@ exports.getAllUsers = getAllUsers;
 const getOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        if (!id || typeof id !== 'string') {
-            return HttpResponse.INVALID_TYPE_ERROR(res, 'ID de usuario no válido');
+        if (!id || typeof id !== "string") {
+            return HttpResponse.INVALID_TYPE_ERROR(res, "ID de usuario no válido");
         }
         const user = yield (0, user_service_1.getUser)(id);
         if (!user)
-            return HttpResponse.DATA_BASE_ERROR(res, 'Usuario no encontrado');
+            return HttpResponse.DATA_BASE_ERROR(res, "Usuario no encontrado");
         return HttpResponse.OK(res, user);
     }
     catch (error) {
@@ -50,14 +50,14 @@ exports.getOneUser = getOneUser;
 const createOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
-        if (typeof data.password !== 'string') {
-            return HttpResponse.Error(res, 'Password must be a string');
+        if (typeof data.password !== "string") {
+            return HttpResponse.Error(res, "Password must be a string");
         }
         const hashedPassword = yield bcrypt_1.default.hash(data.password, 10);
         data.password = hashedPassword;
         const user = yield (0, user_service_1.createUser)(data);
         if (!user)
-            return HttpResponse.DATA_BASE_ERROR(res, 'Error al cargar los datos');
+            return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar los datos");
         return HttpResponse.OK(res, user.msg);
     }
     catch (error) {
@@ -70,7 +70,7 @@ const deleteOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const { id } = req.params;
         const user = yield (0, user_service_1.deleteUser)(id);
         if (!user)
-            return HttpResponse.DATA_BASE_ERROR(res, 'Error al eliminar el usuario');
+            return HttpResponse.DATA_BASE_ERROR(res, "Error al eliminar el usuario");
         return HttpResponse.OK(res, user.msg);
     }
     catch (error) {
@@ -88,7 +88,7 @@ const updateOneUser = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         const user = yield (0, user_service_1.updateUser)(id, req.body);
         if (!user)
-            return HttpResponse.DATA_BASE_ERROR(res, 'Error al actualizar el usuario');
+            return HttpResponse.DATA_BASE_ERROR(res, "Error al actualizar el usuario");
         return HttpResponse.OK(res, user.msg);
     }
     catch (error) {
@@ -100,14 +100,12 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const JWT_KEY = process.env.JWT_KEY;
         const { email, password } = req.body;
-        console.log(req.body);
         if (!(email && password)) {
             return HttpResponse.INVALID_TYPE_ERROR(res, "Email y contraseña son obligatorios");
         }
         const user = yield user_model_1.User.findOne({ where: { email: email } });
-        console.log(user);
         if (!user) {
-            return HttpResponse.INVALID_TYPE_ERROR(res, "Email y contraseña son obligatorios");
+            return HttpResponse.INVALID_TYPE_ERROR(res, "Usuario no encontrado");
         }
         const isValidPassword = yield bcrypt_1.default.compare(password, user.password);
         if (!isValidPassword) {
@@ -118,6 +116,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             expiresIn: "24h",
         });
         const response = {
+            token: token,
             user: {
                 id: user.id,
                 name: user.username,
@@ -133,7 +132,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.cookie(process.env.PASS_COOKIE, token, {
             maxAge: 1000 * 60 * 60, // 1 hora
             httpOnly: false,
-            sameSite: 'none',
+            sameSite: "none",
         });
         return HttpResponse.OK(res, response);
     }

@@ -6,15 +6,17 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  
 } from "sequelize-typescript";
 import { Match } from "./match.model";
 import { Prediction } from "./prediction.model";
+import { predictionInfo } from "../interfaces/predictionInfo.interface";
 
 @Table({
   tableName: "prediction_info",
   timestamps: true,
 })
-export class PredictionInfo extends Model<PredictionInfo> {
+export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   @Column({
     type: DataType.UUID,
     defaultValue: UUIDV4,
@@ -37,10 +39,22 @@ export class PredictionInfo extends Model<PredictionInfo> {
   prediction_id!: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false,
+    type: DataType.ENUM("match", "player"),
+    allowNull: false
   })
-  predicion!: string;
+  predictionType!: string;
+  
+  @Column({
+    type: DataType.ENUM("daily", "future"),
+    allowNull: false
+  })
+  predictionQuotaType!: string;
+
+  @Column({
+    type: DataType.ENUM("win_home", "win_away", 'draw', 'player'),
+    allowNull: true
+  })
+  selectedPredictionType!: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -63,6 +77,6 @@ export class PredictionInfo extends Model<PredictionInfo> {
   status!: string;
 
   // Relación muchos a 1 con Prediction
-  @BelongsTo(() => Prediction)
-  prediction!: Prediction;
+   @BelongsTo(() => Prediction)
+  prediction!: Prediction; 
 }

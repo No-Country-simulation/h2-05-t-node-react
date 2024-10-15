@@ -4,8 +4,9 @@ export interface predictionInterface {
     type?: "simple" | "chained";
     bet_points?: number; 
     date?: Date; 
-    status?: boolean; 
+    status?: string; 
     total_points?: number;
+    total_fee?: number;
 }
 
 export interface HistoryFilterOptions {

@@ -12,13 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPOnePlayer = exports.getPlayer = exports.getTeam = exports.getLeague = exports.getCountries = exports.getRecords = exports.getMatch = void 0;
+exports.getPOnePlayer = exports.getPlayer = exports.getTeam = exports.getLeague = exports.getCountries = exports.getRecords = exports.getMatch = exports.getAllMatches = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const getMatch = (from, to, league) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllMatches = (from, to, match_id, league) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const baseUrl = process.env.API_URL;
-        const url = `${baseUrl}get_predictions&from=${from}&to=${to}&APIkey=${process.env.API_KEY_APIFOOTBALL || ""}&league_id=${league}`;
+        let url;
+        if (league) {
+            url = `${baseUrl}get_events&from=${from}&to=${to}&APIkey=${process.env.API_KEY_APIFOOTBALL || ""}&league_id=${league}`;
+        }
+        else if (match_id) {
+            url = `${baseUrl}get_events&from=${from}&to=${to}&APIkey=${process.env.API_KEY_APIFOOTBALL || ""}&match_id=${match_id}`;
+        }
+        else {
+            url = `${baseUrl}get_events&from=${from}&to=${to}&APIkey=${process.env.API_KEY_APIFOOTBALL || ""}`;
+        }
         const response = yield fetch(url, {
             method: "GET",
             headers: {
@@ -29,6 +38,8 @@ const getMatch = (from, to, league) => __awaiter(void 0, void 0, void 0, functio
             throw new Error("Error al obtener datos");
         const result = yield response.json();
         const filteredResults = result.map((item) => ({
+            league_name: item.league_name,
+            league_id: item.league_id,
             match_id: item.match_id,
             match_date: item.match_date,
             hometeam_id: item.match_hometeam_id,
@@ -40,11 +51,62 @@ const getMatch = (from, to, league) => __awaiter(void 0, void 0, void 0, functio
             home_prob: item.prob_HW,
             draw_prob: item.prob_D,
             away_prob: item.prob_AW,
+            team_home_badge: item.team_home_badge,
+            team_away_badge: item.team_away_badge,
+            match_status: item.match_status,
+            goalscorer: item.goalscorer
         }));
         return filteredResults;
     }
     catch (error) {
-        throw new Error(`Error al obtener el usuario: ${error.message}`);
+        throw new Error(`Error al obtener el la informacion: ${error.message}`);
+    }
+});
+exports.getAllMatches = getAllMatches;
+const getMatch = (from, to, match_id, league) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let url;
+        const baseUrl = process.env.API_URL;
+        if (league) {
+            url = `${baseUrl}get_predictions&from=${from}&to=${to}&APIkey=${process.env.API_KEY_APIFOOTBALL || ""}&league_id=${league}`;
+        }
+        else if (match_id) {
+            url = `${baseUrl}get_predictions&from=${from}&to=${to}&APIkey=${process.env.API_KEY_APIFOOTBALL || ""}&match_id=${match_id}`;
+        }
+        else {
+            url = `${baseUrl}get_predictions&from=${from}&to=${to}&APIkey=${process.env.API_KEY_APIFOOTBALL || ""}`;
+        }
+        const response = yield fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response)
+            throw new Error("Error al obtener datos");
+        const result = yield response.json();
+        const filteredResults = result.map((item) => ({
+            country_name: item.country_name,
+            country_id: item.country_id,
+            league_id: item.league_id,
+            league_name: item.league_name,
+            match_id: item.match_id,
+            match_date: item.match_date,
+            hometeam_id: item.match_hometeam_id,
+            homeTeam: item.match_hometeam_name,
+            awayteam_id: item.match_awayteam_id,
+            awayTeam: item.match_awayteam_name,
+            hometeam_score: item.match_hometeam_score,
+            awayteam_score: item.match_awayteam_score,
+            home_prob: item.prob_HW,
+            draw_prob: item.prob_D,
+            away_prob: item.prob_AW,
+            match_status: item.match_status,
+        }));
+        return filteredResults;
+    }
+    catch (error) {
+        throw new Error(`Error al obtener el la informacion: ${error.message}`);
     }
 });
 exports.getMatch = getMatch;
@@ -68,6 +130,10 @@ const getRecords = (to, league, team_a, team_b) => __awaiter(void 0, void 0, voi
                     item.match_awayteam_name === team_a));
         });
         const filteredResults = record.map((item) => ({
+            country_name: item.country_name,
+            country_id: item.country_id,
+            league_id: item.league_id,
+            league_name: item.league_name,
             match_id: item.match_id,
             match_date: item.match_date,
             hometeam_id: item.match_hometeam_id,
@@ -83,7 +149,7 @@ const getRecords = (to, league, team_a, team_b) => __awaiter(void 0, void 0, voi
         return filteredResults;
     }
     catch (error) {
-        throw new Error(`Error al obtener el usuario: ${error.message}`);
+        throw new Error(`Error al obtener el la informacion: ${error.message}`);
     }
 });
 exports.getRecords = getRecords;
@@ -101,7 +167,7 @@ const getCountries = () => __awaiter(void 0, void 0, void 0, function* () {
         return result;
     }
     catch (error) {
-        throw new Error(`Error al obtener el usuario: ${error.message}`);
+        throw new Error(`Error al obtener el la informacion: ${error.message}`);
     }
 });
 exports.getCountries = getCountries;
@@ -119,7 +185,7 @@ const getLeague = (id) => __awaiter(void 0, void 0, void 0, function* () {
         return result;
     }
     catch (error) {
-        throw new Error(`Error al obtener el usuario: ${error.message}`);
+        throw new Error(`Error al obtener el la informacion: ${error.message}`);
     }
 });
 exports.getLeague = getLeague;
@@ -138,12 +204,12 @@ const getTeam = (id) => __awaiter(void 0, void 0, void 0, function* () {
             team_id: item.team_key,
             team_name: item.team_name,
             team_country: item.team_country,
-            team_logo: item.team_badge
+            team_logo: item.team_badge,
         }));
         return filteredResults;
     }
     catch (error) {
-        throw new Error(`Error al obtener el usuario: ${error.message}`);
+        throw new Error(`Error al obtener el la informacion: ${error.message}`);
     }
 });
 exports.getTeam = getTeam;
@@ -167,13 +233,13 @@ const getPlayer = (id, tid) => __awaiter(void 0, void 0, void 0, function* () {
                 player_age: player.player_age,
                 player_goals: player.player_goals,
                 player_assists: player.player_assists,
-                player_red_cards: player.player_red_cards
-            }))
+                player_red_cards: player.player_red_cards,
+            })),
         }));
         return filteredResults;
     }
     catch (error) {
-        throw new Error(`Error al obtener el usuario: ${error.message}`);
+        throw new Error(`Error al obtener el la informacion: ${error.message}`);
     }
 });
 exports.getPlayer = getPlayer;
@@ -198,12 +264,12 @@ const getPOnePlayer = (name) => __awaiter(void 0, void 0, void 0, function* () {
             player_age: item.player_age,
             player_goals: item.player_goals,
             player_team: item.team_name,
-            player_rating: item.player_rating
+            player_rating: item.player_rating,
         }));
         return filteredResults;
     }
     catch (error) {
-        throw new Error(`Error al obtener el usuario: ${error.message}`);
+        throw new Error(`Error al obtener el la informacion: ${error.message}`);
     }
 });
 exports.getPOnePlayer = getPOnePlayer;

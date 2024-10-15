@@ -52,7 +52,7 @@ export class Match extends Model<Match, matchInterface> {
     allowNull: false,
     onDelete: 'CASCADE'
   })
-  lige_id!: string;
+  league_id!: string;
 
   @Column({
     type: DataType.STRING,

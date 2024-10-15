@@ -6,6 +6,7 @@ const user_service_1 = require("../services/user.service");
 const router = (0, express_1.Router)();
 router.get('/:id/division', ranking_controller_1.getRankingByUserId);
 router.get('/division/:division', ranking_controller_1.getRankingByDivision);
+//ruta creada para pruebas luego no tendra utilidad
 router.post('/assignDivision', user_service_1.populateRankingForExistingUsers);
 exports.default = router;
 //# sourceMappingURL=ranking.routes.js.map
