@@ -37,7 +37,8 @@ export const getAllMatchesApi = async (req: Request, res: Response) => {
   try {
     const from = req.query.from as any | undefined;
     const to = req.query.to as any | undefined;
-    const matches = await getAllMatches(from, to);
+    const { match_id, league } = req.query
+    const matches = await getAllMatches(from, to, match_id, league);
     if (!matches) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
