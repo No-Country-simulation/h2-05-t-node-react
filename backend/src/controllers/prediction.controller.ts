@@ -1,4 +1,4 @@
-import { CreateMatches, CreateOneMatch } from "../services/match.service";
+import { CreateMatches } from "../services/match.service";
 import {
   createPredictions,
   deletePrediction,

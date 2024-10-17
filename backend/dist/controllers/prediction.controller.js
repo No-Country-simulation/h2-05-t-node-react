@@ -55,21 +55,26 @@ const postCreatePrediction = (req, res) => __awaiter(void 0, void 0, void 0, fun
             date: Date;
           }[],
           type: "simple" | "chained",
-          match: {
+          matchs: {
             team_a: team_a,
             team_b: team_b,
             match_date: match_date,
             status: status,
             id_apiMatch: id_apiMatch,
-            league_id: league_id,
+            league_id: league_id
+          }[],
         ) */
         const predictions = yield (0, prediction_service_1.createPredictions)(data.user, data.predictions, data.type);
         if (!predictions) {
             return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
         }
-        //Crear partido
-        const match = yield (0, match_service_1.CreateOneMatch)(data.match);
-        if (!match) {
+        //Crear partidos
+        const matches = data.matchs;
+        if (!Array.isArray(matches) || matches.length === 0) {
+            return HttpResponse.BAD_REQUEST_ERROR(res, "No se proporcionaron partidos para crear.");
+        }
+        const createMatches = yield (0, match_service_1.CreateMatches)(matches);
+        if (!createMatches) {
             return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
         }
         return HttpResponse.OK(res, "Prediccion creada con exito");
@@ -131,5 +136,5 @@ export const createFuturePrediction = async (req: Request, res: Response) => {
     return HttpResponse.Error(res, (error as Error).message);
   }
 };
- */ 
+ */
 //# sourceMappingURL=prediction.controller.js.map
