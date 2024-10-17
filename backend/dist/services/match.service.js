@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateOneMatch = exports.deleteOneMatch = exports.CreateOneMatch = exports.getMatchById = exports.getMatches = void 0;
+exports.updateOneMatch = exports.deleteOneMatch = exports.CreateMatches = exports.CreateOneMatch = exports.getMatchById = exports.getMatches = void 0;
 const match_model_1 = require("../models/match.model");
 const getMatches = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -47,6 +47,32 @@ const CreateOneMatch = (data) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.CreateOneMatch = CreateOneMatch;
+const CreateMatches = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Recorremos para crear todos los partidos si no existen
+        const createdMatches = yield Promise.all(data.map((matchData) => __awaiter(void 0, void 0, void 0, function* () {
+            // Verificamos si el partido ya existe por match.id_apiMatch
+            const existingMatch = yield match_model_1.Match.findOne({
+                where: { id_apiMatch: matchData.id_apiMatch },
+            });
+            if (existingMatch) {
+                console.log(`El partido con ID ${matchData.id} ya existe, omitiendo creación.`);
+                return existingMatch; // Retornamos el partido existente para omitir su creación
+            }
+            // Si el partido no existe, lo creamos
+            const match = yield match_model_1.Match.create(matchData);
+            if (!match) {
+                throw new Error(`Error al cargar el partido: ${JSON.stringify(matchData)}`);
+            }
+            return match;
+        })));
+        return createdMatches;
+    }
+    catch (error) {
+        throw new Error(`Error al crear el partido: ${error.message}`);
+    }
+});
+exports.CreateMatches = CreateMatches;
 const deleteOneMatch = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const match = yield match_model_1.Match.destroy({ where: { id: id } });
