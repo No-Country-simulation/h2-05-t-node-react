@@ -1,4 +1,4 @@
-import { CreateOneMatch } from "../services/match.service";
+import { CreateMatches, CreateOneMatch } from "../services/match.service";
 import {
   createPredictions,
   deletePrediction,
@@ -50,13 +50,14 @@ export const postCreatePrediction = async (req: Request, res: Response) => {
         date: Date;
       }[],
       type: "simple" | "chained",
-      match: {
+      matchs: {
         team_a: team_a,
         team_b: team_b,
         match_date: match_date,
         status: status,
         id_apiMatch: id_apiMatch,
-        league_id: league_id,
+        league_id: league_id
+      }[],
     ) */
     const predictions = await createPredictions(
       data.user,
@@ -66,13 +67,24 @@ export const postCreatePrediction = async (req: Request, res: Response) => {
     if (!predictions) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
     }
+    //Crear partidos
 
-    //Crear partido
-    const match = await CreateOneMatch(data.match);
-    if (!match) {
+    const matches = data.matchs;
+
+    if (!Array.isArray(matches) || matches.length === 0) {
+      return HttpResponse.BAD_REQUEST_ERROR(
+        res,
+        "No se proporcionaron partidos para crear."
+      );
+    }
+
+    const createMatches = await CreateMatches(matches);
+    if (!createMatches) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
     }
+
     return HttpResponse.OK(res, "Prediccion creada con exito");
+
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }
