@@ -5,12 +5,6 @@ const user_controller_1 = require("../controllers/user.controller");
 const user_validator_1 = require("../middlewares/user.validator");
 const auth_middeware_1 = require("../middlewares/auth.middeware");
 const router = (0, express_1.Router)();
-router.get("/", user_controller_1.getAllUsers);
-router.get("/:id", user_controller_1.getOneUser);
-router.post("/createUser", user_validator_1.userValidator, user_validator_1.handleUserValidationErrors, user_controller_1.createOneUser);
-router.post("/login", user_controller_1.login);
-router.delete("/:id", auth_middeware_1.authenticateToken, user_controller_1.deleteOneUser);
-router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateOneUser);
 /**
  * @swagger
  * tags:
@@ -39,7 +33,7 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  *           description: Correo electrónico
  *         password:
  *           type: string
- *           description: Contraseña del usuario (encriptada)
+ *           description: Contraseña del usuario
  *         rol:
  *           type: string
  *           description: Rol del usuario
@@ -50,8 +44,8 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  *           type: integer
  *           description: Total de predicciones hechas por el usuario
  *         subscription:
- *           type: string
- *           description: Tipo de suscripción del usuario
+ *           type: boolean
+ *           description: Estado de la suscripción del usuario
  *         registration_date:
  *           type: string
  *           format: date-time
@@ -59,13 +53,13 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  */
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   get:
  *     summary: Obtiene todos los usuarios
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: Lista de todos los usuarios
+ *         description: Lista de usuarios
  *         content:
  *           application/json:
  *             schema:
@@ -75,10 +69,10 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  *       500:
  *         description: Error en el servidor
  */
-// router.get('/', getAllUsers);
+router.get("/", user_controller_1.getAllUsers);
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   get:
  *     summary: Obtiene un usuario por ID
  *     tags: [Users]
@@ -101,10 +95,10 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  *       500:
  *         description: Error en el servidor
  */
-//router.get('/:id', getOneUser);
+router.get("/:id", user_controller_1.getOneUser);
 /**
  * @swagger
- * /users/createUser:
+ * /api/users:
  *   post:
  *     summary: Crea un nuevo usuario
  *     tags: [Users]
@@ -116,16 +110,16 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
- *         description: Usuario creado correctamente
+ *         description: Usuario creado
  *       400:
- *         description: Error en los datos de entrada
+ *         description: Error en los datos enviados
  *       500:
  *         description: Error en el servidor
  */
-//router.post('/createUser', userValidator, handleUserValidationErrors, createOneUser);
+router.post("/", user_validator_1.userValidator, user_validator_1.handleUserValidationErrors, user_controller_1.createOneUser);
 /**
  * @swagger
- * /users/login:
+ * /api/users/login:
  *   post:
  *     summary: Inicia sesión un usuario
  *     tags: [Users]
@@ -159,10 +153,10 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  *       500:
  *         description: Error en el servidor
  */
-//router.post('/login', login);
+router.post("/login", user_controller_1.login);
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   delete:
  *     summary: Elimina un usuario por ID
  *     tags: [Users]
@@ -177,16 +171,16 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  *         description: ID del usuario a eliminar
  *     responses:
  *       200:
- *         description: Usuario eliminado correctamente
+ *         description: Usuario eliminado
  *       404:
  *         description: Usuario no encontrado
  *       500:
  *         description: Error en el servidor
  */
-//router.delete('/:id', authenticateToken, deleteOneUser);
+router.delete("/:id", auth_middeware_1.authenticateToken, user_controller_1.deleteOneUser);
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   put:
  *     summary: Actualiza un usuario por ID
  *     tags: [Users]
@@ -207,12 +201,12 @@ router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateO
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: Usuario actualizado correctamente
+ *         description: Usuario actualizado
  *       404:
  *         description: Usuario no encontrado
  *       500:
  *         description: Error en el servidor
  */
-//router.put('/:id', authenticateToken, updateOneUser);
+router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateOneUser);
 exports.default = router;
 //# sourceMappingURL=user.routes.js.map

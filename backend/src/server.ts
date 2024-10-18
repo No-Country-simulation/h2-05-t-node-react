@@ -7,7 +7,7 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
-sequelize.sync({ alter: true }) // false para no sobrescribir tablas
+sequelize.sync({ alter: false }) // false para no sobrescribir tablas
   .then(() => {
     console.log('Base de datos sincronizada');
     app.listen(PORT, () => {
