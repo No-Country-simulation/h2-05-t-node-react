@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import dotenv from "dotenv";
 import {
+  getAllMatches,
   getCountries,
   getLeague,
   getMatch,
@@ -11,17 +12,15 @@ import {
 } from "../services/api.service";
 import { httpResponse } from "../utils/enumsErrors";
 
+
 const HttpResponse = new httpResponse();
 dotenv.config();
 
-export const getMatchApi = async (
-  req: Request,
-  res: Response
-) => {
+export const getMatchApi = async (req: Request, res: Response) => {
   try {
-    const { from, to, league } = req.query;
+    const { from, to, match_id, league } = req.query;
 
-    const result = await getMatch(from, to, league);
+    const result = await getMatch(from, to, match_id, league);
     if (!result) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
@@ -29,6 +28,25 @@ export const getMatchApi = async (
       );
     }
     return HttpResponse.OK(res, result);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+};
+
+export const getAllMatchesApi = async (req: Request, res: Response) => {
+  try {
+    const from = req.query.from as any | undefined;
+    const to = req.query.to as any | undefined;
+    const { match_id, league } = req.query
+    const matches = await getAllMatches(from, to, match_id, league);
+    if (!matches) {
+      return HttpResponse.INVALID_TYPE_ERROR(
+        res,
+        `Error fetching data: Matches not found`
+      );
+    }
+
+    return HttpResponse.OK(res, matches);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }

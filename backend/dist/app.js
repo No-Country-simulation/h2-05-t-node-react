@@ -14,6 +14,7 @@ const ranking_routes_1 = __importDefault(require("./routes/ranking.routes"));
 const errorHandler_1 = require("./middlewares/errorHandler");
 const cors_1 = __importDefault(require("cors"));
 const prediction_routes_1 = __importDefault(require("./routes/prediction.routes"));
+require("./cron/adjustPredictionsCron");
 const predictionRecord_routes_1 = __importDefault(require("./routes/predictionRecord.routes"));
 const swaggerConfig_1 = __importDefault(require("./config/swaggerConfig"));
 const app = (0, express_1.default)();

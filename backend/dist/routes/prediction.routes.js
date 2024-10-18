@@ -76,6 +76,7 @@ router.get('', prediction_controller_1.getAllPredictions);
  *         description: Predicción no encontrada
  */
 router.get('/:id', prediction_controller_1.getOnePrediction);
+
 /**
  * @swagger
  * /api/prediction/createPrediction:
@@ -112,6 +113,7 @@ router.post('/createPrediction', prediction_validator_1.predicionValidator, pred
  *       404:
  *         description: Predicción no encontrada
  */
+
 router.delete('/:id', prediction_controller_1.deleteOnePrediction);
 /**
  * @swagger

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { createOnePrediction, deleteOnePrediction, getAllPredictions, getOnePrediction, updateOnePrediction } from '../controllers/prediction.controller';
-import { handleUserValidationErrors, predicionValidator } from '../middlewares/prediction.validator';
+import { deleteOnePrediction, getAllPredictions, getOnePrediction, postCreatePrediction, updateOnePrediction } from '../controllers/prediction.controller';
+import { handleUserValidationErrors } from '../middlewares/prediction.validator';
 
 const router = Router();
 
@@ -95,7 +95,8 @@ router.get('/:id', getOnePrediction);
  *       201:
  *         description: Predicción creada exitosamente
  */
-router.post('/createPrediction', predicionValidator, handleUserValidationErrors, createOnePrediction);
+//router.post('/createPrediction',predicionValidator, handleUserValidationErrors, postCreatePrediction);
+router.post('/createPrediction', handleUserValidationErrors, postCreatePrediction);
 
 /**
  * @swagger

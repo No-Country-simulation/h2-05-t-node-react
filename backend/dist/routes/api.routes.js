@@ -42,6 +42,7 @@ const router = (0, express_1.Router)();
  *         description: Error al obtener los partidos
  */
 router.get('/api_match', api_controller_1.getMatchApi);
+
 /**
  * @swagger
  * /api_record:
@@ -67,6 +68,9 @@ router.get('/api_match', api_controller_1.getMatchApi);
  *       500:
  *         description: Error al obtener los registros
  */
+
+router.get('/api_AllMatch', api_controller_1.getAllMatchesApi);
+
 router.get('/api_record', api_controller_1.getRecord);
 /**
  * @swagger

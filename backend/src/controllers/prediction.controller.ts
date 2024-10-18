@@ -1,6 +1,6 @@
-import { predictionInterface } from "../interfaces/prediction.interface";
+import { CreateMatches } from "../services/match.service";
 import {
-  createPrediction,
+  createPredictions,
   deletePrediction,
   getPrediction,
   getPredictions,
@@ -14,8 +14,9 @@ const HttpResponse = new httpResponse();
 export const getAllPredictions = async (req: Request, res: Response) => {
   try {
     const prediction = await getPredictions();
-    if (!prediction)
+    if (!prediction) {
       return HttpResponse.DATA_BASE_ERROR(res, "Predicciones no encontradas");
+    }
     return HttpResponse.OK(res, prediction);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
@@ -26,21 +27,64 @@ export const getOnePrediction = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const prediction = await getPrediction(id);
-    if (!prediction)
+    if (!prediction) {
       return HttpResponse.DATA_BASE_ERROR(res, "Predicción no encontrada");
+    }
     return HttpResponse.OK(res, prediction);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }
 };
 
-export const createOnePrediction = async (req: Request, res: Response) => {
+export const postCreatePrediction = async (req: Request, res: Response) => {
   try {
-    const data = req.body as predictionInterface;
-    const prediction = await createPrediction(data);
-    if (!prediction)
+    const data = req.body;
+    /*   (
+      user: User,
+      predictions: {
+        match_id: string;
+        predictionType: "match" | "player";
+        selectedPredictionType: "win_home" | "win_away" | "draw" | "player";
+        fee: number;
+        quotaType: "daily" | "future";
+        date: Date;
+      }[],
+      type: "simple" | "chained",
+      matchs: {
+        team_a: team_a,
+        team_b: team_b,
+        match_date: match_date,
+        status: status,
+        id_apiMatch: id_apiMatch,
+        league_id: league_id
+      }[],
+    ) */
+    const predictions = await createPredictions(
+      data.user,
+      data.predictions,
+      data.type
+    );
+    if (!predictions) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
-    return HttpResponse.OK(res, prediction);
+    }
+    //Crear partidos
+
+    const matches = data.matchs;
+
+    if (!Array.isArray(matches) || matches.length === 0) {
+      return HttpResponse.BAD_REQUEST_ERROR(
+        res,
+        "No se proporcionaron partidos para crear."
+      );
+    }
+
+    const createMatches = await CreateMatches(matches);
+    if (!createMatches) {
+      return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
+    }
+
+    return HttpResponse.OK(res, "Prediccion creada con exito");
+
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }
@@ -63,10 +107,37 @@ export const updateOnePrediction = async (req: Request, res: Response) => {
     const { id } = req.params;
     const data = req.body;
     const prediction = await updatePrediction(id, data);
-    if (!prediction)
+    if (!prediction) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al actualizar predición");
+    }
     return HttpResponse.OK(res, prediction);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }
 };
+
+/* export const userPredictions = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const prediction = await userOnePrediction(id);
+
+    if (!prediction) {
+      return HttpResponse.DATA_BASE_ERROR(res, "Error al actualizar predición");
+    }
+    return HttpResponse.OK(res, prediction);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+};
+
+// Endpoint para usar una predicción futura con un día pasado desde el front-end
+export const createFuturePrediction = async (req: Request, res: Response) => {
+  try {
+    const userId = req.body.user_id;
+    const futureDate = req.body.future_date; // El día futuro pasado desde el front-end
+    await handleFuturePrediction(userId, futureDate, res);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+};
+ */

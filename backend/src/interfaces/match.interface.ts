@@ -5,6 +5,6 @@ export interface matchInterface {
   match_date: Date;
   result?: string;
   status?: string;
-  lige_id: string;
+  league_id: string;
   id_apiMatch?: string;
 }

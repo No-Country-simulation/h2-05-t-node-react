@@ -9,6 +9,7 @@ import {
   getOnePlayerApi 
 } from '../controllers/api.controller';
 
+
 const router = Router();
 
 /**
@@ -79,6 +80,8 @@ router.get('/api_match', getMatchApi);
  */
 router.get('/api_record', getRecord);
 
+//revisar esta ruta
+router.get('/api_AllMatch', getAllMatchesApi);
 /**
  * @swagger
  * /api_country:

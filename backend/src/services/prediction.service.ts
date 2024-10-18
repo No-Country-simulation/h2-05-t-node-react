@@ -3,6 +3,14 @@ import { Prediction } from "../models/prediction.model";
 import { PredictionRecord } from "../models/predictionRecord.model";
 //import { Ranking } from "../models/ranking.model";
 import { addPoints } from "./ranking.service";
+import { User } from "../models/user.model";
+import { PredictionInfo } from "../models/prediction_info.model";
+import { calculatePoints } from "../utils/pointCalculation";
+import { calculatePredictionsByDay } from "../utils/predictionByDay";
+import {
+  getPredictionQuota,
+  updateFuturePredictionQuota,
+} from "./predictionQuota.service";
 
 export const getPredictions = async (): Promise<Prediction[]> => {
   try {
@@ -45,11 +53,94 @@ export const createPrediction = async (
     };
     const predRecord = await PredictionRecord.create(dataRecord);
     if (!predRecord) throw new Error("Registro no creado");
-    return { msg: "Predicción creado" };
+    return prediction;
   } catch (error) {
     throw new Error(
       `Error al crear la Predicción: ${(error as Error).message}`
     );
+  }
+};
+
+export const createPredictions = async (
+  user: User,
+  predictions: {
+    match_id: string;
+    predictionType: "match" | "player";
+    selectedPredictionType: "win_home" | "win_away" | "draw" | "player";
+    fee: number;
+    quotaType: "daily" | "future";
+    date: Date;
+  }[],
+  type: "simple" | "chained"
+) => {
+  try {
+    const today = new Date();
+    const todayString = today.toISOString().split("T")[0]; // Formatear la fecha en 'YYYY-MM-DD'
+
+    // Verificar cuántas predicciones disponibles tiene el usuario para hoy
+    let predictionQuota = await getPredictionQuota(user, today);
+
+    const { totalDailyPredictions, futurePredictionsByDay } =
+      calculatePredictionsByDay(predictions, todayString);
+
+    // Verificar si se exceden los límites diarios
+    if (totalDailyPredictions > predictionQuota.daily_predictions_left) {
+      throw new Error(
+        `No tienes suficientes predicciones diarias disponibles (${predictionQuota.daily_predictions_left} restantes).`
+      );
+    }
+
+    // Calcular los puntos totales basados en el tipo de predicción
+    const totalPoints = calculatePoints(predictions, type);
+
+    // Crear la predicción principal y el registro en una sola transacción
+    const newPrediction = await Prediction.create({
+      user_id: user.id,
+      type: type,
+      total_points: totalPoints,
+      status: "pending",
+    });
+
+    if (!newPrediction) throw new Error("Error al crear la predicción.");
+
+    // Crear el registro de predicción
+    await PredictionRecord.create({
+      user_id: user.id,
+      prediction_id: newPrediction.id,
+    });
+
+    // Crear múltiples PredictionInfo en una sola operación
+    const predictionInfos = predictions.map((prediction) => ({
+      match_id: prediction.match_id,
+      prediction_id: newPrediction.id, // Relacionar con la predicción creada
+      predictionType: prediction.predictionType,
+      predictionQuotaType: prediction.quotaType,
+      selectedPredictionType: prediction.selectedPredictionType,
+      fee: prediction.fee,
+      prediction_date: prediction.date,
+      status: "pending",
+    }));
+
+    await PredictionInfo.bulkCreate(predictionInfos);
+
+    // Si la predicción es encadenada, actualizar los puntos totales
+    if (type === "chained") {
+      await newPrediction.update({ total_points: totalPoints });
+    }
+
+    // Actualizar las cuotas de predicción futuras
+    await updateFuturePredictionQuota(user, futurePredictionsByDay);
+
+    // Actualizar las cuotas diarias después de crear las predicciones
+    await predictionQuota.update({
+      daily_predictions_left:
+        predictionQuota.daily_predictions_left - totalDailyPredictions,
+    });
+
+    return `Has creado ${predictionInfos.length} predicciones con éxito.`;
+  } catch (error) {
+    console.error("Error al crear predicciones:", error);
+    throw new Error(`Error al crear predicciones: ${(error as Error).message}`);
   }
 };
 
@@ -84,9 +175,9 @@ export const updatePrediction = async (
 
     // Verificar si la predicción ha cambiado a "win" cambiar por el estada usado
     if (updateData.status === "win" && previousStatus !== "win") {
-      const point=addPoints(id, prediction.total_points)
-      if(!point){
-        throw new Error("No se pudo añadir los puntos a la clasificación")
+      const point = addPoints(id, prediction.total_points);
+      if (!point) {
+        throw new Error("No se pudo añadir los puntos a la clasificación");
       }
     }
     // Actualizar registro en el historial de predicciones
