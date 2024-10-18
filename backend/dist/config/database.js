@@ -21,7 +21,7 @@ if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_PASSWORD || 
 const sequelize = new sequelize_typescript_1.Sequelize({
     database: process.env.DB_NAME || 'mydb',
     username: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'password',
+    password: process.env.DB_PASSWORD || 'admin',
     host: process.env.DB_HOST || 'localhost',
     dialect: 'mysql',
     models: [user_model_1.User, match_model_1.Match, league_model_1.League, prediction_info_model_1.PredictionInfo, prediction_model_1.Prediction, ranking_model_1.Ranking, prize_model_1.Prize, predictionRecord_model_1.PredictionRecord, predictionQuota_model_1.PredictionQuota]

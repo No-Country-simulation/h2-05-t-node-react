@@ -19,7 +19,7 @@ if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_PASSWORD || 
 const sequelize = new Sequelize({
   database: process.env.DB_NAME || 'mydb',
   username: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'password',
+  password: process.env.DB_PASSWORD || 'admin',
   host: process.env.DB_HOST || 'localhost',
   dialect: 'mysql',
   models: [User, Match, League, PredictionInfo, Prediction, Ranking, Prize, PredictionRecord, PredictionQuota]
