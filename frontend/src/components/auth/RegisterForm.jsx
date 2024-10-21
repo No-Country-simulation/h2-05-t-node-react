@@ -1,7 +1,8 @@
 import { useState } from "react"
 import Input from "../common/Input"
 import InputPassword from "../common/InputPassword"
-import Button from "../common/Button"
+import ButtonSolid from '../common/ButtonSolid';
+import { useNavigate } from "react-router-dom"
 
 const initialFormValues = {
     username: '',
@@ -17,6 +18,7 @@ const RegisterForm = () => {
         repeatedPassword: false
     })
     const [error, setError] = useState({})
+    const navigate = useNavigate()
 
     const handleShowPassword = (name) => {
         setShowPassword(prevState => ({
@@ -68,7 +70,8 @@ const RegisterForm = () => {
 
         if (!isValid) return
 
-        console.log(formValues)
+        navigate('/login')
+        // console.log(formValues)
     }
 
     return (
@@ -90,7 +93,7 @@ const RegisterForm = () => {
                 {error.repeatedPassword && <p className="text-red-500 text-sm mt-1">{error.repeatedPassword}</p>}
             </div>
 
-            <Button>Registrarse</Button>
+            <ButtonSolid>Registrarse</ButtonSolid>
         </form>
     )
 }

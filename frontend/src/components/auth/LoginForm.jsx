@@ -1,7 +1,8 @@
 import { useState } from "react"
 import Input from "../common/Input"
 import InputPassword from "../common/InputPassword"
-import Button from "../common/Button"
+import ButtonSolid from '../common/ButtonSolid';
+import { useNavigate } from "react-router-dom"
 
 const initialFormValues = {
     emailOrPhone: '',
@@ -12,6 +13,7 @@ const LoginForm = () => {
     const [formValues, setFormValues] = useState(initialFormValues)
     const [showPassword, setShowPassword] = useState(false)
     const [error, setError] = useState({})
+    const navigate = useNavigate()
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
@@ -48,7 +50,7 @@ const LoginForm = () => {
 
         if (!isValid) return
 
-        console.log(formValues)
+        navigate('/matches')
     }
 
     return (
@@ -64,7 +66,7 @@ const LoginForm = () => {
 
             <a href="#" className='mt-3.5 mb-8 text-sm text-center text-blue underline'>¿Olvidaste tu contraseña?</a>
 
-            <Button>Iniciar sesión</Button>
+            <ButtonSolid>Iniciar sesión</ButtonSolid>
         </form>
     )
 }

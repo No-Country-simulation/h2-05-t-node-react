@@ -30,7 +30,9 @@ module.exports = {
         'primary': '#C5C5C5',
         'secondary': '#555555',
         'tertiary': '#8D8D8D',
-        'soft-gray': '#F3F4F5'
+        'soft-gray': '#F3F4F5',
+        'search': '#EFEFF0',
+        'black': '#181818'
       }
     },
   },
