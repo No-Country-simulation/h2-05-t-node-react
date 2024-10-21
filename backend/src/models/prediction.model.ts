@@ -1,12 +1,3 @@
-/*
-  id_apuesta_detalle REFERENCES !!!!
-  tipo varchar [note:"Simple o Encadenada"]
-  puntos_apostados int
-  couta_total float [note:"total de la cuota, si es encadenada se multiplica x10"] !!!!
-  fecha_prediccion datetime
-  estado bool
-  puntos_ganados int */
-
 import { UUIDV4 } from "sequelize";
 import {
   Table,
