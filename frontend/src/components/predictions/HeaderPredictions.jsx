@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import ArrowBackIcon from "../../assets/icons/ArrowBackIcon"
-import Button from "../common/Button"
+import ButtonSolid from '../common/ButtonSolid';
 
 const HeaderPredictions = () => {
     return (
@@ -21,7 +21,7 @@ const HeaderPredictions = () => {
                     <div className="w-[35%] text-regular flex justify-end">
                         <span className="w-[110px] lg:w-full text-secondary">¿Te quedaste sin predicciones?</span>
                     </div>
-                    <Button>Comprar predicciones</Button>
+                    <ButtonSolid>Comprar predicciones</ButtonSolid>
                 </div>
             </div>
         </section>
