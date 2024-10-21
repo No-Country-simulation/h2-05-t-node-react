@@ -19,17 +19,17 @@ const keyMomentsList = [
     },
 ]
 
-const KeyMoments = () => {
+const KeyMoments = ({ completedMatch }) => {
     const [keyMoments, setKeyMoments] = useState(keyMomentsList)
 
     return (
         <>
-            <div className="flex justify-between py-2 mt-4">
+            <div className="flex justify-between py-2 mt-4 mb-1">
                 <span className="font-medium">Momentos clave</span>
             </div>
 
             {keyMoments.map((item, index) => (
-                <KeyMomentsItem key={index} index={index} item={item} />
+                <KeyMomentsItem key={index} index={index} item={item} completedMatch={completedMatch} />
             ))}
         </>
     )
