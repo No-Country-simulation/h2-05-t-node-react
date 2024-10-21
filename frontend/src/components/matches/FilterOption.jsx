@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ButtonForm from "../common/ButtonForm"
+import ButtonSolid from '../common/ButtonSolid';
 import Dropdown from "../common/Dropdown"
 
 const options = ['Ligas', 'Horario', 'Trending']
@@ -11,7 +11,7 @@ const FilterOption = () => {
         <div className="w-[90%] mx-auto mt-5">
             <div className="flex justify-between items-center">
                 <p className="capitalize font-medium ms-1">{selectedOption || 'ligas'}</p>
-                <ButtonForm text='Mis predicciones' />
+                <ButtonSolid>Mis Predicciones</ButtonSolid>
             </div>
 
             <Dropdown options={options} selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
