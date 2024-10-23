@@ -5,12 +5,13 @@ import {
   Model,
   DataType,
 } from "sequelize-typescript";
+import { PrizeInterface } from "../interfaces/prize.interface";
 
 @Table({
   tableName: "prize",
   timestamps: true,
 })
-export class Prize extends Model<Prize> {
+export class Prize extends Model<Prize, PrizeInterface> {
   @Column({
     type: DataType.STRING,
     primaryKey: true,
