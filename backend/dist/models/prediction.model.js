@@ -1,12 +1,4 @@
 "use strict";
-/*
-  id_apuesta_detalle REFERENCES !!!!
-  tipo varchar [note:"Simple o Encadenada"]
-  puntos_apostados int
-  couta_total float [note:"total de la cuota, si es encadenada se multiplica x10"] !!!!
-  fecha_prediccion datetime
-  estado bool
-  puntos_ganados int */
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);

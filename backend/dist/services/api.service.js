@@ -37,6 +37,9 @@ const getAllMatches = (from, to, match_id, league) => __awaiter(void 0, void 0, 
         if (!response)
             throw new Error("Error al obtener datos");
         const result = yield response.json();
+        if (result.length === 0) {
+            return { msg: 'No hay partidos' };
+        }
         const filteredResults = result.map((item) => ({
             league_name: item.league_name,
             league_id: item.league_id,
@@ -85,6 +88,9 @@ const getMatch = (from, to, match_id, league) => __awaiter(void 0, void 0, void 
         if (!response)
             throw new Error("Error al obtener datos");
         const result = yield response.json();
+        if (result.length === 0) {
+            return { msg: 'No hay partidos' };
+        }
         const filteredResults = result.map((item) => ({
             country_name: item.country_name,
             country_id: item.country_id,
