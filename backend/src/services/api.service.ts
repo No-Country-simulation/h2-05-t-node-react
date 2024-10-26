@@ -35,6 +35,9 @@ export const getAllMatches = async (
     if (!response) throw new Error("Error al obtener datos");
 
     const result = await response.json();
+    if(result.length === 0) {
+      return {msg: 'No hay partidos'};
+    }
     const filteredResults = result.map((item: any) => ({
       league_name: item.league_name,
       league_id: item.league_id,
@@ -94,6 +97,9 @@ export const getMatch = async (
     if (!response) throw new Error("Error al obtener datos");
 
     const result = await response.json();
+    if(result.length === 0) {
+      return {msg: 'No hay partidos'};
+    }
     const filteredResults = result.map((item: any) => ({
       country_name: item.country_name,
       country_id: item.country_id,

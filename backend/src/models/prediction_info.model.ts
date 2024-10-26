@@ -51,8 +51,8 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   predictionQuotaType!: string;
 
   @Column({
-    type: DataType.ENUM("win_home", "win_away", 'draw', 'player'),
-    allowNull: true
+    type: DataType.STRING,
+    allowNull: false
   })
   selectedPredictionType!: string;
 
