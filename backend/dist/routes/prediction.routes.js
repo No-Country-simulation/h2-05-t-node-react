@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { deleteOnePrediction, getAllPredictions, getOnePrediction, postCreatePrediction, updateOnePrediction } from '../controllers/prediction.controller';
-import { handleUserValidationErrors } from '../middlewares/prediction.validator';
-
-const router = Router();
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const prediction_controller_1 = require("../controllers/prediction.controller");
+const prediction_validator_1 = require("../middlewares/prediction.validator");
+const router = (0, express_1.Router)();
 /**
  * @swagger
  * components:
@@ -35,7 +35,6 @@ const router = Router();
  *           type: integer
  *           description: Puntos totales acumulados
  */
-
 /**
  * @swagger
  * /api/prediction:
@@ -52,8 +51,7 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Prediction'
  */
-router.get('', getAllPredictions);
-
+router.get('', prediction_controller_1.getAllPredictions);
 /**
  * @swagger
  * /api/prediction/{id}:
@@ -77,7 +75,7 @@ router.get('', getAllPredictions);
  *       404:
  *         description: Predicción no encontrada
  */
-router.get('/:id', getOnePrediction);
+router.get('/:id', prediction_controller_1.getOnePrediction);
 
 /**
  * @swagger
@@ -95,9 +93,7 @@ router.get('/:id', getOnePrediction);
  *       201:
  *         description: Predicción creada exitosamente
  */
-//router.post('/createPrediction',predicionValidator, handleUserValidationErrors, postCreatePrediction);
-router.post('/createPrediction', handleUserValidationErrors, postCreatePrediction);
-
+router.post('/createPrediction', prediction_validator_1.predicionValidator, prediction_validator_1.handleUserValidationErrors, prediction_controller_1.createOnePrediction);
 /**
  * @swagger
  * /api/prediction/{id}:
@@ -117,8 +113,8 @@ router.post('/createPrediction', handleUserValidationErrors, postCreatePredictio
  *       404:
  *         description: Predicción no encontrada
  */
-router.delete('/:id', deleteOnePrediction);
 
+router.delete('/:id', prediction_controller_1.deleteOnePrediction);
 /**
  * @swagger
  * /api/prediction/{id}:
@@ -144,6 +140,6 @@ router.delete('/:id', deleteOnePrediction);
  *       404:
  *         description: Predicción no encontrada
  */
-router.put('/:id', updateOnePrediction);
-
-export default router;
+router.put('/:id', prediction_controller_1.updateOnePrediction);
+exports.default = router;
+//# sourceMappingURL=prediction.routes.js.map

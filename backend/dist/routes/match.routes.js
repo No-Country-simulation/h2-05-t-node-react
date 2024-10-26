@@ -1,15 +1,14 @@
+"use strict";
 /**
  * @swagger
  * tags:
  *   name: Matches
  *   description: Gestión de partidos
  */
-
-import { Router } from 'express';
-import { createMatch, deleteMatch, getAllMatches, getOneMatch, updateMatch } from '../controllers/match.controller';
-
-const router = Router();
-
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const match_controller_1 = require("../controllers/match.controller");
+const router = (0, express_1.Router)();
 /**
  * @swagger
  * /api/match:
@@ -28,8 +27,7 @@ const router = Router();
  *       500:
  *         description: Error al obtener los partidos
  */
-router.get('/', getAllMatches);
-
+router.get('/', match_controller_1.getAllMatches);
 /**
  * @swagger
  * /api/match/{id}:
@@ -53,8 +51,7 @@ router.get('/', getAllMatches);
  *       404:
  *         description: Partido no encontrado
  */
-router.get('/:id', getOneMatch);
-
+router.get('/:id', match_controller_1.getOneMatch);
 /**
  * @swagger
  * /api/match:
@@ -97,8 +94,7 @@ router.get('/:id', getOneMatch);
  *       400:
  *         description: Error al crear el partido
  */
-router.post('/', createMatch);
-
+router.post('/', match_controller_1.createMatch);
 /**
  * @swagger
  * /api/match/{id}:
@@ -118,8 +114,7 @@ router.post('/', createMatch);
  *       404:
  *         description: Partido no encontrado
  */
-router.delete('/:id', deleteMatch);
-
+router.delete('/:id', match_controller_1.deleteMatch);
 /**
  * @swagger
  * /api/match/{id}:
@@ -169,10 +164,8 @@ router.delete('/:id', deleteMatch);
  *       404:
  *         description: Partido no encontrado
  */
-router.put('/:id', updateMatch);
-
-export default router;
-
+router.put('/:id', match_controller_1.updateMatch);
+exports.default = router;
 /**
  * @swagger
  * components:
@@ -207,3 +200,4 @@ export default router;
  *           type: string
  *           description: ID del partido desde una API externa
  */
+//# sourceMappingURL=match.routes.js.map

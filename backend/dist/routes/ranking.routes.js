@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { getRankingByDivision, getRankingByUserId } from '../controllers/ranking.controller';
-import { populateRankingForExistingUsers } from '../services/user.service';
-
-const router = Router();
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const ranking_controller_1 = require("../controllers/ranking.controller");
+const user_service_1 = require("../services/user.service");
+const router = (0, express_1.Router)();
 /**
  * @swagger
  * /api/ranking/{id}/division:
@@ -34,8 +34,7 @@ const router = Router();
  *       500:
  *         description: Error del servidor.
  */
-router.get('/:id/division', getRankingByUserId);
-
+router.get('/:id/division', ranking_controller_1.getRankingByUserId);
 /**
  * @swagger
  * /api/ranking/division/{division}:
@@ -77,7 +76,7 @@ router.get('/:id/division', getRankingByUserId);
  *       500:
  *         description: Error del servidor.
  */
-router.get('/division/:division', getRankingByDivision);
+router.get('/division/:division', ranking_controller_1.getRankingByDivision);
 
 /**
  * @swagger
@@ -92,6 +91,7 @@ router.get('/division/:division', getRankingByDivision);
  *       500:
  *         description: Error del servidor.
  */
-router.post('/assignDivision', populateRankingForExistingUsers);
-
-export default router;
+//ruta creada para pruebas luego no tendra utilidad
+router.post('/assignDivision', user_service_1.populateRankingForExistingUsers);
+exports.default = router;
+//# sourceMappingURL=ranking.routes.js.map

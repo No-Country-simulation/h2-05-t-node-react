@@ -1,17 +1,19 @@
-import { Router } from "express";
-import passport from "passport";
-import { authController } from "../controllers/auth.controller";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const passport_1 = __importDefault(require("passport"));
+const auth_controller_1 = require("../controllers/auth.controller");
 //import { authenticateToken } from '../middlewares/auth.middeware';
-
-const router = Router();
-
+const router = (0, express_1.Router)();
 /**
  * @swagger
  * tags:
  *   name: Auth
- *   description: Gestión de autenticación  (MUY BAJA PRIORIDAD)
+ *   description: Gestión de autenticación
  */
-
 /**
  * @swagger
  * /auth/google:
@@ -23,11 +25,7 @@ const router = Router();
  *       302:
  *         description: Redirige a la página de autenticación de Google.
  */
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
+router.get("/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
 /**
  * @swagger
  * /auth/google/callback:
@@ -49,12 +47,7 @@ router.get(
  *       401:
  *         description: Autenticación fallida.
  */
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { session: false }),
-  authController.googleAuthCallback
-);
-
+router.get("/google/callback", passport_1.default.authenticate("google", { session: false }), auth_controller_1.authController.googleAuthCallback);
 /**
  * @swagger
  * /auth/verify-token:
@@ -85,8 +78,7 @@ router.get(
  *       403:
  *         description: Token inválido.
  */
-router.get("/verify-token", authController.verifyToken);
-
+router.get("/verify-token", auth_controller_1.authController.verifyToken);
 /**
  * @swagger
  * /auth/logout:
@@ -98,6 +90,6 @@ router.get("/verify-token", authController.verifyToken);
  *       200:
  *         description: Sesión cerrada correctamente y redirecciona a la página de inicio.
  */
-router.post('/logout', authController.logout);
-
-export default router;
+router.post('/logout', auth_controller_1.authController.logout);
+exports.default = router;
+//# sourceMappingURL=auth.routes.js.map

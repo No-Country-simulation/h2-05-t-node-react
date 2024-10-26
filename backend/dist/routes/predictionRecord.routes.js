@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import { getPredictionHistoryByUser } from '../controllers/predictionRecord.controller';
-
-const router = Router();
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const predictionRecord_controller_1 = require("../controllers/predictionRecord.controller");
+const router = (0, express_1.Router)();
 /**
  * @swagger
  * /api/prediction/predictionHistory:
@@ -72,7 +72,6 @@ const router = Router();
  *       500:
  *         description: Error interno en el servidor.
  */
-
-router.get('/predictionHistory', getPredictionHistoryByUser);
-
-export default router;
+router.get('/predictionHistory', predictionRecord_controller_1.getPredictionHistoryByUser);
+exports.default = router;
+//# sourceMappingURL=predictionRecord.routes.js.map

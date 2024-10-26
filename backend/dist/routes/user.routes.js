@@ -1,27 +1,16 @@
-import { Router } from "express";
-import {
-  getAllUsers,
-  getOneUser,
-  createOneUser,
-  deleteOneUser,
-  updateOneUser,
-  login,
-} from "../controllers/user.controller";
-import {
-  handleUserValidationErrors,
-  userValidator,
-} from "../middlewares/user.validator";
-import { authenticateToken } from "../middlewares/auth.middeware";
-
-const router = Router();
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const user_controller_1 = require("../controllers/user.controller");
+const user_validator_1 = require("../middlewares/user.validator");
+const auth_middeware_1 = require("../middlewares/auth.middeware");
+const router = (0, express_1.Router)();
 /**
  * @swagger
  * tags:
  *   name: Users
  *   description: Operaciones relacionadas con usuarios
  */
-
 /**
  * @swagger
  * components:
@@ -44,7 +33,7 @@ const router = Router();
  *           description: Correo electrónico
  *         password:
  *           type: string
- *           description: Contraseña del usuario 
+ *           description: Contraseña del usuario
  *         rol:
  *           type: string
  *           description: Rol del usuario
@@ -62,7 +51,6 @@ const router = Router();
  *           format: date-time
  *           description: Fecha de registro del usuario
  */
-
 /**
  * @swagger
  * /api/users:
@@ -81,8 +69,7 @@ const router = Router();
  *       500:
  *         description: Error en el servidor
  */
-router.get("/", getAllUsers);
-
+router.get("/", user_controller_1.getAllUsers);
 /**
  * @swagger
  * /api/users/{id}:
@@ -108,8 +95,7 @@ router.get("/", getAllUsers);
  *       500:
  *         description: Error en el servidor
  */
-router.get("/:id", getOneUser);
-
+router.get("/:id", user_controller_1.getOneUser);
 /**
  * @swagger
  * /api/users:
@@ -130,13 +116,7 @@ router.get("/:id", getOneUser);
  *       500:
  *         description: Error en el servidor
  */
-router.post(
-  "/",
-  userValidator,
-  handleUserValidationErrors,
-  createOneUser
-);
-
+router.post("/", user_validator_1.userValidator, user_validator_1.handleUserValidationErrors, user_controller_1.createOneUser);
 /**
  * @swagger
  * /api/users/login:
@@ -173,8 +153,7 @@ router.post(
  *       500:
  *         description: Error en el servidor
  */
-router.post("/login", login);
-
+router.post("/login", user_controller_1.login);
 /**
  * @swagger
  * /api/users/{id}:
@@ -198,8 +177,7 @@ router.post("/login", login);
  *       500:
  *         description: Error en el servidor
  */
-router.delete("/:id", authenticateToken, deleteOneUser);
-
+router.delete("/:id", auth_middeware_1.authenticateToken, user_controller_1.deleteOneUser);
 /**
  * @swagger
  * /api/users/{id}:
@@ -229,6 +207,6 @@ router.delete("/:id", authenticateToken, deleteOneUser);
  *       500:
  *         description: Error en el servidor
  */
-router.put("/:id", authenticateToken, updateOneUser);
-
-export default router;
+router.put("/:id", auth_middeware_1.authenticateToken, user_controller_1.updateOneUser);
+exports.default = router;
+//# sourceMappingURL=user.routes.js.map

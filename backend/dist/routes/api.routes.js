@@ -1,24 +1,14 @@
-import { Router } from 'express';
-import { 
-  getMatchApi, 
-  getCountriesApi, 
-  getRecord, 
-  getLeagueApi, 
-  getTeamApi, 
-  getPlayerApi, 
-  getOnePlayerApi 
-} from '../controllers/api.controller';
-
-
-const router = Router();
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const api_controller_1 = require("../controllers/api.controller");
+const router = (0, express_1.Router)();
 /**
  * @swagger
  * tags:
  *   name: API
  *   description: Rutas para la obtención de datos de la API externa EN DESARROLLO
  */
-
 /**
  * @swagger
  * /api_match:
@@ -51,7 +41,7 @@ const router = Router();
  *       500:
  *         description: Error al obtener los partidos
  */
-router.get('/api_match', getMatchApi);
+router.get('/api_match', api_controller_1.getMatchApi);
 
 /**
  * @swagger
@@ -78,10 +68,10 @@ router.get('/api_match', getMatchApi);
  *       500:
  *         description: Error al obtener los registros
  */
-router.get('/api_record', getRecord);
 
-//revisar esta ruta
-router.get('/api_AllMatch', getAllMatchesApi);
+router.get('/api_AllMatch', api_controller_1.getAllMatchesApi);
+
+router.get('/api_record', api_controller_1.getRecord);
 /**
  * @swagger
  * /api_country:
@@ -107,8 +97,7 @@ router.get('/api_AllMatch', getAllMatchesApi);
  *       500:
  *         description: Error al obtener los países
  */
-router.get('/api_country', getCountriesApi);
-
+router.get('/api_country', api_controller_1.getCountriesApi);
 /**
  * @swagger
  * /api_league:
@@ -134,8 +123,7 @@ router.get('/api_country', getCountriesApi);
  *       500:
  *         description: Error al obtener las ligas
  */
-router.get('/api_league', getLeagueApi);
-
+router.get('/api_league', api_controller_1.getLeagueApi);
 /**
  * @swagger
  * /api_team:
@@ -161,8 +149,7 @@ router.get('/api_league', getLeagueApi);
  *       500:
  *         description: Error al obtener los equipos
  */
-router.get('/api_team', getTeamApi);
-
+router.get('/api_team', api_controller_1.getTeamApi);
 /**
  * @swagger
  * /api_players:
@@ -188,8 +175,7 @@ router.get('/api_team', getTeamApi);
  *       500:
  *         description: Error al obtener los jugadores
  */
-router.get('/api_players', getPlayerApi);
-
+router.get('/api_players', api_controller_1.getPlayerApi);
 /**
  * @swagger
  * /api_Oneplayers:
@@ -222,6 +208,6 @@ router.get('/api_players', getPlayerApi);
  *       500:
  *         description: Error al obtener el jugador
  */
-router.get('/api_Oneplayers', getOnePlayerApi);
-
-export default router;
+router.get('/api_Oneplayers', api_controller_1.getOnePlayerApi);
+exports.default = router;
+//# sourceMappingURL=api.routes.js.map
