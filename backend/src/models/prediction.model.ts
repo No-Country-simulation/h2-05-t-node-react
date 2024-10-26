@@ -56,6 +56,8 @@ export class Prediction extends Model<Prediction, predictionInterface> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
+    defaultValue: "pending",
+
   })
   status!: string;
 

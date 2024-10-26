@@ -6,5 +6,5 @@ export interface predictionInfo {
     selectedPredictionType: string,
     fee: number,
     prediction_date: Date,
-    status: string
+    status?: string
 }

@@ -1,17 +1,25 @@
 import sequelize from "../config/database";
 import { QueryTypes } from "sequelize";
 import { getFirstDate, getSecondDate } from "./days";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const predictionResult = async () => {
   try {
+    
     const firstDate = getFirstDate();
     const secondDate = getSecondDate();
-    const result = await sequelize.query(
-      `SELECT * FROM mydb.bets_match_prediction WHERE bet_status = 'pending'`,
-      {
-        type: QueryTypes.SELECT,
-      }
-    );
+     // Obtener el nombre de la base de datos
+     const dbName = process.env.DB_NAME;
+     if (!dbName) throw new Error("Faltan variables de entorno para la configuración de la base de datos.");
+ 
+     const result = await sequelize.query(
+       `SELECT * FROM ${dbName}.bets_match_prediction WHERE bet_status = 'pending'`,
+       {
+         type: QueryTypes.SELECT,
+       }
+     );
+ 
     console.log(firstDate);
     console.log(secondDate);
     const resultMap = result.map(async (item: any) =>{
