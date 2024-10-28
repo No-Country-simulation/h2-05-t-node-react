@@ -6,7 +6,8 @@ import {
   getLeagueApi, 
   getTeamApi, 
   getPlayerApi, 
-  getOnePlayerApi 
+  getOnePlayerApi, 
+  getAllMatchesApi
 } from '../controllers/api.controller';
 
 

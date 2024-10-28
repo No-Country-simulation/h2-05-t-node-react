@@ -1,3 +1,1 @@
-
 {"version":3,"file":"ranking.routes.js","sourceRoot":"","sources":["../../src/routes/ranking.routes.ts"],"names":[],"mappings":";;AAAA,qCAAiC;AACjC,0EAA6F;AAC7F,2DAA2E;AAE3E,MAAM,MAAM,GAAG,IAAA,gBAAM,GAAE,CAAC;AAExB;;;;;;;;;;;;;;;;;;;;;;;;;;;;;GA6BG;AACH,MAAM,CAAC,GAAG,CAAC,eAAe,EAAE,uCAAkB,CAAC,CAAC;AAEhD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;GAwCG;AACH,MAAM,CAAC,GAAG,CAAC,qBAAqB,EAAE,yCAAoB,CAAC,CAAC;AAExD;;;;;;;;;;;;GAYG;AACH,MAAM,CAAC,IAAI,CAAC,iBAAiB,EAAE,8CAA+B,CAAC,CAAC;AAEhE,kBAAe,MAAM,CAAC"}
-

@@ -14,7 +14,7 @@ export const predictionResult = async () => {
      if (!dbName) throw new Error("Faltan variables de entorno para la configuración de la base de datos.");
  
      const result = await sequelize.query(
-       `SELECT * FROM ${dbName}.bets_match_prediction WHERE bet_status = 'pending'`,
+       `SELECT * FROM ${dbName}.bets WHERE status = 'pending'`,
        {
          type: QueryTypes.SELECT,
        }

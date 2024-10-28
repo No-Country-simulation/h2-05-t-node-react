@@ -77,7 +77,6 @@ router.get('/:id/division', ranking_controller_1.getRankingByUserId);
  *         description: Error del servidor.
  */
 router.get('/division/:division', ranking_controller_1.getRankingByDivision);
-
 /**
  * @swagger
  * /api/ranking/assignDivision:
@@ -91,7 +90,6 @@ router.get('/division/:division', ranking_controller_1.getRankingByDivision);
  *       500:
  *         description: Error del servidor.
  */
-//ruta creada para pruebas luego no tendra utilidad
 router.post('/assignDivision', user_service_1.populateRankingForExistingUsers);
 exports.default = router;
 //# sourceMappingURL=ranking.routes.js.map
