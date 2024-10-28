@@ -1,41 +1,59 @@
 import './index.css'
 import LoadingScreen from './components/layout/LoadingScreen'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Footer from './components/layout/Footer';
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import MatchesPage from './pages/MatchesPage';
 import NotFoundPage from './pages/NotFoundPage';
-import PredictionsPage from './pages/PredictionsPage';
 import MatchesCompletedPage from './pages/MatchesCompletedPage';
 import DetailsPage from './pages/DetailsPage';
-import CompletedPredictionsPage from './pages/CompletedPredictionsPage';
 import ClassificationPage from './pages/ClassificationPage';
+import HomePage from './pages/HomePage';
+import Predictions from './components/completedMatches/Predictions';
+import MyPredictionsPage from './pages/MyPredictionsPage';
+import DivisionsPage from './pages/DivisionsPage';
+import ScoutPlayersPage from './pages/ScoutPlayersPage';
+import Ranking from './components/divisions/pages/Ranking';
+import Rewards from './components/divisions/pages/Rewards';
+import Quests from './components/divisions/pages/Quests';
 
 function App() {
 
   return (
     <Router>
-      <div className="App">
-        <div className="content">
+      <div className="flex flex-col min-h-screen">
+        <div className="content flex-grow">
           <Routes>
-            <Route path="/" element={<LoadingScreen />} />
+            {/* <Route path="/" element={<LoadingScreen />} /> */}
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/matches" element={<MatchesPage />} />
+            <Route path="/divisions" element={<DivisionsPage />} />
+            <Route path="/scout-players" element={<ScoutPlayersPage />} />
 
             <Route path="/matches-completed" element={<MatchesCompletedPage />}>
-              <Route index element={<CompletedPredictionsPage />} />
-              <Route path='predictions' element={<CompletedPredictionsPage />} />
+              <Route index element={<Predictions />} />
+              <Route path='predictions' element={<Predictions />} />
               <Route path='details' element={<DetailsPage />} />
               <Route path='classification' element={<ClassificationPage />} />
             </Route>
 
-            <Route path="/predictions" element={<PredictionsPage />} />
+            <Route path="/divisions" element={<DivisionsPage />}>
+              <Route index element={<Ranking />} />
+              <Route path='ranking' element={<Ranking />} />
+              <Route path='rewards' element={<Rewards />} />
+              <Route path='quests' element={<Quests />} />
+            </Route>
+
+            <Route path="/me/predictions" element={<MyPredictionsPage />} />
             <Route path="*" element={<NotFoundPage />} />
 
           </Routes>
         </div>
 
+        {/* <Footer /> */}
       </div>
     </Router>
 
