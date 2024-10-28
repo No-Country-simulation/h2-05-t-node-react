@@ -36,12 +36,12 @@ const ActivePredictions = () => {
                                 <div className='flex gap-2'>
                                     {/* <img className='w-5 h-5 object-contain' src={item.homeTeam == completedMatch.homeTeam ? completedMatch.team_home_badge : completedMatch.team_away_badge} alt={`Img Equipo`} /> */}
                                     <img className='w-5 h-5 object-contain' src={RealMadridImg} alt={`Img Equipo`} />
-                                    <span className="text-regular text-secondary capitalize">Real Madrid</span>
+                                    <span className="text-regular text-secondary capitalize sm:w-auto sm:whitespace-normal sm:overflow-visible sm:text-clip overflow-hidden text-ellipsis whitespace-nowrap w-[100px]">Real Madrid</span>
                                 </div>
                                 <div className='flex gap-2'>
                                     {/* <img className='w-5 h-5 object-contain' src={item.awayTeam == completedMatch.awayTeam ? completedMatch.team_away_badge : completedMatch.team_home_badge} alt={`Img Equipo`} /> */}
                                     <img className='w-5 h-5 object-contain' src={BarcelonaImg} alt={`Img Equipo`} />
-                                    <span className="text-regular text-secondary capitalize">Barcelona</span>
+                                    <span className="text-regular text-secondary capitalize sm:w-auto sm:whitespace-normal sm:overflow-visible sm:text-clip overflow-hidden text-ellipsis whitespace-nowrap w-[100px]">Barcelona</span>
                                 </div>
                             </div>
 
