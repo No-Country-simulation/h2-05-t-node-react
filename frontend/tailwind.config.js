@@ -21,6 +21,8 @@ module.exports = {
       fontSize: {
         'regular': '12.42px',
         'regular-14': '14px',
+        'regular-16': '16px',
+        'regular-18': '18px',
         'medium': '39.45px',
         'title': '22px'
       },
@@ -32,7 +34,8 @@ module.exports = {
         'tertiary': '#8D8D8D',
         'soft-gray': '#F3F4F5',
         'search': '#EFEFF0',
-        'black': '#181818'
+        'black': '#181818',
+        'ranking-user': '#C2DAFF'
       }
     },
   },
