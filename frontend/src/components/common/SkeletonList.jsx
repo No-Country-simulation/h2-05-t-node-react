@@ -1,10 +1,10 @@
 import { Skeleton } from "primereact/skeleton"
 
-const SkeletonList = ({ length }) => {
+const SkeletonList = ({ length, height }) => {
     return (
         <div>
             {[...Array(length)].map((_, i) => (
-                <Skeleton key={i} height="3.9rem" className="w-full mb-2" />
+                <Skeleton key={i} height={height} className='w-full mb-2' />
             ))}
         </div>
     )
