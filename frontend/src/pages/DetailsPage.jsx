@@ -19,8 +19,8 @@ const DetailsPage = () => {
   return (
     <Container>
       <Details completedMatch={completedMatch} />
-      <KeyMoments completedMatch={completedMatch} /> {/* SOLO PARA PARTIDOS FINALIZADOS */}
-      <LastConfrontations />
+      <KeyMoments completedMatch={completedMatch} />
+      <LastConfrontations completedMatch={completedMatch} />
     </Container>
   )
 }
