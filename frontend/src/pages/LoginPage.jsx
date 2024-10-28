@@ -7,7 +7,7 @@ const LoginPage = () => {
   return (
     <>
       <Navbar />
-      <WelcomeMessage title='Welcome back,' message='Please login to enjoy full feature' />
+      <WelcomeMessage title='Bienvenido de nuevo,' message='Por favor, inicia sesión para disfrutar de todas las funciones' />
       <LoginForm />
       <GoogleButton title='O inicia sesión con' />
     </>

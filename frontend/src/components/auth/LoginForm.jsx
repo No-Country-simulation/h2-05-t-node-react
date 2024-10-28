@@ -50,7 +50,7 @@ const LoginForm = () => {
 
         if (!isValid) return
 
-        navigate('/matches')
+        navigate('/')
     }
 
     return (
