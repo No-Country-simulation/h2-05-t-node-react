@@ -17,26 +17,26 @@ import './cron/cron.module';
 
 const app = express();
 
-app.use(errorHandler);
+// Middlewares globales
 app.use(cors());
-
-// Inicializar Passport
-app.use(passport.initialize());
+app.use(express.json()); // Parsear JSON
+app.use(express.urlencoded({ extended: false })); // Parsear URL-encoded
+app.use(passport.initialize()); // Inicializar Passport
 
 // Configurar Swagger
 swaggerConfig(app);
 
-// Middlewares globales
-app.use(express.json()); // Para parsear JSON
-app.use(express.urlencoded({ extended: false })); // Para parsear URL-encoded
-
+// Rutas de la aplicación
 app.use("/auth", authRoutes);
 app.use("/api/ranking", rankingRoutes);
-app.use("/api/", predictionRecordRoutes);
+app.use("/api/prediction-record", predictionRecordRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/match", matchRoutes);
 app.use("/api/prediction", predictionRouter);
 app.use("/api/prize", prizeRouter);
-app.use("", apiRoutes);
+app.use("/", apiRoutes); // Ruta general o fallback
+
+// Manejo de errores
+app.use(errorHandler);
 
 export default app;
