@@ -1,14 +1,14 @@
 import sequelize from "../config/database";
 import { QueryTypes } from "sequelize";
-import { getFirstDate, getSecondDate } from "./days";
+//import { getFirstDate, getSecondDate } from "./days";
 import dotenv from 'dotenv';
 dotenv.config();
 
 export const predictionResult = async () => {
   try {
     
-    const firstDate = getFirstDate();
-    const secondDate = getSecondDate();
+    //const firstDate = getFirstDate();
+    //const secondDate = getSecondDate();
      // Obtener el nombre de la base de datos
      const dbName = process.env.DB_NAME;
      if (!dbName) throw new Error("Faltan variables de entorno para la configuración de la base de datos.");
@@ -20,13 +20,17 @@ export const predictionResult = async () => {
        }
      );
  
-    console.log(firstDate);
-    console.log(secondDate);
-    const resultMap = result.map(async (item: any) =>{
+    //console.log(firstDate);
+    //console.log(secondDate);
+    if (!result || result.length === 0) {
+      console.log("No hay datos pendientes para consultar.");
+      return {msg: 'No hay predicciones para actualizar'}; 
+    }
+    /* const resultMap = result.map(async (item: any) =>{
         console.log(item.bet_status);
         
-    })
-    return  resultMap;
+    }) */
+    return  result;
 
     
   } catch (error) {

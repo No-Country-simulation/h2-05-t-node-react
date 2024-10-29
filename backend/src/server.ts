@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 sequelize.sync({ alter: false }) // false para no sobrescribir tablas
   .then(() => {
-    console.log('Base de datos sincronizada');
+    console.log("Sincronización de base de datos completada.");
     app.listen(PORT, () => {
       console.log(`Servidor escuchando en http://localhost:${PORT}`);
     });
