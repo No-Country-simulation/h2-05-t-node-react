@@ -12,7 +12,7 @@ const router = (0, express_1.Router)();
  * @swagger
  * tags:
  *   name: Auth
- *   description: Gestión de autenticación
+ *   description: Gestión de autenticación  (MUY BAJA PRIORIDAD)
  */
 /**
  * @swagger

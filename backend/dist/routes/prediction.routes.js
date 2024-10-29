@@ -76,7 +76,6 @@ router.get('', prediction_controller_1.getAllPredictions);
  *         description: Predicción no encontrada
  */
 router.get('/:id', prediction_controller_1.getOnePrediction);
-
 /**
  * @swagger
  * /api/prediction/createPrediction:
@@ -93,7 +92,8 @@ router.get('/:id', prediction_controller_1.getOnePrediction);
  *       201:
  *         description: Predicción creada exitosamente
  */
-router.post('/createPrediction', prediction_validator_1.predicionValidator, prediction_validator_1.handleUserValidationErrors, prediction_controller_1.createOnePrediction);
+//router.post('/createPrediction',predicionValidator, handleUserValidationErrors, postCreatePrediction);
+router.post('/createPrediction', prediction_validator_1.handleUserValidationErrors, prediction_controller_1.postCreatePrediction);
 /**
  * @swagger
  * /api/prediction/{id}:
@@ -113,7 +113,6 @@ router.post('/createPrediction', prediction_validator_1.predicionValidator, pred
  *       404:
  *         description: Predicción no encontrada
  */
-
 router.delete('/:id', prediction_controller_1.deleteOnePrediction);
 /**
  * @swagger

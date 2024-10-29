@@ -23,7 +23,12 @@ const sequelize = new sequelize_typescript_1.Sequelize({
     username: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'admin',
     host: process.env.DB_HOST || 'localhost',
-    dialect: 'mysql',
+    dialect: 'mysql', dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    },
     models: [user_model_1.User, match_model_1.Match, league_model_1.League, prediction_info_model_1.PredictionInfo, prediction_model_1.Prediction, ranking_model_1.Ranking, prize_model_1.Prize, predictionRecord_model_1.PredictionRecord, predictionQuota_model_1.PredictionQuota]
 });
 // Relacionar los modelos
