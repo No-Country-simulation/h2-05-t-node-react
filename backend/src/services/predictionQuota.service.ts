@@ -1,7 +1,7 @@
 import { PredictionQuota } from "../models/predictionQuota.model";
 import { User } from "../models/user.model";
 
-export const getPredictionQuota = async (userId: string, day: string) => {
+export const getPredictionQuota = async (userId: string, day: Date) => {
   try {
   
     // Verificar cuántas predicciones disponibles tiene el usuario para ese dia

@@ -53,14 +53,14 @@ export const postCreatePrediction = async (req: Request, res: Response) => {
     ) */
     const predictions = await createPrediction(
       data.userId,
-      data.predictions,
+      data.prediction,
       data.type,
       data?.predictionId
     );
     if (!predictions) {
       return HttpResponse.DATA_BASE_ERROR(res, "Error al cargar datos");
     }
-    return HttpResponse.OK(res, "Prediccion creada con exito");
+    return HttpResponse.OK(res, predictions );
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }

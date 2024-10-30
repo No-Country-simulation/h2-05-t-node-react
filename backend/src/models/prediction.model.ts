@@ -14,7 +14,7 @@ import { PredictionInfo } from "./prediction_info.model";
 import { PredictionRecord } from "./predictionRecord.model";
 
 @Table({
-  tableName: "bets",
+  tableName: "predictions",
   timestamps: true,
 })
 export class Prediction extends Model<Prediction, predictionInterface> {
@@ -57,7 +57,6 @@ export class Prediction extends Model<Prediction, predictionInterface> {
     type: DataType.STRING,
     allowNull: false,
     defaultValue: "pending",
-
   })
   status!: string;
 
