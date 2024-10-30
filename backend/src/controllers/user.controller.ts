@@ -134,12 +134,6 @@ export const login = async (req: Request, res: Response) => {
         registration_date: user.registration_date,
       },
     };
-    // Configurar la cookie con el token
-    res.cookie(process.env.PASS_COOKIE as string, token, {
-      maxAge: 1000 * 60 * 60, // 1 hora
-      httpOnly: false,
-      sameSite: "none",
-    });
     return HttpResponse.OK(res, response);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);

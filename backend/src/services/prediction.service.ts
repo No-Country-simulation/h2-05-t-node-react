@@ -38,7 +38,7 @@ export const createPrediction = async (
   prediction: {
     match_id: string;
     predictionType: "match" | "player";
-    selectedPredictionType: string;
+    selectedPredictionType: "win_home" | "win_away" | "draw" | string;
     fee: number;
     quotaType: "daily" | "future";
     date: Date;
@@ -48,11 +48,11 @@ export const createPrediction = async (
 ) => {
   const transaction = await sequelize.transaction();
   try {
-    const today = new Date();
-    const todayString = today.toISOString().split("T")[0]; // Formatear la fecha en 'YYYY-MM-DD'
+    //const today = new Date();
+    // const todayString = today.toISOString().split("T")[0]; // Formatear la fecha en 'YYYY-MM-DD'
 
     // Verificar cuántas predicciones disponibles tiene el usuario para hoy
-    let predictionQuota = await getPredictionQuota(userId, todayString);
+    let predictionQuota = await getPredictionQuota(userId, prediction.date);
 
     // Validar existencia de `predictionQuota`
     if (!predictionQuota)
@@ -74,7 +74,8 @@ export const createPrediction = async (
     let newPrediction;
     let totalPoints = prediction.fee;
     //Si el usuario ya tiene predicciones llega con id sino llega null
-    let predId = predictionId || null;
+
+    //let predId = predictionId || null;
 
     if (type === "simple") {
       // Crear la predicción principal y el registro en una sola transacción
@@ -132,6 +133,7 @@ export const createPrediction = async (
         msg: "Has creado la predicciones simple con éxito.",
       };
     } else if (type === "chained") {
+      // Verifica si `predictionId` es nulo o undefined
       if (!predictionId) {
         // Crear la predicción principal y el registro en una sola transacción
         const newPrediction = await Prediction.create(
@@ -142,23 +144,30 @@ export const createPrediction = async (
           },
           { transaction }
         );
-        // Crear el registro de predicción
+
+        // Guardar el id de la predicción para relacionarlo con la predicción creada
+        if (newPrediction && newPrediction.id) {
+          predictionId = newPrediction.id;
+        } else {
+          throw new Error("No se pudo crear una nueva predicción principal.");
+        }
+        console.log("Id de la nueva predicción:", predictionId);
+
+        // Crear el registro de predicción con el mismo `transaction`
         await PredictionRecord.create(
           {
             user_id: userId,
-            prediction_id: newPrediction.id,
+            prediction_id: predictionId, // Usa predictionId de forma consistente
           },
           { transaction }
         );
-        // Guardar el id de la predicción para Relacionar con la predicción creada
-        predId = newPrediction.id;
       }
 
-      // Crear PredictionInfo con su relacion
-       await PredictionInfo.create(
+      // Crear PredictionInfo y vincularlo a `predictionId`
+      await PredictionInfo.create(
         {
           match_id: prediction.match_id,
-          prediction_id: predId as string, // Relacionar con la predicción creada
+          prediction_id: predictionId, // Relacionar con la predicción creada
           predictionType: prediction.predictionType,
           predictionQuotaType: prediction.quotaType,
           selectedPredictionType: prediction.selectedPredictionType,
@@ -167,17 +176,23 @@ export const createPrediction = async (
         },
         { transaction }
       );
+      // Realiza el commit antes de calcular los puntos
+      await transaction.commit();
+      // Cargar de nuevo `newPrediction` usando `predictionId` para cálculos de puntos
+      const newPrediction = await Prediction.findByPk(predictionId);
+      totalPoints = await calculateChainedPoints(predictionId);
 
-      const newPrediction = await Prediction.findByPk(predId as string);
-      totalPoints = await calculateChainedPoints(predId as string);
+      // Ahora inicia una nueva transacción para actualizar `total_points`
+      const updateTransaction = await sequelize.transaction();
 
       if (newPrediction) {
         await newPrediction.update(
           { total_points: totalPoints },
-          { transaction }
+          { transaction: updateTransaction }
         );
       }
-    
+
+      // Actualizar la cuota de predicciones
       await predictionQuota.update(
         {
           daily_predictions_left:
@@ -189,14 +204,14 @@ export const createPrediction = async (
               ? predictionQuota.future_predictions_left - 1
               : predictionQuota.future_predictions_left,
         },
-        { transaction }
+        { transaction: updateTransaction }
       );
 
-      await transaction.commit();
+      await updateTransaction.commit();
 
       return {
-        predId,
-        msg: "Has creado la predicciones chained con éxito.",
+        predictionId,
+        msg: "Has creado la predicción chained con éxito.",
       };
     }
   } catch (error) {

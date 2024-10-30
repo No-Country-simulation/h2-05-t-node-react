@@ -11,7 +11,7 @@ import { Prediction } from "./prediction.model";
 import { predictionRecordInterface } from "../interfaces/predictionRecord.interface";
 
 @Table({
-  tableName: "predictionRecord",
+  tableName: "predictions_record",
   timestamps: true,
 })
 export class PredictionRecord extends Model<
@@ -39,12 +39,6 @@ export class PredictionRecord extends Model<
     onDelete: "CASCADE",
   })
   user_id!: string;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-  })
-  timestamp!: Date;
 
   @BelongsTo(() => Prediction)
   prediction!: Prediction;

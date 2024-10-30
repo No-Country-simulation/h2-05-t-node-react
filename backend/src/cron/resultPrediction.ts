@@ -1,4 +1,4 @@
-import sequelize from "../config/database";
+/* import sequelize from "../config/database";
 import { QueryTypes } from "sequelize";
 //import { getFirstDate, getSecondDate } from "./days";
 import dotenv from 'dotenv';
@@ -14,7 +14,7 @@ export const predictionResult = async () => {
      if (!dbName) throw new Error("Faltan variables de entorno para la configuración de la base de datos.");
  
      const result = await sequelize.query(
-       `SELECT * FROM ${dbName}.bets WHERE status = 'pending'`,
+       `SELECT * FROM ${dbName}.predictions WHERE status = 'pending'`,
        {
          type: QueryTypes.SELECT,
        }
@@ -30,10 +30,10 @@ export const predictionResult = async () => {
         console.log(item.bet_status);
         
     }) */
-    return  result;
+    //return  result;
 
     
-  } catch (error) {
+/*   } catch (error) {
     console.error(
         `Error al consultar los resultados: ${(error as Error).message}`
       );
@@ -42,4 +42,4 @@ export const predictionResult = async () => {
       );
   }
 };
-predictionResult();
+predictionResult();  */
