@@ -18,7 +18,7 @@ export const predictionResult = async () => {
           console.log(bet);
           return bet;
         } 
-      if(item.bets_status === 'successful' || item.bet_type === 'simple'){
+      if(item.bets_status === 'failed' || item.bet_type === 'simple'){
           const bet = await updateBet(item.bet_id, {total_points: 0});
           console.log(bet);
           return bet;
