@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { createOnePrize, deleteOnePrize, getAllPrize, getOnePrize, updateOnePrize } from "../controllers/prize.controller";
+/* import { adminAuthenticate } from "../middlewares/auth.middeware"; */
 
 const router = Router();
 
 router.get('', getAllPrize);
 router.get('/:id', getOnePrize);
-router.post('/createPrize', createOnePrize);
-router.delete('/:id', deleteOnePrize);
-router.put('/:id', updateOnePrize);
+router.post('/createPrize', /* adminAuthenticate, */ createOnePrize);
+router.delete('/:id', /* adminAuthenticate, */ deleteOnePrize);
+router.put('/:id', /* adminAuthenticate, */ updateOnePrize);
 
 /**
  * @swagger
@@ -41,9 +42,13 @@ router.put('/:id', updateOnePrize);
  *           type: string
  *           description: Condiciones para obtener el premio
  *         date:
- *           type: string
+ *           type: Date
  *           format: date-time
  *           description: Fecha de creación o asignación del premio
+ *         rewardingDate:
+ *           type: Date
+ *           format: date-time
+ *           description: Fecha de entrega del premio
  *         createdAt:
  *           type: string
  *           format: date-time

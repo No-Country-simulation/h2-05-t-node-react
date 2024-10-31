@@ -1,22 +1,28 @@
 import sequelize from "../config/database";
 import { QueryTypes } from "sequelize";
-import { getFirstDate, getSecondDate } from "./days";
+import { updateBet } from "../services/prediction.service";
+
 
 export const predictionResult = async () => {
   try {
-    const firstDate = getFirstDate();
-    const secondDate = getSecondDate();
     const result = await sequelize.query(
-      `SELECT * FROM mydb.bets_match_prediction WHERE bet_status = 'pending'`,
+      `SELECT * FROM mydb.bets_match_prediction WHERE total_points is NULL`,
       {
         type: QueryTypes.SELECT,
       }
     );
-    console.log(firstDate);
-    console.log(secondDate);
     const resultMap = result.map(async (item: any) =>{
-        console.log(item.bet_status);
-        
+        if(item.bets_status === 'successful' || item.bet_type === 'simple'){
+          const point = 1 * item.fee;
+          const bet = await updateBet(item.bet_id, {total_points: point});
+          console.log(bet);
+          return bet;
+        } 
+      if(item.bets_status === 'successful' || item.bet_type === 'simple'){
+          const bet = await updateBet(item.bet_id, {total_points: 0});
+          console.log(bet);
+          return bet;
+      }
     })
     return  resultMap;
 

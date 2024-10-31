@@ -203,3 +203,18 @@ export const updatePrediction = async (
     );
   }
 };
+
+export const updateBet = async (id:any, data: any) => {
+  try {
+    const bet = await Prediction.findOne(id);
+    if(!bet){
+      throw new Error('No existe la predicción')
+    }
+    const update = await Prediction.update(data, { where: { id: id } });
+    return { data:update, msg: "Predicción actualizado" };
+  } catch (error) {
+    throw new Error(
+      `Error al actualizado la Predicción: ${(error as Error).message}`
+    );
+  }
+}

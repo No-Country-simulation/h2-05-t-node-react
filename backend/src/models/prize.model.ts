@@ -49,4 +49,11 @@ export class Prize extends Model<Prize, PrizeInterface> {
     defaultValue: DataType.NOW,
   })
   date!: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    defaultValue: DataType.NOW,
+  })
+  rewardingDate!: Date;
 }

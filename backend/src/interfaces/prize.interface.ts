@@ -5,4 +5,5 @@ export interface PrizeInterface {
     image?: string,
     condition?: string,
     date?: Date,
+    rewardingDate?: Date,
 }
