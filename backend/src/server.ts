@@ -1,11 +1,8 @@
 // src/server.ts
 import app from './app';
-import dotenv from 'dotenv';
 import sequelize from './config/database';
+import { PORT } from './config/enviroment';
 
-dotenv.config();
-
-const PORT = process.env.PORT || 3000;
 
 sequelize.sync({ alter: false }) // false para no sobrescribir tablas
   .then(() => {
