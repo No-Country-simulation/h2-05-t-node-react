@@ -26,7 +26,7 @@ const MatchDetail = ({ league }) => {
         localStorage.setItem('completedMatch', JSON.stringify(match))
         navigate('/matches-completed');
     }
-
+ 
     const handleSubmitPrediction = e => {
         e.preventDefault();
         if (!selectedOption) return

@@ -113,7 +113,7 @@ const Leagues = ({ date }) => {
     console.log(leagues)
 
     return (
-        <section className="w-[90%] mx-auto flex-grow">
+        <section className="w-[90%] mx-auto flex-grow mb-5">
             <div className="mt-5">
                 <div className="flex justify-between items-center">
                     <p className="capitalize font-medium ms-1">{selectedOption || 'ligas'}</p>
