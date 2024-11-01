@@ -47,13 +47,13 @@ const HomePage = () => {
                 </div>
             </section>
 
-            <section className="flex-grow">
+            <section className="flex-grow mb-5">
                 <Container>
-                    <span className="capitalize mt-2">Novedades para vos</span>
-                    <Carrousel imageOne={NovedadesImg} imageTwo={NovedadesImg} />
+                    <span className="capitalize mt-2 mb-4">Novedades para vos</span>
+                    <Carrousel className='w-[300px] h-[140px] p-[3.5px]' imageOne={NovedadesImg} imageTwo={NovedadesImg} />
 
-                    <span className="capitalize mt-4">Promociones</span>
-                    <Carrousel imageOne={PromocionesImg} imageTwo={PromocionesImg} />
+                    <span className="capitalize my-4">Promociones</span>
+                    <Carrousel className='w-[300px] h-[140px] p-[3.5px]' imageOne={PromocionesImg} imageTwo={PromocionesImg} />
                 </Container>
             </section>
 

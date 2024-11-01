@@ -6,7 +6,7 @@ import HomeIcon from '../../assets/icons/HomeIcon';
 
 const Footer = () => {
     return (
-        <footer className="flex justify-center gap-9 pt-4 pb-5 w-full bg-blue rounded-t-lg mt-5 text-xs font-medium tracking-tight text-center">
+        <footer className="flex justify-center gap-9 pt-4 pb-5 w-full bg-blue rounded-t-lg text-xs font-medium tracking-tight text-center">
             <NavLink
                 to='/'
                 className={({ isActive }) => `flex flex-col items-center ${isActive ? 'text-white' : 'text-opacity-30 text-white'}`}>

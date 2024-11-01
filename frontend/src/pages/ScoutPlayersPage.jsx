@@ -1,11 +1,21 @@
-import { Link } from "react-router-dom"
+import { Outlet } from "react-router-dom"
+import Footer from "../components/layout/Footer"
+import NavbarScoutPlayers from "../components/scoutPlayers/NavbarScoutPlayers"
 
 const ScoutPlayersPage = () => {
     return (
-        <main className='h-screen w-full bg-gradiente flex flex-col justify-center items-center'>
-            <h1 className="text-[40px] font-black text-white">Scout Players</h1>
-            <p className="text-[20px] font-black text-white">(En desarrollo)</p>
-            <Link to='/' className="text-white pb-[1px] border-b border-b-white">Volver a Waki</Link>
+        <main className='flex flex-col min-h-screen'>
+            <header className='h-[147px]'>
+                <div className="h-[95px] pb-6 flex items-end justify-center">
+                    <span className='font-semibold text-blue text-title'>Scout Players</span>
+                </div>
+                <NavbarScoutPlayers />
+            </header>
+
+            <div className="flex-grow mb-5">
+                <Outlet />
+            </div>
+            <Footer />
         </main>
     )
 }

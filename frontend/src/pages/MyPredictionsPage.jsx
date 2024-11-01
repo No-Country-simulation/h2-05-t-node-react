@@ -5,9 +5,9 @@ import LastPredictions from "../components/predictions/LastPredictions"
 
 const MyPredictionsPage = () => {
     return (
-        <main className="flex flex-col min-h-screen">
+        <main className="flex flex-col min-h-screen bg-gradiente">
             <HeaderPredictions />
-            <div className="flex-grow">
+            <div className="flex-grow pb-5 bg-white rounded-t-lg">
                 <ActivePredictions />
                 <LastPredictions />
             </div>

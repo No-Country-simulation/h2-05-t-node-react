@@ -10,8 +10,6 @@ const MatchesPage = () => {
     const [date, setDate] = useState(getCurrentDate)
     const [searchData, setSearchData] = useState('')
 
-    console.log({currentDate: date})
-
     const handleSearch = (e) => {
         e.preventDefault();
     }
@@ -41,7 +39,7 @@ const MatchesPage = () => {
                 {/* BARRA DE FECHAS */}
                 <NavbarDate date={date} setDate={setDate} />
 
-                <div className='w-[90%] mx-auto'>
+                <div className='w-[90%] mx-auto mt-6'>
                     <SearchBar handleSearch={handleSearch} searchData={searchData} setSearchData={setSearchData} autoFocus={false} placeholder={'Buscar Liga'} />
                 </div>
             </header>

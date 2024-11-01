@@ -12,7 +12,7 @@ const DivisionsPage = () => {
                 <NavbarDivisions />
             </header>
 
-            <div className="flex-grow">
+            <div className="flex-grow mb-5">
                 <Outlet />
             </div>
             <Footer />
