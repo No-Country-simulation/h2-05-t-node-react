@@ -3,14 +3,15 @@ import ArrowBackIcon from "../../assets/icons/ArrowBackIcon"
 import ButtonOutline from "../common/ButtonOutline";
 import ModalMakePrediction from "./ModalMakePrediction";
 import { useState } from "react";
-import Navbar30NextDays from "../common/Navbar30NextDays";
 import { getCurrentDate } from "../../utils/getCurrentDate";
-import { getNext30Days } from "../../utils/getNext30Days";
+import { getNextFiveDays } from "../../utils/getNextFiveDays";
 import { convertToOriginalFormat } from "../../utils/convertToOriginalFormat";
+import NavbarNextFiveDays from "../common/NavbarNextFiveDays";
+import ButtonSolid from "../common/ButtonSolid";
 
 const HeaderPredictions = () => {
     const currentDate = getCurrentDate()
-    const dateList = getNext30Days(currentDate)
+    const dateList = getNextFiveDays(currentDate)
     const [selectedDate, setSelectedDate] = useState(0)
     const [visible, setVisible] = useState(false)
     const predictionDate = dateList[selectedDate] === "Todas" ? currentDate : convertToOriginalFormat(dateList[selectedDate]);
@@ -29,18 +30,18 @@ const HeaderPredictions = () => {
                     <span className="mt-3.5 text-primary">Predicciones disponibles</span>
                 </div>
 
-                {/* <div className="h-[48px] rounded-lg bg-white flex items-center justify-between p-2">
+                <NavbarNextFiveDays dateList={dateList} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+
+                <div className="h-[48px] my-5 mb-7 rounded-lg bg-white flex items-center justify-between p-2">
                     <div className="w-[35%] text-regular flex justify-end">
                         <span className="w-[110px] lg:w-full text-secondary">¿Te quedaste sin predicciones?</span>
                     </div>
                     <ButtonSolid>Comprar predicciones</ButtonSolid>
-                </div> */}
-
-                <Navbar30NextDays dateList={dateList} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-
-                <div className="mt-5 mb-7">
-                    <ButtonOutline onClick={() => setVisible(true)} className='bg-white mx-auto px-5'>Hacer Predicción</ButtonOutline>
                 </div>
+
+                {/* <div className="mt-5 mb-7">
+                    <ButtonOutline onClick={() => setVisible(true)} className='bg-white mx-auto px-5'>Hacer Predicción</ButtonOutline>
+                </div> */}
             </div>
 
             <ModalMakePrediction dateFormatDM={dateList[selectedDate]} predictionDate={predictionDate} visible={visible} setVisible={setVisible} />

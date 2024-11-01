@@ -18,7 +18,7 @@ const targetLeagueIds = [
   "4", // UEFA Europa League
 ]
 
-const API_URL = import.meta.env.VITE_API_URL;
+// const API_URL = import.meta.env.VITE_API_URL;
 
 const ModalMakePrediction = ({ dateFormatDM, predictionDate, visible, setVisible }) => {
   const [allMatches, setAllMatches] = useState([])
@@ -34,7 +34,7 @@ const ModalMakePrediction = ({ dateFormatDM, predictionDate, visible, setVisible
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${API_URL}/api_AllMatch?from=${predictionDate || date}&to=${predictionDate || date}`)
+    axios.get(`https://apifootboll.onrender.com/api_AllMatch?from=${predictionDate || date}&to=${predictionDate || date}`)
       .then(res => {
         const matches = res.data.data;
         setAllMatches(matches);
@@ -77,7 +77,7 @@ const ModalMakePrediction = ({ dateFormatDM, predictionDate, visible, setVisible
         className="w-[50vw] min-h-[100vh] !important"
         breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
 
-        <div className='flex flex-col items-center justify-center'>
+        <div className='flex flex-col items-center justify-center mb-6'>
           <span className='font-semibold text-title text-black'>Elige un partido {dateFormatDM == 'Todas' ? 'de Hoy' : dateFormatDM == undefined ? 'de Hoy' : 'del ' + dateFormatDM}</span>
           <span className='text-[18px]'>Selecciona una opción</span>
         </div>

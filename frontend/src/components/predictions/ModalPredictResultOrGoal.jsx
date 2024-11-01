@@ -4,9 +4,11 @@ import SoccerJerseyIcon from "../../assets/icons/SoccerJerseyIcon";
 import ArrowBackPurpleIcon from "../../assets/icons/ArrowBackPurpleIcon";
 import { useState } from "react";
 import ModalPredictResult from "./ModalPredictResult";
+import ModalPredictGoal from "./ModalPredictGoal";
 
 const ModalPredictResultOrGoal = ({ setVisible, selectedMatch, visiblePredictResultOrGoal, setVisiblePredictResultOrGoal }) => {
     const [visiblePredictResult, setVisiblePredictResult] = useState(false)
+    const [visiblePredictGoal, setVisiblePredictGoal] = useState(false)
 
     return (
         <>
@@ -28,7 +30,7 @@ const ModalPredictResultOrGoal = ({ setVisible, selectedMatch, visiblePredictRes
                             <BlueStadiumIcon />
                             <span className="font-semibold text-regular-18">Resultado final</span>
                         </div>
-                        <div className="h-[77px] shadow-soft flex gap-4 items-center px-5 rounded-xl">
+                        <div onClick={() => setVisiblePredictGoal(true)} className="h-[77px] shadow-soft flex gap-4 items-center px-5 rounded-xl">
                             <SoccerJerseyIcon />
                             <span className="font-semibold text-regular-18">Goles</span>
                         </div>
@@ -36,11 +38,20 @@ const ModalPredictResultOrGoal = ({ setVisible, selectedMatch, visiblePredictRes
                 </Dialog>
             </div>
 
-            {/* MODAL PARA PREDECIR EL RESULTADO */}
+            {/* MODAL PARA PREDECIR UN RESULTADO */}
             <ModalPredictResult
                 selectedMatch={selectedMatch}
                 visiblePredictResult={visiblePredictResult}
                 setVisiblePredictResult={setVisiblePredictResult}
+                setVisiblePredictResultOrGoal={setVisiblePredictResultOrGoal}
+                setVisible={setVisible}
+            />
+
+            {/* MODAL PARA PREDECIR UN GOL */}
+            <ModalPredictGoal
+                selectedMatch={selectedMatch}
+                visiblePredictGoal={visiblePredictGoal}
+                setVisiblePredictGoal={setVisiblePredictGoal}
                 setVisiblePredictResultOrGoal={setVisiblePredictResultOrGoal}
                 setVisible={setVisible}
             />

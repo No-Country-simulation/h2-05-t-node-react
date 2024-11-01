@@ -4,6 +4,7 @@ import ButtonOutline from "../common/ButtonOutline";
 import DefaultTeam from '../../assets/img/defaultTeam.png'
 import { useState } from "react";
 import AlertMessage from "../common/AlertMessage";
+import ArrowBackPurpleIcon from "../../assets/icons/ArrowBackPurpleIcon";
 
 const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selectedMatch, visiblePredictResult, setVisiblePredictResult }) => {
     const [selectedOption, setSelectedOption] = useState(null)
@@ -42,6 +43,7 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                 onHide={closeAllModalsPredictions}
                 className="w-[50vw] min-h-[100vh] !important"
                 breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
+                <ArrowBackPurpleIcon onClick={() => { if (!visiblePredictResult) return; setVisiblePredictResult(false); }} />
 
                 <div className='flex flex-col items-center justify-center'>
                     <span className='font-semibold text-title text-black'>Predice el resultado</span>
