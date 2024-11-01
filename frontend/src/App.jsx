@@ -1,7 +1,5 @@
 import './index.css'
-import LoadingScreen from './components/layout/LoadingScreen'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Footer from './components/layout/Footer';
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import MatchesPage from './pages/MatchesPage';
@@ -14,9 +12,17 @@ import Predictions from './components/completedMatches/Predictions';
 import MyPredictionsPage from './pages/MyPredictionsPage';
 import DivisionsPage from './pages/DivisionsPage';
 import ScoutPlayersPage from './pages/ScoutPlayersPage';
-import Ranking from './components/divisions/pages/Ranking';
-import Rewards from './components/divisions/pages/Rewards';
-import Quests from './components/divisions/pages/Quests';
+import Quests from './pages/divisions/Quests';
+import Rewards from './pages/divisions/Rewards';
+import Ranking from './pages/divisions/Ranking';
+import MonthlyPrizes from './pages/divisions/MonthlyPrizes';
+import RankingSP from './pages/scoutPlayers/RankingSP';
+import Market from './pages/scoutPlayers/Market';
+import Statistics from './pages/scoutPlayers/Statistics';
+import Players from './pages/scoutPlayers/PlayersPage';
+import PlayersPage from './pages/scoutPlayers/PlayersPage';
+import PlayerDetails from './pages/scoutPlayers/players/PlayerDetails';
+import PlayerToken from './pages/scoutPlayers/players/PlayerToken';
 
 function App() {
 
@@ -30,8 +36,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/matches" element={<MatchesPage />} />
-            <Route path="/divisions" element={<DivisionsPage />} />
-            <Route path="/scout-players" element={<ScoutPlayersPage />} />
+            {/* <Route path="/divisions" element={<DivisionsPage />} /> */}
+            {/* <Route path="/scout-players" element={<ScoutPlayersPage />} /> */}
 
             <Route path="/matches-completed" element={<MatchesCompletedPage />}>
               <Route index element={<Predictions />} />
@@ -45,6 +51,20 @@ function App() {
               <Route path='ranking' element={<Ranking />} />
               <Route path='rewards' element={<Rewards />} />
               <Route path='quests' element={<Quests />} />
+            </Route>
+            <Route path="/divisions/rewards/prizes" element={<MonthlyPrizes />} />
+
+            <Route path="/scout-players" element={<ScoutPlayersPage />}>
+              <Route index element={<RankingSP />} />
+              <Route path='ranking' element={<RankingSP />} />
+              <Route path='market' element={<Market />} />
+              <Route path='statistics' element={<Statistics />} />
+            </Route>
+
+            <Route path="/scout-players/ranking/players/:id" element={<PlayersPage />}>
+              <Route index element={<PlayerDetails />} />
+              <Route path="details" element={<PlayerDetails />} />
+              <Route path="token" element={<PlayerToken />} />
             </Route>
 
             <Route path="/me/predictions" element={<MyPredictionsPage />} />
