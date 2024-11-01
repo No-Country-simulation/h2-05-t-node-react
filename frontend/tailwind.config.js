@@ -33,6 +33,7 @@ module.exports = {
         'secondary': '#555555',
         'tertiary': '#8D8D8D',
         'soft-gray': '#F3F4F5',
+        'rewards-gray': '#F7F7F7',
         'search': '#EFEFF0',
         'black': '#181818',
         'ranking-user': '#C2DAFF'

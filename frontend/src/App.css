@@ -18,6 +18,29 @@
   stroke: #8E2BFF !important;
 }
 
+.custom-progress-bar-rewards {
+  border: 2px solid #8E2BFF !important;
+}
+
+.custom-progress-bar-rewards .p-progressbar-value {
+  background: linear-gradient(to right, #317EF4, #8E2BFF);
+  border-radius: 44.74px;
+}
+
+.custom-progress-bar-logros .p-progressbar-value {
+  background: linear-gradient(to right, #317EF4, #8E2BFF);
+  border-radius: 44.74px;
+}
+
+.custom-progress-bar-quests .p-progressbar-value {
+  background-color: #fff;
+  border-radius: 44.74px;
+}
+
+.custom-dialog .p-dialog-content {
+  padding: 0 !important;
+}
+
 @media (max-width: 720px) {
   input[type="date"] {
     right: 300px;
