@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-const Carrousel = ({ imageOne, imageTwo }) => {
+const Carrousel = ({ imageOne, imageTwo, className }) => {
     const scrollContainerRef = useRef(null);
 
     const scrollToStart = () => {
@@ -22,14 +22,14 @@ const Carrousel = ({ imageOne, imageTwo }) => {
     }
 
     return (
-        <div className="w-full mt-4 overflow-x-auto scrollbar-hide" ref={scrollContainerRef}>
+        <div className="w-full overflow-x-auto scrollbar-hide" ref={scrollContainerRef}>
             <div className="flex gap-4 w-max">
                 <div
                     onClick={scrollToStart}
-                    className="responsive-carrousel w-[300px] h-[140px] p-[3.5px] flex justify-center items-center relative bg-gradiente shadow-soft rounded-xl cursor-pointer"
+                    className={`${className} responsive-carrousel flex justify-center items-center relative bg-gradiente shadow-soft rounded-xl cursor-pointer`}
                 >
                     <div
-                        className="w-[100%] h-[100%] bg-white rounded-lg"
+                        className="w-[100%] h-[100%] bg-transparent rounded-lg"
                         style={{
                             backgroundImage: `url(${imageOne})`,
                             backgroundSize: 'cover',
@@ -40,10 +40,10 @@ const Carrousel = ({ imageOne, imageTwo }) => {
 
                 <div
                     onClick={scrollToEnd}
-                    className="responsive-carrousel w-[300px] h-[140px] p-[3.5px] flex justify-center items-center relative bg-gradiente shadow-soft rounded-xl cursor-pointer"
+                    className={`${className} responsive-carrousel flex justify-center items-center relative bg-gradiente shadow-soft rounded-xl cursor-pointer`}
                 >
                     <div
-                        className="w-[100%] h-[100%] bg-white rounded-lg"
+                        className="w-[100%] h-[100%] bg-transparent rounded-lg"
                         style={{
                             backgroundImage: `url(${imageOne})`,
                             backgroundSize: 'cover',

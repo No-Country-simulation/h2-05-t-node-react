@@ -1,5 +1,5 @@
 
-const Navbar30NextDays = ({ dateList, selectedDate, setSelectedDate }) => {
+const NavbarNextFiveDays = ({ dateList, selectedDate, setSelectedDate }) => {
 
     const handleSelectDate = (index) => {
         setSelectedDate(index);
@@ -21,4 +21,4 @@ const Navbar30NextDays = ({ dateList, selectedDate, setSelectedDate }) => {
     );
 };
 
-export default Navbar30NextDays;
+export default NavbarNextFiveDays;
