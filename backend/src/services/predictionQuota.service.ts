@@ -1,4 +1,4 @@
-import { PredictionQuota } from "../models/predictionQuota.model";
+import { PredictionQuota } from "../models/prediction_quota.model";
 import { User } from "../models/user.model";
 
 export const getPredictionQuota = async (userId: string, day: Date) => {

@@ -10,7 +10,7 @@ import {
 } from "sequelize-typescript";
 import { Match } from "./match.model";
 import { Prediction } from "./prediction.model";
-import { predictionInfo } from "../interfaces/predictionInfo.interface";
+import { predictionInfo } from "../interfaces/prediction_info.interface";
 
 @Table({
   tableName: "prediction_info",
@@ -26,7 +26,7 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
 
   @ForeignKey(() => Match)
   @Column({
-    type: DataType.UUID,
+    type: DataType.STRING,
     allowNull: false,
   })
   match_id!: string;
@@ -57,7 +57,7 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   selectedPredictionType!: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.FLOAT,
     allowNull: false,
     defaultValue: 1,
   })

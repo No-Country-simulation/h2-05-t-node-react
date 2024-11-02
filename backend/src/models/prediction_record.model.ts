@@ -8,7 +8,7 @@ import {
   BelongsTo,
 } from "sequelize-typescript";
 import { Prediction } from "./prediction.model";
-import { predictionRecordInterface } from "../interfaces/predictionRecord.interface";
+import { predictionRecordInterface } from "../interfaces/prediction_record.interface";
 
 @Table({
   tableName: "predictions_record",

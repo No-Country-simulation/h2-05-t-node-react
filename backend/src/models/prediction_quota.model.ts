@@ -1,7 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { User } from "./user.model";
 import { UUIDV4 } from "sequelize";
-import { predictionQuotaInterface } from "../interfaces/predictionQuota.interface";
+import { predictionQuotaInterface } from "../interfaces/prediction_quota.interface";
 
 @Table({
     tableName: "predictions_quota",
