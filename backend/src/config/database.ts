@@ -6,8 +6,8 @@ import { Prediction } from '../models/prediction.model';
 import { User } from '../models/user.model';
 import { Ranking } from '../models/ranking.model';
 import { Prize } from '../models/prize.model';
-import { PredictionRecord } from '../models/predictionRecord.model';
-import { PredictionQuota } from '../models/predictionQuota.model';
+import { PredictionRecord } from '../models/prediction_record.model';
+import { PredictionQuota } from '../models/prediction_quota.model';
 import { DB_URL } from './enviroment';
 import pg from 'pg';
 

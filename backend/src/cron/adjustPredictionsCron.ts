@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { PredictionQuota } from "../models/predictionQuota.model";
+import { PredictionQuota } from "../models/prediction_quota.model";
 
 
 // Ejecutar todos los días a la medianoche

@@ -11,7 +11,7 @@ import {
 import { User } from "./user.model";
 import { predictionInterface } from "../interfaces/prediction.interface";
 import { PredictionInfo } from "./prediction_info.model";
-import { PredictionRecord } from "./predictionRecord.model";
+import { PredictionRecord } from "./prediction_record.model";
 
 @Table({
   tableName: "predictions",

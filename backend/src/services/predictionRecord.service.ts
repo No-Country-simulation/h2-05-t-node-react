@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { Prediction } from "../models/prediction.model";
-import { PredictionRecord } from "../models/predictionRecord.model";
+import { PredictionRecord } from "../models/prediction_record.model";
 import { HistoryFilterOptions } from "../interfaces/prediction.interface";
 
 export const predictionHistoryByUser = async (
