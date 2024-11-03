@@ -55,6 +55,7 @@ export const postCreatePrediction = async (req: Request, res: Response) => {
       data.userId,
       data.prediction,
       data.type,
+      data.matchData,
       data?.predictionId
     );
     if (!predictions) {

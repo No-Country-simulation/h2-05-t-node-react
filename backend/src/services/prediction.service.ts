@@ -8,6 +8,7 @@ import { calculateChainedPoints } from "../utils/pointCalculation";
 import { getPredictionQuota } from "./prediction_quota.service";
 
 import sequelize from "../config/database";
+import { CreateOneMatch } from "./match.service";
 
 export const getPredictions = async (): Promise<Prediction[]> => {
   try {
@@ -36,7 +37,6 @@ export const getPrediction = async (id: any): Promise<Prediction> => {
 export const createPrediction = async (
   userId: string,
   prediction: {
-    match_id: string;
     predictionType: "match" | "player";
     selectedPredictionType: "win_home" | "win_away" | "draw" | string;
     fee: number;
@@ -44,7 +44,19 @@ export const createPrediction = async (
     date: Date;
   },
   type: "simple" | "chained",
-  predictionId?: string
+  matchData : {
+    id_apiMatch: string;
+    home_team: string;
+    home_team_img: string;
+    away_team:string;
+    away_team_img:string;
+    league: string;
+    league_id: string;
+    league_img: string;
+    match_date: Date,
+  },
+  predictionId?: string,
+
 ) => {
   const transaction = await sequelize.transaction();
   try {
@@ -73,9 +85,8 @@ export const createPrediction = async (
     }
     let newPrediction;
     let totalPoints = prediction.fee;
-    //Si el usuario ya tiene predicciones llega con id sino llega null
 
-    //let predId = predictionId || null;
+    const match = await CreateOneMatch(matchData);
 
     if (type === "simple") {
       // Crear la predicción principal y el registro en una sola transacción
@@ -101,7 +112,7 @@ export const createPrediction = async (
       // Crear PredictionInfo con su relacion
       const newPredictionInfo = await PredictionInfo.create(
         {
-          match_id: prediction.match_id,
+          match_id: match.id,
           prediction_id: newPrediction.id, // Relacionar con la predicción creada
           predictionType: prediction.predictionType,
           predictionQuotaType: prediction.quotaType,
@@ -166,7 +177,7 @@ export const createPrediction = async (
       // Crear PredictionInfo y vincularlo a `predictionId`
       await PredictionInfo.create(
         {
-          match_id: prediction.match_id,
+          match_id: match.id,
           prediction_id: predictionId, // Relacionar con la predicción creada
           predictionType: prediction.predictionType,
           predictionQuotaType: prediction.quotaType,
