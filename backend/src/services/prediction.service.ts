@@ -5,7 +5,7 @@ import { addPoints } from "./ranking.service";
 import { PredictionInfo } from "../models/prediction_info.model";
 import { calculateChainedPoints } from "../utils/pointCalculation";
 
-import { getPredictionQuota } from "./predictionQuota.service";
+import { getPredictionQuota } from "./prediction_quota.service";
 
 import sequelize from "../config/database";
 

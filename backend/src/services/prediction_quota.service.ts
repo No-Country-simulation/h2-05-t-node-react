@@ -1,22 +1,21 @@
 import { PredictionQuota } from "../models/prediction_quota.model";
 import { User } from "../models/user.model";
 
-export const getPredictionQuota = async (userId: string, day: Date) => {
+export const getPredictionQuota = async (userId: string, date: Date) => {
   try {
-  
     // Verificar cuántas predicciones disponibles tiene el usuario para ese dia
     let predictionQuota = await PredictionQuota.findOne({
       where: {
         user_id: userId,
-        date: day,
+        date: date,
       },
     });
-
+    console.log("predictionQuota----------", predictionQuota);
     // Si no existe un registro de cuota de predicciones para el usuario, crearlo
     if (!predictionQuota) {
       predictionQuota = await PredictionQuota.create({
         user_id: userId,
-        date: new Date(day),
+        date: date,
         daily_predictions_left: 5,
         future_predictions_left: 2,
       });
@@ -24,7 +23,9 @@ export const getPredictionQuota = async (userId: string, day: Date) => {
     return predictionQuota;
   } catch (error) {
     // Lanzar el error para que se pueda manejar en otro nivel
-    throw new Error(`Error al consultar las cuotas de predicción: ${(error as Error).message}`);
+    throw new Error(
+      `Error al consultar las cuotas de predicción: ${(error as Error).message}`
+    );
   }
 };
 

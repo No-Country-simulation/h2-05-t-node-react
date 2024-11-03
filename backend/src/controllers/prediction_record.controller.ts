@@ -1,5 +1,5 @@
-import { HistoryFilterOptions } from "../interfaces/prediction.interface";
-import { predictionHistoryByUser } from "../services/predictionRecord.service";
+//import { HistoryFilterOptions } from "../interfaces/prediction.interface";
+import { predictionHistoryByUser } from "../services/prediction_record.service";
 import { httpResponse } from "../utils/enumsErrors";
 import { Request, Response } from "express";
 
@@ -10,10 +10,10 @@ export const getPredictionHistoryByUser = async (
   res: Response
 ) => {
   try {
-    const filters = req.body.filters as HistoryFilterOptions;
-    const userId = req.body.id as string;
+    const data = req.body;
 
-    const historyPrediction = await predictionHistoryByUser(userId, filters);
+    console.log("id----------------------------------", data.userId);
+    const historyPrediction = await predictionHistoryByUser(data.userId, data.filters);
 
     if (!historyPrediction)
       return HttpResponse.DATA_BASE_ERROR(

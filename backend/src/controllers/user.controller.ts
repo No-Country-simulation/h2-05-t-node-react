@@ -11,6 +11,7 @@ import {
 import { httpResponse } from "../utils/enumsErrors";
 import { userInterface } from "../interfaces/user.interface";
 import { User } from "../models/user.model";
+import { getPredictionQuota } from "../services/prediction_quota.service";
 
 const HttpResponse = new httpResponse();
 
@@ -118,11 +119,18 @@ export const login = async (req: Request, res: Response) => {
       return HttpResponse.INVALID_TYPE_ERROR(res, "contraseña invalidos");
     }
     const id = user.id;
+     const today = new Date();
+     //const todayString = today.toISOString().split("T")[0]; // Formatear la fecha en 'YYYY-MM-DD'
+
+    // Verificar cuántas predicciones disponibles tiene el usuario para hoy
+    let predictionQuota = await getPredictionQuota(id, today);
+
     const token = jwt.sign({ email, id }, JWT_KEY!, {
       expiresIn: "24h",
     });
     const response = {
       token: token,
+      quota: predictionQuota,
       user: {
         id: user.id,
         name: user.username,
