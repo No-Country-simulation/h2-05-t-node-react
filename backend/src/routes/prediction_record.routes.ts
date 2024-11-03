@@ -73,6 +73,6 @@ const router = Router();
  *         description: Error interno en el servidor.
  */
 
-router.get('/history', getPredictionHistoryByUser);
+router.post('/history', getPredictionHistoryByUser);
 
 export default router;
