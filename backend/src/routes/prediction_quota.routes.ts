@@ -3,6 +3,6 @@ import { getPredictionQuotaByDate } from "../controllers/prediction_quota.contro
 
 const router = express.Router();
 
-router.get("", getPredictionQuotaByDate);
+router.post("", getPredictionQuotaByDate);
 
 export default router;
