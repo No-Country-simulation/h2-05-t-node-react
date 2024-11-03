@@ -1,7 +1,14 @@
 import { UUIDV4 } from "sequelize";
-import { Table, Column, Model, DataType, ForeignKey } from "sequelize-typescript";
-import { League } from "./league.model";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  HasMany,
+} from "sequelize-typescript";
+
 import { matchInterface } from "../interfaces/match.interface";
+import { PredictionInfo } from "./prediction_info.model";
 
 @Table({
   tableName: "matches",
@@ -19,13 +26,37 @@ export class Match extends Model<Match, matchInterface> {
     type: DataType.STRING,
     allowNull: false,
   })
-  team_a!: string;
+  home_team!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  home_team_img!: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  team_b!: string;
+  away_team!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  away_team_img!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  league!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  league_img!: string;
 
   @Column({
     type: DataType.DATE,
@@ -41,22 +72,20 @@ export class Match extends Model<Match, matchInterface> {
   result!: string;
 
   @Column({
-    type: DataType.ENUM('scheduled', 'in_progress', 'completed'),
+    type: DataType.ENUM("scheduled", "in_progress", "completed"),
     allowNull: true,
+    defaultValue: "scheduled",
   })
   status!: string;
-
-  @ForeignKey(() => League)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-    onDelete: 'CASCADE'
-  })
-  league_id!: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  id_apiMatch!: string
+  id_apiMatch!: string;
+
+  // Relación 1 a muchos con PredictionInfo
+  @HasMany(() => PredictionInfo)
+  predictionInfos!: PredictionInfo[];
+
 }

@@ -26,7 +26,7 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
 
   @ForeignKey(() => Match)
   @Column({
-    type: DataType.STRING,
+    type: DataType.UUID,
     allowNull: false,
   })
   match_id!: string;
@@ -79,4 +79,8 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   // Relación muchos a 1 con Prediction
    @BelongsTo(() => Prediction)
   prediction!: Prediction; 
+
+  // Relación muchos a 1 con partidos
+   @BelongsTo(() => Match)
+   match!: Match; 
 }

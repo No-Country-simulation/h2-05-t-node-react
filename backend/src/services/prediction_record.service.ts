@@ -1,7 +1,8 @@
 import { Op } from "sequelize";
 import { Prediction } from "../models/prediction.model";
-import { PredictionRecord } from "../models/prediction_record.model";
 import { HistoryFilterOptions } from "../interfaces/prediction.interface";
+import { PredictionInfo } from "../models/prediction_info.model";
+import { Match } from "../models/match.model";
 
 export const predictionHistoryByUser = async (
   userId: string,
@@ -19,19 +20,35 @@ export const predictionHistoryByUser = async (
       },
       include: [
         {
-          model: PredictionRecord,
+          model: PredictionInfo,
+          attributes: ["predictionType","predictionQuotaType","selectedPredictionType","prediction_date","status"],
           where: {
             ...(startDate &&
               endDate && {
-                // Filtrar por rango de fechas en el historial
                 timestamp: {
                   [Op.between]: [startDate, endDate],
                 },
               }),
           },
+          include: [
+            {
+              model: Match, // Incluir el modelo Match
+              attributes: [
+                "home_team",
+                "home_team_img",
+                "away_team",
+                "away_team_img",
+                "match_date",
+                "league",
+                "league_img",
+                "result",
+                "status",
+              ], // Selecciona solo los campos necesarios
+            },
+          ],
         },
       ],
-      attributes: ["total_points", "status"], // Incluir los campos `total_points` y `status`
+      attributes: ["id","total_points", "status", "type"], // Incluir los campos
       limit, // Limitar a 10 resultados por página
       offset, // Saltar resultados basados en la página actual
     });
