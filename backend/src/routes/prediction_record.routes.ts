@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { getPredictionHistoryByUser } from '../controllers/predictionRecord.controller';
+import { getPredictionHistoryByUser } from '../controllers/prediction_record.controller';
 
 const router = Router();
 
 /**
  * @swagger
- * /api/prediction/predictionHistory:
+ * /api/prediction-record/history:
  *   get:
  *     tags:
  *       - Predicciones
@@ -73,6 +73,6 @@ const router = Router();
  *         description: Error interno en el servidor.
  */
 
-router.get('/predictionHistory', getPredictionHistoryByUser);
+router.get('/history', getPredictionHistoryByUser);
 
 export default router;

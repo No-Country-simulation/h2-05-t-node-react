@@ -11,7 +11,8 @@ import { errorHandler } from "./middlewares/errorHandler";
 import cors from "cors";
 import predictionRouter from "./routes/prediction.routes";
 import './cron/adjustPredictionsCron';
-import predictionRecordRoutes from "./routes/predictionRecord.routes";
+import predictionRecordRoutes from "./routes/prediction_record.routes";
+import predictionQuotaRoutes from "./routes/prediction_quota.routes";
 import swaggerConfig from "./config/swaggerConfig";
 import './cron/cron.module';
 
@@ -29,6 +30,7 @@ swaggerConfig(app);
 // Rutas de la aplicación
 app.use("/auth", authRoutes);
 app.use("/api/ranking", rankingRoutes);
+app.use("/api/prediction-qouta", predictionQuotaRoutes);
 app.use("/api/prediction-record", predictionRecordRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/match", matchRoutes);
