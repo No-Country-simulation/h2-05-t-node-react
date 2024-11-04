@@ -13,7 +13,7 @@ import predictionRouter from "./routes/prediction.routes";
 import './cron/adjustPredictionsCron';
 import predictionRecordRoutes from "./routes/predictionRecord.routes";
 import swaggerConfig from "./config/swaggerConfig";
-import './cron/cron.module';
+/* import './cron/cron.module'; */
 
 const app = express();
 

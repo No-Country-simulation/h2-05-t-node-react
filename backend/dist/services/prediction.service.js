@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePrediction = exports.deletePrediction = exports.createPredictions = exports.createPrediction = exports.getPrediction = exports.getPredictions = void 0;
+exports.updateBet = exports.updatePrediction = exports.deletePrediction = exports.createPredictions = exports.createPrediction = exports.getPrediction = exports.getPredictions = void 0;
 const prediction_model_1 = require("../models/prediction.model");
 const predictionRecord_model_1 = require("../models/predictionRecord.model");
 //import { Ranking } from "../models/ranking.model";
@@ -169,4 +169,18 @@ const updatePrediction = (id, updateData) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.updatePrediction = updatePrediction;
+const updateBet = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const bet = yield prediction_model_1.Prediction.findOne(id);
+        if (!bet) {
+            throw new Error('No existe la predicción');
+        }
+        const update = yield prediction_model_1.Prediction.update(data, { where: { id: id } });
+        return { data: update, msg: "Predicción actualizado" };
+    }
+    catch (error) {
+        throw new Error(`Error al actualizado la Predicción: ${error.message}`);
+    }
+});
+exports.updateBet = updateBet;
 //# sourceMappingURL=prediction.service.js.map

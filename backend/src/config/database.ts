@@ -21,7 +21,14 @@ const sequelize = new Sequelize({
   username: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'password',
   host: process.env.DB_HOST || 'localhost',
-  dialect: 'mysql',
+  dialect: 'postgres',
+  port: 5432, // Asegúrate de especificar el puerto correcto para PostgreSQL
+  dialectOptions: {
+    ssl: {
+      require: true, // Esto es necesario para Render
+      rejectUnauthorized: false // Esto evita problemas con certificados no verificados
+    }
+  },
   models: [User, Match, League, PredictionInfo, Prediction, Ranking, Prize, PredictionRecord, PredictionQuota]
 });
 

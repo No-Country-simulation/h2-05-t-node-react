@@ -59,6 +59,14 @@ __decorate([
     }),
     __metadata("design:type", Date)
 ], Prize.prototype, "date", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.DATE,
+        allowNull: true,
+        defaultValue: sequelize_typescript_1.DataType.NOW,
+    }),
+    __metadata("design:type", Date)
+], Prize.prototype, "rewardingDate", void 0);
 exports.Prize = Prize = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "prize",

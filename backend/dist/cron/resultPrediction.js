@@ -15,18 +15,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.predictionResult = void 0;
 const database_1 = __importDefault(require("../config/database"));
 const sequelize_1 = require("sequelize");
-const days_1 = require("./days");
+const prediction_service_1 = require("../services/prediction.service");
 const predictionResult = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const firstDate = (0, days_1.getFirstDate)();
-        const secondDate = (0, days_1.getSecondDate)();
-        const result = yield database_1.default.query(`SELECT * FROM mydb.bets_match_prediction WHERE bet_status = 'pending'`, {
+        const result = yield database_1.default.query(`SELECT * FROM mydb.bets_match_prediction WHERE total_points is NULL`, {
             type: sequelize_1.QueryTypes.SELECT,
         });
-        console.log(firstDate);
-        console.log(secondDate);
         const resultMap = result.map((item) => __awaiter(void 0, void 0, void 0, function* () {
-            console.log(item.bet_status);
+            if (item.bets_status === 'successful' || item.bet_type === 'simple') {
+                const point = 1 * item.fee;
+                const bet = yield (0, prediction_service_1.updateBet)(item.bet_id, { total_points: point });
+                return bet;
+            }
+            if (item.bets_status === 'failed' || item.bet_type === 'simple') {
+                const bet = yield (0, prediction_service_1.updateBet)(item.bet_id, { total_points: 0 });
+                return bet;
+            }
         }));
         return resultMap;
     }
