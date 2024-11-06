@@ -6,7 +6,6 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
-  
 } from "sequelize-typescript";
 import { Match } from "./match.model";
 import { Prediction } from "./prediction.model";
@@ -40,19 +39,19 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
 
   @Column({
     type: DataType.ENUM("match", "player"),
-    allowNull: false
+    allowNull: false,
   })
   predictionType!: string;
-  
+
   @Column({
     type: DataType.ENUM("daily", "future"),
-    allowNull: false
+    allowNull: false,
   })
   predictionQuotaType!: string;
 
   @Column({
-    type: DataType.ENUM("win_home", "win_away", 'draw', 'player'),
-    allowNull: true
+    type: DataType.ENUM("win_home", "win_away", "draw", "player"),
+    allowNull: true,
   })
   selectedPredictionType!: string;
 
@@ -77,6 +76,9 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   status!: string;
 
   // Relación muchos a 1 con Prediction
-   @BelongsTo(() => Prediction)
-  prediction!: Prediction; 
+  @BelongsTo(() => Prediction)
+  prediction!: Prediction;
+
+  @BelongsTo(() => Match)
+  match!: Match;
 }

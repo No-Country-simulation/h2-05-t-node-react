@@ -1,6 +1,7 @@
 import { predictionInterface } from "../interfaces/prediction.interface";
 import { Prediction } from "../models/prediction.model";
 import { PredictionRecord } from "../models/predictionRecord.model";
+import { Match } from "../models/match.model";
 //import { Ranking } from "../models/ranking.model";
 import { addPoints } from "./ranking.service";
 import { User } from "../models/user.model";
@@ -215,6 +216,53 @@ export const updateBet = async (id:any, data: any) => {
   } catch (error) {
     throw new Error(
       `Error al actualizado la Predicción: ${(error as Error).message}`
+    );
+  }
+}
+
+export const predictionRecordByMatch = async (userId:any, matchId:any) => {
+  try {
+    const prediction = await Prediction.findAll({
+      where: {
+        user_id: userId,
+      },
+      include: [
+        {
+          model: PredictionInfo,
+          attributes: [
+            "predictionType",
+            "predictionQuotaType",
+            "selectedPredictionType",
+            "prediction_date",
+            "status",
+          ],
+          where: {
+            match_id: matchId, // Filtrar por match_id en PredictionInfo
+          },
+          include: [
+            {
+              model: Match,
+              attributes: [
+                "team_a",
+                "team_b",
+                "match_date",
+                "league_id",
+                "result",
+                "status",
+              ],
+            },
+          ],
+        },
+      ],
+      attributes: ["id", "total_points", "status", "type"],
+     })
+     if(!prediction){
+      throw new Error('No existe la predicción')
+    }
+    return prediction;
+  } catch (error) {
+    throw new Error(
+      `Error al obtener la Predicción: ${(error as Error).message}`
     );
   }
 }

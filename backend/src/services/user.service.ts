@@ -108,3 +108,4 @@ export const updateUser = async (id: any, data: any): Promise<any> => {
     );
   }
 };
+

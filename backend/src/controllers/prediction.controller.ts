@@ -4,6 +4,7 @@ import {
   deletePrediction,
   getPrediction,
   getPredictions,
+  predictionRecordByMatch,
   updatePrediction,
 } from "../services/prediction.service";
 import { httpResponse } from "../utils/enumsErrors";
@@ -141,3 +142,16 @@ export const createFuturePrediction = async (req: Request, res: Response) => {
   }
 };
  */
+
+export const getPredictionRecordByMatch = async (req: Request, res: Response) => {
+  try {
+    const { userId, matchId } = req.params;
+    const prediction = await predictionRecordByMatch(userId, matchId);
+    if (!prediction) {
+      return HttpResponse.DATA_BASE_ERROR(res, "Error al traer predicciones");
+    }
+    return HttpResponse.OK(res, prediction);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+}
