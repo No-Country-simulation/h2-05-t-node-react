@@ -1,5 +1,5 @@
 import { UUIDV4 } from "sequelize";
-import { Table, Column, Model, DataType, BelongsTo } from "sequelize-typescript";
+import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { TokenAttributesInterface } from "../interfaces/token.interface";
 import { TokenInfo } from "./token_info.model";
 
@@ -22,9 +22,10 @@ export class Token extends Model<Token, TokenAttributesInterface> {
   })
   user_id!: string;
 
+  @ForeignKey(() => TokenInfo)
   @Column({
-    type: DataType.STRING,
-    allowNull: true,
+    type: DataType.UUID,
+    allowNull: false,
   })
   token_info_id!: string;
 

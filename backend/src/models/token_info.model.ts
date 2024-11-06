@@ -34,11 +34,13 @@ export class TokenInfo extends Model<TokenInfo, TokenInfoAttributesInterface> {
     allowNull: true,
   })
   total_tokens!: number;
+  
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
   })
   assigned_tokens!: number;
+
   @Column({
     type: DataType.FLOAT,
     allowNull: true,
@@ -109,6 +111,7 @@ export class TokenInfo extends Model<TokenInfo, TokenInfoAttributesInterface> {
     country: string;
     season: string;
     place: string;
+    porcentage: string;
   }>;
 
   @Column({
@@ -118,10 +121,8 @@ export class TokenInfo extends Model<TokenInfo, TokenInfoAttributesInterface> {
   apiId!: string;
 
   @HasMany(() => Token)
-  token!: Token[];
+  tokens!: Token[];
 
   @HasMany(() => TokenRecord)
-  token_record!: TokenRecord[];
-
-
+  token_records!: TokenRecord[];
 }

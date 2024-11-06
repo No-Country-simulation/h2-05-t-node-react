@@ -1,5 +1,5 @@
 import { UUIDV4 } from "sequelize";
-import { Table, Column, Model, DataType, BelongsTo } from "sequelize-typescript";
+import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { TokenInfo } from "./token_info.model";
 import { TokenRecordAttributesInterface } from "../interfaces/token_record.interface";
 
@@ -17,12 +17,6 @@ export class TokenRecord extends Model<TokenRecord, TokenRecordAttributesInterfa
   id!: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: true,
-  })
-  token_info_id!: string;
-
-  @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
@@ -34,7 +28,14 @@ export class TokenRecord extends Model<TokenRecord, TokenRecordAttributesInterfa
     unique: true,
   })
   token_number!: number;
- 
+
+  @ForeignKey(() => TokenInfo)
+  @Column({
+    type: DataType.UUID,
+    allowNull: true,
+  })
+  token_info_id!: string;
+
   @BelongsTo(() => TokenInfo)
   token_info!: TokenInfo;
 

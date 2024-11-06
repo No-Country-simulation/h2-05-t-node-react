@@ -7,7 +7,12 @@ import {
   getTeamApi, 
   getPlayerApi, 
   getOnePlayerApi, 
-  getAllMatchesApi
+  getAllMatchesApi,
+  getPlayerByNameApi,
+  getPlayerSeasonByIdApi,
+  getPlayerByIdAndSeasonApi,
+  getPlayerByIdAndTotalSeasonApi,
+  getPlayerTrophyByIdApi
 } from '../controllers/api.controller';
 
 
@@ -224,5 +229,11 @@ router.get('/api_players', getPlayerApi);
  *         description: Error al obtener el jugador
  */
 router.get('/api_Oneplayers', getOnePlayerApi);
+
+router.get('/api_player_by_name', getPlayerByNameApi);
+router.get('/api_player_season_by_id', getPlayerSeasonByIdApi);
+router.get('/api_player_by_id_season', getPlayerByIdAndSeasonApi);
+router.get('/api_player_by_id_total_season', getPlayerByIdAndTotalSeasonApi);
+router.get('/api_player_trophies_by_id', getPlayerTrophyByIdApi);
 
 export default router;

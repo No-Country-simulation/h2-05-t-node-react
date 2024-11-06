@@ -1,5 +1,4 @@
 export interface TokenInfoAttributesInterface {
-  user_id: string;
   division?: number;
   total_tokens?: number;
   assigned_tokens?: number;
@@ -19,6 +18,7 @@ export interface TokenInfoAttributesInterface {
     country: string;
     season: string;
     place: string;
+    porcentage: string;
   }>;
   apiId?: string;
 }

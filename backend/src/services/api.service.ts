@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { API_URL } from "../config/enviroment";
 
 dotenv.config();
 
@@ -35,8 +36,8 @@ export const getAllMatches = async (
     if (!response) throw new Error("Error al obtener datos");
 
     const result = await response.json();
-    if(result.length === 0) {
-      return {msg: 'No hay partidos'};
+    if (result.length === 0) {
+      return { msg: "No hay partidos" };
     }
     const filteredResults = result.map((item: any) => ({
       league_name: item.league_name,
@@ -55,12 +56,14 @@ export const getAllMatches = async (
       team_home_badge: item.team_home_badge,
       team_away_badge: item.team_away_badge,
       match_status: item.match_status,
-      goalscorer: item.goalscorer
+      goalscorer: item.goalscorer,
     }));
 
     return filteredResults;
   } catch (error) {
-    throw new Error(`Error al obtener el la informacion: ${(error as Error).message}`);
+    throw new Error(
+      `Error al obtener el la informacion: ${(error as Error).message}`
+    );
   }
 };
 
@@ -97,8 +100,8 @@ export const getMatch = async (
     if (!response) throw new Error("Error al obtener datos");
 
     const result = await response.json();
-    if(result.length === 0) {
-      return {msg: 'No hay partidos'};
+    if (result.length === 0) {
+      return { msg: "No hay partidos" };
     }
     const filteredResults = result.map((item: any) => ({
       country_name: item.country_name,
@@ -121,7 +124,9 @@ export const getMatch = async (
 
     return filteredResults;
   } catch (error) {
-    throw new Error(`Error al obtener el la informacion: ${(error as Error).message}`);
+    throw new Error(
+      `Error al obtener el la informacion: ${(error as Error).message}`
+    );
   }
 };
 
@@ -176,7 +181,9 @@ export const getRecords = async (
     }));
     return filteredResults;
   } catch (error) {
-    throw new Error(`Error al obtener el la informacion: ${(error as Error).message}`);
+    throw new Error(
+      `Error al obtener el la informacion: ${(error as Error).message}`
+    );
   }
 };
 
@@ -194,7 +201,9 @@ export const getCountries = async () => {
     const result = await response.json();
     return result;
   } catch (error) {
-    throw new Error(`Error al obtener el la informacion: ${(error as Error).message}`);
+    throw new Error(
+      `Error al obtener el la informacion: ${(error as Error).message}`
+    );
   }
 };
 
@@ -212,7 +221,9 @@ export const getLeague = async (id: any) => {
     const result = await response.json();
     return result;
   } catch (error) {
-    throw new Error(`Error al obtener el la informacion: ${(error as Error).message}`);
+    throw new Error(
+      `Error al obtener el la informacion: ${(error as Error).message}`
+    );
   }
 };
 
@@ -237,7 +248,9 @@ export const getTeam = async (id: any) => {
     }));
     return filteredResults;
   } catch (error) {
-    throw new Error(`Error al obtener el la informacion: ${(error as Error).message}`);
+    throw new Error(
+      `Error al obtener el la informacion: ${(error as Error).message}`
+    );
   }
 };
 
@@ -267,7 +280,9 @@ export const getPlayer = async (id: any, tid: any) => {
     }));
     return filteredResults;
   } catch (error) {
-    throw new Error(`Error al obtener el la informacion: ${(error as Error).message}`);
+    throw new Error(
+      `Error al obtener el la informacion: ${(error as Error).message}`
+    );
   }
 };
 
@@ -297,6 +312,259 @@ export const getPOnePlayer = async (name: any) => {
     }));
     return filteredResults;
   } catch (error) {
-    throw new Error(`Error al obtener el la informacion: ${(error as Error).message}`);
+    throw new Error(
+      `Error al obtener el la informacion: ${(error as Error).message}`
+    );
+  }
+};
+
+export const getPlayerByName = async (name: any) => {
+  try {
+    const apiUrl = API_URL;
+    const url = `${apiUrl}players/profiles?search=${name}`;
+    const apiKey = process.env.API_KEY_APIFOOTBALL;
+
+    const respuesta = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "v3.football.api-sports.io",
+        "x-rapidapi-key": `${apiKey}`,
+      },
+    });
+
+    const result = await respuesta.json();
+    //Se da formato de la respuesta
+    const players = result.response.map((item: any) => ({
+      apiId: item.player.id,
+      name: item.player.name,
+      firstname: item.player.firstname
+        ? item.player.firstname
+        : "No hay datos ingresados en la api",
+      lastname: item.player.lastname
+        ? item.player.lastname
+        : "No hay datos ingresados en la api",
+      age: item.player.age
+        ? item.player.age
+        : "No hay datos ingresados en la api",
+      photo: item.player.photo
+        ? item.player.photo
+        : "No hay datos ingresados en la api",
+      position: item.player.position
+        ? item.player.position
+        : "No hay datos ingresados en la api",
+      nationality: item.player.nationality
+        ? item.player.nationality
+        : "No hay datos ingresados en la api",
+    }));
+
+    return players;
+  } catch (error) {
+    throw new Error(`Error al buscar el jugador: ${(error as Error).message}`);
+  }
+};
+
+export const getPlayerSeasonById = async (id: any) => {
+  try {
+    const apiUrl = API_URL;
+    const url = `${apiUrl}players/seasons?player=${id}`;
+    const apiKey = process.env.API_KEY_APIFOOTBALL;
+
+    const respuesta = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "v3.football.api-sports.io",
+        "x-rapidapi-key": `${apiKey}`,
+      },
+    });
+
+    const result = await respuesta.json();
+    //Se da formato de la respuesta
+    const player = result.response;
+
+    return player;
+  } catch (error) {
+    throw new Error(`Error al buscar el jugador: ${(error as Error).message}`);
+  }
+};
+
+export const getPlayerByIdAndSeason = async (id: any, season: any) => {
+  try {
+    const apiUrl = API_URL;
+    const url = `${apiUrl}players?id=${id}&season=${season}`;
+    const apiKey = process.env.API_KEY_APIFOOTBALL;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "v3.football.api-sports.io",
+        "x-rapidapi-key": `${apiKey}`,
+      },
+    });
+
+    const result = await response.json();
+    console.log("Response:", result.response);
+
+    // Process and map the response
+    const players = result.response.map((item: any) => {
+      const { player, statistics } = item;
+
+      // Aggregate statistics
+      const aggregatedStats = statistics.reduce(
+        (acc: any, stat: any) => {
+          acc.goals += stat.goals.total || 0;
+          acc.assists_goals += stat.goals.assists || 0;
+          acc.games += stat.games.appearences || 0;
+          acc.minutes_played += stat.games.minutes || 0;
+          acc.cards_yellow += stat.cards.yellow || 0;
+          acc.cards_red += stat.cards.red || 0;
+          return acc;
+        },
+        {
+          goals: 0,
+          assists_goals: 0,
+          games: 0,
+          minutes_played: 0,
+          cards_yellow: 0,
+          cards_red: 0,
+        }
+      );
+
+      // Return the final structure
+      return {
+        name: player.name,
+        photo: player.photo,
+        age: player.age,
+        ...aggregatedStats,
+      };
+    });
+
+    console.log("Filtered Players:", players);
+    return players;
+  } catch (error) {
+    throw new Error(`Error al buscar el jugador: ${(error as Error).message}`);
+  }
+};
+
+export const getPlayerByIdAndTotalSeason = async (id: any, seasons: any) => {
+  try {
+    const apiUrl = API_URL;
+    const apiKey = process.env.API_KEY_APIFOOTBALL;
+
+    if (typeof seasons === "string") {
+      seasons = JSON.parse(seasons);
+    }
+
+    // Initialize the total aggregated statistics
+    const totalAggregatedStats = {
+      goals: 0,
+      assists_goals: 0,
+      games: 0,
+      minutes_played: 0,
+      cards_yellow: 0,
+      cards_red: 0,
+    };
+
+    let playerInfo: any = null;
+    console.log("Seasons:", seasons);
+    // Loop through each season and fetch data
+    for (const season of seasons) {
+      const url = `${apiUrl}players?id=${id}&season=${season}`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "x-rapidapi-host": "v3.football.api-sports.io",
+          "x-rapidapi-key": `${apiKey}`,
+        },
+      });
+
+      const result = await response.json();
+      //console.log(`Response for season ${season}:`, result.response);
+
+      // Process and aggregate statistics for each season
+      result.response.forEach((item: any) => {
+        const { player, statistics } = item;
+
+        // Set player info once (assuming it doesn't change across seasons)
+        if (!playerInfo) {
+          playerInfo = {
+            name: player.name,
+            photo: player.photo,
+            age: player.age,
+          };
+        }
+
+        // Aggregate the statistics for the season
+        statistics.forEach((stat: any) => {
+          totalAggregatedStats.goals += stat.goals.total || 0;
+          totalAggregatedStats.assists_goals += stat.goals.assists || 0;
+          totalAggregatedStats.games += stat.games.appearences || 0;
+          totalAggregatedStats.minutes_played += stat.games.minutes || 0;
+          totalAggregatedStats.cards_yellow += stat.cards.yellow || 0;
+          totalAggregatedStats.cards_red += stat.cards.red || 0;
+        });
+      });
+    }
+
+    // Combine player info with the total aggregated statistics
+    const finalPlayerData = {
+      ...playerInfo,
+      ...totalAggregatedStats,
+    };
+
+    console.log("Final Player Data:", finalPlayerData);
+    return finalPlayerData;
+  } catch (error) {
+    throw new Error(`Error al buscar el jugador: ${(error as Error).message}`);
+  }
+};
+export const getPlayerTrophyById = async (id: any) => {
+  try {
+    const apiUrl = API_URL;
+    const url = `${apiUrl}trophies?player=${id}`;
+    const apiKey = process.env.API_KEY_APIFOOTBALL;
+
+    const respuesta = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "v3.football.api-sports.io",
+        "x-rapidapi-key": `${apiKey}`,
+      },
+    });
+
+    const result = await respuesta.json();
+    //Se da formato de la respuesta
+    const player = result.response;
+    if (player.length === 0) {
+      return { msg: "No hay datos de trofeos" };
+    }
+    return player;
+  } catch (error) {
+    throw new Error(`Error al buscar el jugador: ${(error as Error).message}`);
+  }
+};
+export const postPlayerInfoToken = async (id: any) => {
+  try {
+    const apiUrl = API_URL;
+    const url = `${apiUrl}trophies?player=${id}`;
+    const apiKey = process.env.API_KEY_APIFOOTBALL;
+
+    const respuesta = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "v3.football.api-sports.io",
+        "x-rapidapi-key": `${apiKey}`,
+      },
+    });
+
+    const result = await respuesta.json();
+    //Se da formato de la respuesta
+    const player = result.response;
+    if (player.length === 0) {
+      return { msg: "No hay datos de trofeos" };
+    }
+    return player;
+  } catch (error) {
+    throw new Error(`Error al buscar el jugador: ${(error as Error).message}`);
   }
 };
