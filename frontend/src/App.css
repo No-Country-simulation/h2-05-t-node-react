@@ -1,0 +1,59 @@
+.p-dialog-header-icon {
+  color: #8E2BFF;
+  font-weight: bold;
+  font-size: 10rem;
+  transform: scale(1.3);
+  left: 5px;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+.custom-spinner .p-progress-spinner-circle {
+  stroke: #8E2BFF !important;
+}
+
+.custom-progress-bar-rewards {
+  border: 2px solid #8E2BFF !important;
+}
+
+.custom-progress-bar-rewards .p-progressbar-value {
+  background: linear-gradient(to right, #317EF4, #8E2BFF);
+  border-radius: 44.74px;
+}
+
+.custom-progress-bar-logros .p-progressbar-value {
+  background: linear-gradient(to right, #317EF4, #8E2BFF);
+  border-radius: 44.74px;
+}
+
+.custom-progress-bar-quests .p-progressbar-value {
+  background-color: #fff;
+  border-radius: 44.74px;
+}
+
+.custom-dialog .p-dialog-content {
+  padding: 0 !important;
+}
+
+@media (max-width: 720px) {
+  input[type="date"] {
+    right: 300px;
+  }
+}
+
+@media (max-width: 365px) {
+  .responsive-div {
+    padding: 0.25rem 0.25rem;
+    gap: 0.5rem;
+  }
+
+  .responsive-carrousel {
+    width: 280px;
+  }
+}
