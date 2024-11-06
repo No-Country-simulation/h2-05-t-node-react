@@ -10,6 +10,9 @@ import { PredictionRecord } from '../models/prediction_record.model';
 import { PredictionQuota } from '../models/prediction_quota.model';
 import { DB_URL } from './enviroment';
 import pg from 'pg';
+import { TokenInfo } from '../models/token_info.model';
+import { Token } from '../models/token.model';
+import { TokenRecord } from '../models/token_record';
 
 /* if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_HOST) {
   throw new Error('Faltan variables de entorno para la configuración de la base de datos.');
@@ -25,14 +28,7 @@ const sequelize = new Sequelize(DB_URL, {
     }
   }
 });
-/* const sequelize = new Sequelize({
-  database: process.env.DB_NAME ,
-  username: process.env.DB_USER ,
-  password: process.env.DB_PASSWORD ,
-  host: process.env.DB_HOST,
-  dialect: 'mysql',
-});
- */
+
 sequelize.addModels([
   User,
   Match,
@@ -43,6 +39,9 @@ sequelize.addModels([
   Prize,
   PredictionRecord,
   PredictionQuota,
+  TokenInfo,
+  Token,
+  TokenRecord
 ]);
 
 // Relacionar los modelos
@@ -61,6 +60,11 @@ PredictionRecord.belongsTo(Prediction);
 User.hasMany(PredictionQuota);
 PredictionQuota.belongsTo(User);
 
+TokenInfo.hasMany(Token);
+Token.belongsTo(TokenInfo);
+
+TokenInfo.hasMany(TokenRecord);
+TokenRecord.belongsTo(TokenInfo);
 
 
 export default sequelize;
