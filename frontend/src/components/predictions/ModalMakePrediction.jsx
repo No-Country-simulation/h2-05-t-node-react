@@ -6,6 +6,7 @@ import axios from "axios"
 import { getCurrentDate } from "../../utils/getCurrentDate"
 import DefaultTeam from '../../assets/img/defaultTeam.png'
 import SkeletonList from "../common/SkeletonList"
+import AlertTimeOut from "../common/AlertTimeOut"
 
 const ModalMakePrediction = ({ currentDate, dateFormatDM, predictionDate, visible, setVisible }) => {
   const [allMatches, setAllMatches] = useState([])
@@ -13,6 +14,7 @@ const ModalMakePrediction = ({ currentDate, dateFormatDM, predictionDate, visibl
   const [searchData, setSearchData] = useState('')
   const [selectedMatch, setSelectedMatch] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [showAlertFinishedMatch, setShowAlertFinishedMatch] = useState()
   const [visiblePredictResultOrGoal, setVisiblePredictResultOrGoal] = useState(false)
 
   if (predictionDate == undefined) {
@@ -55,7 +57,7 @@ const ModalMakePrediction = ({ currentDate, dateFormatDM, predictionDate, visibl
   }
 
   const handleSelectedMatch = (match) => {
-    if (match.status.long == 'Match Finished') return
+    if (match.status.long == 'Match Finished') return setShowAlertFinishedMatch(true)
 
     setSelectedMatch(match)
     setVisiblePredictResultOrGoal(true)
@@ -123,7 +125,9 @@ const ModalMakePrediction = ({ currentDate, dateFormatDM, predictionDate, visibl
                 ))
           }
         </section>
-
+        <AlertTimeOut showAlert={showAlertFinishedMatch} setShowAlert={setShowAlertFinishedMatch}>
+          No podés predecir un partido finalizado
+        </AlertTimeOut>
       </Dialog>
 
       <ModalPredictResultOrGoal
