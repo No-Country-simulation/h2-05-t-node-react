@@ -5,22 +5,22 @@ import KeyMoments from "../components/completedMatches/KeyMoments"
 import LastConfrontations from "../components/completedMatches/LastConfrontations"
 
 const DetailsPage = () => {
-  const [completedMatch, setCompletedMatch] = useState(null)
+  const [selectedMatch, setSelectedMatch] = useState(null)
 
   useEffect(() => {
-    const storedMatch = localStorage.getItem('completedMatch');
+    const storedMatch = localStorage.getItem('selectedMatch');
     if (storedMatch) {
-      setCompletedMatch(JSON.parse(storedMatch));
+      setSelectedMatch(JSON.parse(storedMatch));
     }
   }, []);
 
-  console.log(completedMatch)
+  console.log(selectedMatch)
 
   return (
     <Container>
-      <Details completedMatch={completedMatch} />
-      <KeyMoments completedMatch={completedMatch} />
-      <LastConfrontations completedMatch={completedMatch} />
+      <Details selectedMatch={selectedMatch} />
+      <KeyMoments selectedMatch={selectedMatch} />
+      <LastConfrontations selectedMatch={selectedMatch} />
     </Container>
   )
 }
