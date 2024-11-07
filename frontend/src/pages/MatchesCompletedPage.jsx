@@ -6,53 +6,67 @@ import ArrowBackBlueIcon from '../assets/icons/ArrowBackBlueIcon'
 import Footer from "../components/layout/Footer"
 
 const MatchesCompletedPage = () => {
-    const [completedMatch, setCompletedMatch] = useState(null)
-    let date = formatDateToMD(completedMatch?.match_date)
+    const [selectedMatch, setSelectedMatch] = useState(null)
+    let date = formatDateToMD(selectedMatch?.match_date)
 
     useEffect(() => {
-        const storedMatch = localStorage.getItem('completedMatch')
+        const storedMatch = localStorage.getItem('selectedMatch')
         if (storedMatch) {
-            setCompletedMatch(JSON.parse(storedMatch))
+            setSelectedMatch(JSON.parse(storedMatch))
         }
     }, [])
+
+    function getDate(dateString) {
+        const date = new Date(dateString)
+        return date.toISOString().split('T')[0]
+    }
+
+    const getTime = (dateTimeString) => {
+        return dateTimeString.split("T")[1].split(":").slice(0, 2).join(":");
+    }
 
     return (
         <main className="flex flex-col min-h-screen">
             <section className="w-[90%] mx-auto flex flex-col">
-                <Link onClick={() => localStorage.clear()} to='/matches' className="w-[90px] flex items-center gap-2 mt-7 text-blue text-sm p-2 ps-0">
+                {/* onClick={() => localStorage.removeItem('selectedMatch')} */}
+                <Link to='/matches' className="w-[90px] flex items-center gap-2 mt-7 text-blue text-sm p-2 ps-0">
                     <ArrowBackBlueIcon />
                     <span>Partidos</span>
                 </Link>
 
                 <div className="flex items-center py-[18px] justify-around gap-8 text-center">
                     <div className="w-[83px]">
-                        <img className="mx-auto w-[88px] h-[88px] object-contain" src={completedMatch?.team_home_badge} alt={`Img ${completedMatch?.awayTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
-                        <p className="capitalize text-secondary text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{completedMatch?.homeTeam}</p>
+                        <img className="mx-auto w-[88px] h-[88px] object-contain" src={selectedMatch?.teams.home.logo} alt={`Img ${selectedMatch?.teams.home.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                        <p className="capitalize text-secondary text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{selectedMatch?.teams.home.name}</p>
                     </div>
 
                     <div className="flex flex-col mb-3 justify-top">
                         <span className="text-base text-secondary font-semibold capitalize">
                             {/* ESTADO DEL PARTIDO */}
                             {
-                                completedMatch?.match_status == 'Finished' ? 'Finalizado'
-                                    : completedMatch?.match_status == '' ? date
-                                        : completedMatch?.match_status == 'Half Time' ? 'Medio tiempo'
-                                            : `🔴 ` + completedMatch?.match_status + `'`
+                                selectedMatch?.status.long == 'Match Finished' ? 'Finalizado'
+                                    : selectedMatch?.status.long == 'Not Started' ? formatDateToMD(getDate(selectedMatch?.date))
+                                        : selectedMatch?.status.long == 'First Half' ? '🔴 ' + selectedMatch?.status.elapsed + `'`
+                                            : selectedMatch?.status.long == 'Second Half' ? '🔴 ' + selectedMatch?.status.elapsed + `'`
+                                                : selectedMatch?.status.elapsed !== null ? 'M. tiempo'
+                                                    : 'Pendiente'
                             }
                         </span>
                         <span className="text-medium ">
                             {
-                                completedMatch?.match_status == '' ?
-                                    `10:30` //hh:mm
-                                    :
-                                    `${completedMatch?.hometeam_score} - ${completedMatch?.awayteam_score}`
+                                selectedMatch?.status.long === 'Not Started' ? (
+                                    getTime(selectedMatch?.date)
+                                ) : (
+                                    `${selectedMatch?.score.fulltime.home ?? selectedMatch?.score.halftime.home} - 
+        ${selectedMatch?.score.fulltime.away ?? selectedMatch?.score.halftime.away}`
+                                )
                             }
                         </span>
                     </div>
 
                     <div className="w-[83px]">
-                        <img className="mx-auto w-[88px] h-[88px] object-contain" src={completedMatch?.team_away_badge} alt={`Img ${completedMatch?.awayTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
-                        <p className="capitalize text-secondary text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{completedMatch?.awayTeam}</p>
+                        <img className="mx-auto w-[88px] h-[88px] object-contain" src={selectedMatch?.teams.away.logo} alt={`Img ${selectedMatch?.teams.away.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                        <p className="capitalize text-secondary text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{selectedMatch?.teams.away.name}</p>
                     </div>
                 </div>
             </section>

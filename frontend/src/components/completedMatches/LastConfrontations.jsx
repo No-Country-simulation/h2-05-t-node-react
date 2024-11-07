@@ -13,18 +13,18 @@ const LastConfrontations = ({ completedMatch }) => {
 
     console.log({ lastFourMatches })
 
-    useEffect(() => {
-        if (completedMatch?.homeTeam && completedMatch?.awayTeam) {
-            setLoading(true)
-            axios.get(`https://apifootboll.onrender.com/api_record?to=${date}&league=302&team_a=${completedMatch.homeTeam}&team_b=${completedMatch.awayTeam}`)
-                .then(res => {
-                    const sortedMatches = res.data.data.sort((a, b) => new Date(b.match_date) - new Date(a.match_date));
-                    setLastFourMatches(sortedMatches)
-                })
-                .catch(error => console.log(error.message))
-                .finally(() => setLoading(false))
-        }
-    }, [date, completedMatch])
+    // useEffect(() => {
+    //     if (completedMatch?.homeTeam && completedMatch?.awayTeam) {
+    //         setLoading(true)
+    //         axios.get(`https://apifootboll.onrender.com/api_record?to=${date}&league=302&team_a=${completedMatch.homeTeam}&team_b=${completedMatch.awayTeam}`)
+    //             .then(res => {
+    //                 const sortedMatches = res.data.data.sort((a, b) => new Date(b.match_date) - new Date(a.match_date));
+    //                 setLastFourMatches(sortedMatches)
+    //             })
+    //             .catch(error => console.log(error.message))
+    //             .finally(() => setLoading(false))
+    //     }
+    // }, [date, completedMatch])
 
     return (
         <>

@@ -17,7 +17,7 @@ const PlayersPage = () => {
 
                 <div className="flex flex-col items-center pt-[30px] pb-[18px] justify-around gap-3 text-center">
                     <img className="w-[125.31px] h-[125.31px]" src={DefaultUser} alt="Player" onError={(e) => { e.target.src = DefaultUser }} />
-                    <h1 className="text-title font-semibold">Nombre jugador</h1>
+                    <h1 className="text-title font-semibold uppercase">messi / usdt</h1>
                 </div>
             </section>
 

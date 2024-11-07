@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import BlueStadiumIcon from "../../assets/icons/BlueStadiumIcon";
 import SoccerJerseyIcon from "../../assets/icons/SoccerJerseyIcon";
 import ArrowBackPurpleIcon from "../../assets/icons/ArrowBackPurpleIcon";
-import { useState } from "react";
 import ModalPredictResult from "./ModalPredictResult";
 import ModalPredictGoal from "./ModalPredictGoal";
 
@@ -14,9 +14,10 @@ const ModalPredictResultOrGoal = ({ setVisible, selectedMatch, visiblePredictRes
         <>
             <div className="card flex justify-content-center">
                 <Dialog
+                    position="bottom"
                     visible={visiblePredictResultOrGoal}
                     onHide={() => { if (!visiblePredictResultOrGoal) return; setVisiblePredictResultOrGoal(false); }}
-                    className="w-[50vw] min-h-[100vh] !important"
+                    className="w-[50vw] min-h-[97vh] !important"
                     breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
                     <ArrowBackPurpleIcon onClick={() => { if (!visiblePredictResultOrGoal) return; setVisiblePredictResultOrGoal(false); }} />
 

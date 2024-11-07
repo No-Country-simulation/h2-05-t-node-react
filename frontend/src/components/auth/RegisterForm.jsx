@@ -3,22 +3,26 @@ import Input from "../common/Input"
 import InputPassword from "../common/InputPassword"
 import ButtonSolid from '../common/ButtonSolid';
 import { useNavigate } from "react-router-dom"
+import API_URL from '../../config.js';
+import axios from "axios";
+import AlertMessage from "../common/AlertMessage";
 
 const initialFormValues = {
     username: '',
-    emailOrPhone: '',
+    email: '',
     password: '',
+    photo: 'https://cdn-icons-png.flaticon.com/512/5951/5951752.png'
 }
 
 const RegisterForm = () => {
     const [formValues, setFormValues] = useState(initialFormValues)
+    const [showAlert, setShowAlert] = useState(false)
     const [repeatedPassword, setRepeatedPassword] = useState('')
     const [showPassword, setShowPassword] = useState({
         password: false,
         repeatedPassword: false
     })
     const [error, setError] = useState({})
-    const navigate = useNavigate()
 
     const handleShowPassword = (name) => {
         setShowPassword(prevState => ({
@@ -34,16 +38,18 @@ const RegisterForm = () => {
             newErrors.username = 'El nombre de usuario es obligatorio.'
         }
 
-        if (!formValues.emailOrPhone) {
-            newErrors.emailOrPhone = 'El email o teléfono es obligatorio.'
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.emailOrPhone) && !/^\d{10}$/.test(formValues.emailOrPhone)) {
-            newErrors.emailOrPhone = 'Debes ingresar un email válido o un teléfono de 10 dígitos.'
+        if (!formValues.email) {
+            newErrors.email = 'El email o teléfono es obligatorio.'
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email) && !/^\d{10}$/.test(formValues.email)) {
+            newErrors.email = 'Debes ingresar un email válido'
         }
 
         if (!formValues.password || !formValues.password.trim()) {
-            newErrors.password = 'La contraseña es obligatoria.'
+            newErrors.password = 'La contraseña es obligatoria.';
         } else if (formValues.password.length < 8) {
-            newErrors.password = 'La contraseña debe tener al menos 8 caracteres.'
+            newErrors.password = 'La contraseña debe tener al menos 8 caracteres.';
+        } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formValues.password)) {
+            newErrors.password = 'La contraseña debe contener al menos un carácter especial.';
         }
 
         if (!repeatedPassword) {
@@ -70,31 +76,42 @@ const RegisterForm = () => {
 
         if (!isValid) return
 
-        navigate('/login')
-        // console.log(formValues)
+        axios.post(`${API_URL}/api/users`, formValues)
+            .then(res => {
+                if (res.data.status === 200 && res.data.statusMsg === 'Success') {
+                    setShowAlert(true)
+                }
+            })
+            .catch(error => console.log(error.response.data.errors))
     }
 
     return (
-        <form onSubmit={handleSubmit} className='flex flex-col mx-auto items-center mt-8 w-[80%]'>
-            <div className='w-full text-sm'>
-                <Input autoFocus name='username' handleChange={handleChange} value={formValues.username} htmlFor='username' text='Nombre de usuario' id='username' />
-                {error.username && <p className="text-red-500 text-sm mt-1">{error.username}</p>}
-            </div>
-            <div className='w-full text-sm mt-4'>
-                <Input name='emailOrPhone' handleChange={handleChange} value={formValues.emailOrPhone} htmlFor='emailOrPhone' text='Ingresa tu email o teléfono' id='emailOrPhone' />
-                {error.emailOrPhone && <p className="text-red-500 text-sm mt-1">{error.emailOrPhone}</p>}
-            </div>
-            <div className='w-full text-sm mt-4'>
-                <InputPassword name='password' handleChange={handleChange} value={formValues.password} htmlFor='password' text='Contraseña' id='password' showPassword={showPassword.password} handleShowPassword={() => handleShowPassword('password')} />
-                {error.password && <p className="text-red-500 text-sm mt-1">{error.password}</p>}
-            </div>
-            <div className='w-full text-sm mt-4 mb-8'>
-                <InputPassword name='repeatedPassword' handleChange={e => setRepeatedPassword(e.target.value)} value={repeatedPassword} htmlFor='repeatedPassword' text='Repetir contraseña' id='repeatedPassword' showPassword={showPassword.repeatedPassword} handleShowPassword={() => handleShowPassword('repeatedPassword')} />
-                {error.repeatedPassword && <p className="text-red-500 text-sm mt-1">{error.repeatedPassword}</p>}
-            </div>
+        <>
+            <form onSubmit={handleSubmit} className='flex flex-col mx-auto items-center mt-8 w-[80%]'>
+                <div className='w-full text-sm'>
+                    <Input autoFocus name='username' handleChange={handleChange} value={formValues.username} htmlFor='username' text='Nombre de usuario' id='username' />
+                    {error.username && <p className="text-red-500 text-sm mt-1">{error.username}</p>}
+                </div>
+                <div className='w-full text-sm mt-4'>
+                    <Input name='email' handleChange={handleChange} value={formValues.email} htmlFor='email' text='Ingresa tu email o teléfono' id='email' />
+                    {error.email && <p className="text-red-500 text-sm mt-1">{error.email}</p>}
+                </div>
+                <div className='w-full text-sm mt-4'>
+                    <InputPassword name='password' handleChange={handleChange} value={formValues.password} htmlFor='password' text='Contraseña' id='password' showPassword={showPassword.password} handleShowPassword={() => handleShowPassword('password')} />
+                    {error.password && <p className="text-red-500 text-sm mt-1">{error.password}</p>}
+                </div>
+                <div className='w-full text-sm mt-4 mb-8'>
+                    <InputPassword name='repeatedPassword' handleChange={e => setRepeatedPassword(e.target.value)} value={repeatedPassword} htmlFor='repeatedPassword' text='Repetir contraseña' id='repeatedPassword' showPassword={showPassword.repeatedPassword} handleShowPassword={() => handleShowPassword('repeatedPassword')} />
+                    {error.repeatedPassword && <p className="text-red-500 text-sm mt-1">{error.repeatedPassword}</p>}
+                </div>
 
-            <ButtonSolid>Registrarse</ButtonSolid>
-        </form>
+                <ButtonSolid>Registrarse</ButtonSolid>
+            </form>
+
+            <AlertMessage showAlert={showAlert} setShowAlert={setShowAlert} redirect={true} route='/login'>
+                Usuario creado exitosamente
+            </AlertMessage>
+        </>
     )
 }
 

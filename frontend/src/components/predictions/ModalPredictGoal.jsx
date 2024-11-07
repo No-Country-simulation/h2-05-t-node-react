@@ -1,29 +1,60 @@
 import { Dialog } from "primereact/dialog"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ButtonSolid from "../common/ButtonSolid"
 import ButtonOutline from "../common/ButtonOutline"
-import AlertMessage from "../common/AlertMessage"
 import BlueSoccerJerseyIcon from '../../assets/icons/BlueSoccerJerseyIcon'
 import ArrowBackPurpleIcon from "../../assets/icons/ArrowBackPurpleIcon"
-
-const players = [
-    { id: 1, name: 'Thibaut Courtois', number: 1 },
-    { id: 2, name: 'Dani Carvajal', number: 2 },
-    { id: 3, name: 'David Alaba', number: 4 },
-    { id: 4, name: 'Antonio Rüdiger', number: 22 },
-    { id: 5, name: 'Ferland Mendy', number: 23 },
-    { id: 6, name: 'Eduardo Camavinga', number: 12 },
-    { id: 7, name: 'Federico Valverde', number: 15 },
-    { id: 8, name: 'Aurélien Tchouaméni', number: 18 },
-    { id: 9, name: 'Jude Bellingham', number: 5 },
-    { id: 10, name: 'Vinícius Júnior', number: 7 },
-    { id: 11, name: 'Rodrygo Goes', number: 11 },
-]
+import axios from "axios"
+import API_URL from "../../config"
+import AlertSuccessMessage from "../common/AlertSuccessMessage"
 
 const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedMatch, visiblePredictGoal, setVisiblePredictGoal }) => {
-    const [playersList, setPlayersList] = useState(players)
+    const [user, setUser] = useState(null)
+    const [playersList, setPlayersList] = useState([])
+    const [loading, setLoading] = useState(false)
     const [selectedOption, setSelectedOption] = useState(null)
     const [showAlert, setShowAlert] = useState(false)
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user')
+        if (storedUser) {
+            const { token, user } = JSON.parse(storedUser)
+            setUser(user)
+        }
+    }, [])
+
+    console.log(selectedMatch)
+
+    useEffect(() => {
+        if (!selectedMatch) return
+        setLoading(true)
+
+        const fetchPlayers = async () => {
+            try {
+                const awayTeamResponse = await axios.get(
+                    `${API_URL}/api_players?id=${selectedMatch?.league.id}&tid=${selectedMatch?.teams.home.id}`
+                )
+
+                const homeTeamResponse = await axios.get(
+                    `${API_URL}/api_players?id=${selectedMatch?.league.id}&tid=${selectedMatch?.teams.away.id}`
+                )
+
+                const combinedPlayersList = [
+                    ...awayTeamResponse.data.data[0].team_players,
+                    ...homeTeamResponse.data.data[0].team_players
+                ]
+
+                setPlayersList(combinedPlayersList)
+                console.log(combinedPlayersList)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchPlayers()
+    }, [selectedMatch])
 
     const closeAllModalsPredictions = () => {
         if (!visiblePredictGoal) return
@@ -35,28 +66,60 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
         setVisible(false)
     }
 
-    const handleSubmitPrediction = e => {
-        e.preventDefault()
+    const createUserPrediction = (type) => {
+        const { match_id, match_date, homeTeam, awayTeam, team_home_badge, team_away_badge, league_name, league_id } = selectedMatch || {}
+
+        return {
+            userId: user?.id,
+            prediction: {
+                predictionType: "player",
+                selectedPredictionType: selectedOption, // nombre del jugador
+                fee: 1.3,
+                quotaType: "daily",
+                date: match_date,
+            },
+            matchData: {
+                id_apiMatch: match_id,
+                home_team: homeTeam,
+                home_team_img: team_home_badge,
+                away_team: awayTeam,
+                away_team_img: team_away_badge,
+                league: league_name,
+                league_id: league_id,
+                league_img: "https://pbs.twimg.com/profile_images/545702389571784704/fYZ2mg85_400x400.png",
+                match_date: match_date
+            },
+            type: type,
+        }
+    }
+
+    const handleSubmitPrediction = (type, e) => {
+        e.preventDefault();
         if (!selectedOption) return
 
-        console.log('prediccion enviada: ' + selectedOption)
+        const newUserPrediction = createUserPrediction(type)
 
-        setShowAlert(true)
-
-        setSelectedOption(null)
-
-        // CERRAR TODOS LOS MODALES
-        setVisiblePredictGoal(false)
-        setVisiblePredictResultOrGoal(false)
-        setVisible(false)
+        setLoading(true)
+        axios.post(`${API_URL}/api/prediction/createPrediction`, newUserPrediction)
+            .then(res => {
+                setShowAlert(true)
+                setSelectedOption(null)
+                setVisiblePredictGoal(false);
+                setVisiblePredictResultOrGoal(false);
+                setVisible(false);
+                console.log(res.data)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false))
     }
+
 
     return (
         <div className="card flex justify-content-center">
             <Dialog
                 visible={visiblePredictGoal}
                 onHide={closeAllModalsPredictions}
-                className="w-[50vw] min-h-[100vh] !important"
+                className="w-[50vw] min-h-[97vh] !important"
                 breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
                 <ArrowBackPurpleIcon onClick={() => { if (!visiblePredictGoal) return; setVisiblePredictGoal(false); }} />
 
@@ -65,25 +128,25 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
                     <span className='text-[18px]'>Selecciona una opción</span>
                 </div>
 
-                <form onSubmit={handleSubmitPrediction} className='w-[90%] mx-auto flex flex-col mt-7    text-black'>
+                <form className='w-[90%] mx-auto flex flex-col mt-7 text-black'>
                     <div className="max-h-[480px] p-1 flex flex-col gap-1.5 rounded-lg overflow-y-scroll scrollbar-hide">
                         {playersList?.map(item => (
                             <div
-                                key={item.id}
-                                onClick={() => setSelectedOption(item.name)}
-                                className={`h-[54px] min-h-[54px] max-h-[54px] px-5 flex items-center gap-3 rounded-lg shadow-soft ${selectedOption == item.name ? 'border border-2 border-blue' : ''}`}>
-                                <BlueSoccerJerseyIcon playerNumber={item.number} />
+                                key={item.player_name + item.player_number}
+                                onClick={() => setSelectedOption(item.player_name)}
+                                className={`h-[54px] min-h-[54px] max-h-[54px] px-5 flex items-center gap-3 rounded-lg shadow-soft ${selectedOption == item.player_name ? 'border border-2 border-blue' : ''}`}>
+                                <BlueSoccerJerseyIcon playerNumber={item.player_number} />
                                 <div className="flex flex-col">
-                                    <p className="text-regular-18 text-secondary font-semibold capitalize">{item.name}</p>
-                                    <span className="text-xs text-tertiary">{item.number}</span>
+                                    <p className="text-regular-18 text-secondary font-semibold capitalize">{item.player_name}</p>
+                                    <span className="text-xs text-tertiary">{item.player_number}</span>
                                 </div>
                             </div>
                         ))}
                     </div>
 
                     <div className='flex mt-7 gap-1 justify-between'>
-                        <ButtonSolid onClick={() => setVisiblePredictGoal(false)} className='w-full'>Predecir</ButtonSolid>
-                        <ButtonOutline className='w-full'>Hacer combinada</ButtonOutline>
+                        <ButtonSolid onClick={(e) => handleSubmitPrediction('simple', e)} disabled={!selectedOption || loading} className='w-full'>Predecir</ButtonSolid>
+                        <ButtonOutline onClick={(e) => handleSubmitPrediction('chained', e)} disabled={!selectedOption || loading} className='w-full'>Hacer combinada</ButtonOutline>
                     </div>
                 </form>
 
@@ -103,7 +166,6 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
                     <div className='flex justify-between text-regular-14 mb-3'>
                         <div>
                             <span>Goles: {selectedOption}</span>
-                            <span>Jugador 10</span>
                         </div>
                         <span>15</span>
                     </div>
@@ -113,9 +175,11 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
                         <span>15</span>
                     </div>
                 </div>
-            </Dialog>
 
-            <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage>
+                <AlertSuccessMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>
+                    Se ha añadido tu predicción
+                </AlertSuccessMessage>
+            </Dialog>
         </div>
     )
 }

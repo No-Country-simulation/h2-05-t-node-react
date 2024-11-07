@@ -4,6 +4,9 @@ import SilverLockedImg from '../../assets/img/divisionSilverLocked.png'
 import BronzeLockedImg from '../../assets/img/divisionBronzeLocked.png'
 import UserImg from '../../assets/img/user.png'
 import TableUserRanking from "../../components/divisions/TableUserRanking"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import API_URL from "../../config"
 
 const usersList = [
     { id: 1, name: 'Usuario 1', score: 1369 },
@@ -20,6 +23,20 @@ const usersList = [
 
 
 const Ranking = () => {
+    const [loading, setLoading] = useState(false)
+    const [divisionUserList, setDivisionUserList] = useState([])
+
+    // OBTENER RANKING POR DIVISION (ORO,PLATA,BRONCE)
+    useEffect(() => {
+        axios.get(`${API_URL}/api/ranking/division/1`) // DIVISIONES: 1, 2, 3, 4
+            .then(res => {
+                console.log('res', res.data.data)
+                setDivisionUserList(res.data.data)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false))
+    }, [])
+
     return (
         <Container>
             <section className="mt-1">

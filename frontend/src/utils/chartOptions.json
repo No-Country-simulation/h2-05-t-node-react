@@ -1,0 +1,40 @@
+{
+  "maintainAspectRatio": false,
+  "aspectRatio": 1,
+  "plugins": {
+    "legend": {
+      "display": false
+    }
+  },
+  "scales": {
+    "x": {
+      "title": {
+        "display": true,
+        "text": "Años",
+        "color": "var(--text-color)"
+      },
+      "ticks": {
+        "color": "var(--text-color-secondary)"
+      },
+      "grid": {
+        "color": "var(--surface-border)"
+      }
+    },
+    "y": {
+      "title": {
+        "display": true,
+        "text": "Token liberados acumulados",
+        "color": "var(--text-color)"
+      },
+      "min": 0,
+      "max": 200000,
+      "ticks": {
+        "color": "var(--text-color-secondary)",
+        "stepSize": 25000
+      },
+      "grid": {
+        "color": "var(--surface-border)"
+      }
+    }
+  }
+}

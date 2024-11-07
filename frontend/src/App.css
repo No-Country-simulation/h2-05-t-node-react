@@ -6,6 +6,32 @@
   left: 5px;
 }
 
+/* icono cerrar modal */
+.custom-prices-dialog .p-dialog-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+/* icono cerrar modal */
+.custom-prices-dialog .p-dialog-header-icon {
+  color: #c0c0c0;
+  background-color: #c0c0c0;
+  height: 5px;
+  border-radius: 0;
+  font-weight: bold;
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.p-dialog-content {
+  margin: 0 !important;
+  width: 100vw;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -20,6 +46,10 @@
 
 .custom-progress-bar-rewards {
   border: 2px solid #8E2BFF !important;
+}
+
+.form-spinner .p-progress-spinner-circle {
+  stroke: #fff !important;
 }
 
 .custom-progress-bar-rewards .p-progressbar-value {

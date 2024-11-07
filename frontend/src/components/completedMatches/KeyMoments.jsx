@@ -19,7 +19,7 @@ const keyMomentsList = [
     },
 ]
 
-const KeyMoments = ({ completedMatch }) => {
+const KeyMoments = ({ selectedMatch }) => {
     const [keyMoments, setKeyMoments] = useState(keyMomentsList)
 
     return (
@@ -29,7 +29,7 @@ const KeyMoments = ({ completedMatch }) => {
             </div>
 
             {keyMoments.map((item, index) => (
-                <KeyMomentsItem key={index} index={index} item={item} completedMatch={completedMatch} />
+                <KeyMomentsItem key={index} index={index} item={item} selectedMatch={selectedMatch} />
             ))}
         </>
     )

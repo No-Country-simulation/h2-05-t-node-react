@@ -1,0 +1,43 @@
+{
+    "maintainAspectRatio": false,
+    "aspectRatio": 1,
+    "plugins": {
+      "legend": {
+        "display": false
+      }
+    },
+    "scales": {
+      "x": {
+        "title": {
+          "display": true,
+          "text": "Año",
+          "color": "var(--text-color)"
+        },
+        "min": 2004,
+        "max": 2022,
+        "ticks": {
+          "color": "var(--text-color-secondary)"
+        },
+        "grid": {
+          "color": "var(--surface-border)"
+        }
+      },
+      "y": {
+        "title": {
+          "display": true,
+          "text": "Token liberados",
+          "color": "var(--text-color)"
+        },
+        "min": 0,
+        "max": 10000,
+        "ticks": {
+          "color": "var(--text-color-secondary)",
+          "stepSize": 1000
+        },
+        "grid": {
+          "color": "var(--surface-border)"
+        }
+      }
+    }
+  }
+  

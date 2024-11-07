@@ -2,38 +2,109 @@ import { Dialog } from "primereact/dialog";
 import ButtonSolid from "../common/ButtonSolid";
 import ButtonOutline from "../common/ButtonOutline";
 import DefaultTeam from '../../assets/img/defaultTeam.png'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AlertMessage from "../common/AlertMessage";
 import ArrowBackPurpleIcon from "../../assets/icons/ArrowBackPurpleIcon";
+import ModalMakeChained from "./ModalMakeChained";
+import axios from "axios";
+import API_URL from "../../config";
 
 const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selectedMatch, visiblePredictResult, setVisiblePredictResult }) => {
     const [selectedOption, setSelectedOption] = useState(null)
+    const [visibleMakeChained, setVisibleMakeChained] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
+    const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user')
+        if (storedUser) {
+            const { token, user } = JSON.parse(storedUser)
+            setUser(user)
+        }
+    }, [])
+
+    const getDate = (dateString) => {
+        const date = new Date(dateString)
+        return date.toISOString().split('T')[0]
+    }
 
     const closeAllModalsPredictions = () => {
         if (!visiblePredictResult) return
 
-        setSelectedOption(null)
+        // setSelectedOption(null)
 
         setVisiblePredictResult(false)
         setVisiblePredictResultOrGoal(false)
         setVisible(false)
     }
 
+    const createUserPrediction = () => {
+        const {
+            fixtureId,
+            date,
+            leagueName,
+            leagueId,
+            leagueLogo,
+            teams: {
+                home: { name: homeTeamName, logo: homeTeamLogo },
+                away: { name: awayTeamName, logo: awayTeamLogo }
+            }
+        } = selectedMatch || {};
+
+        let predictionType = ''
+        if (homeTeamName == selectedOption) {
+            predictionType = 'win_home'
+        } else if (awayTeamName == selectedOption) {
+            predictionType = 'win_away'
+        } else {
+            predictionType = 'draw'
+        }
+
+        return {
+            userId: user?.id,
+            prediction: {
+                predictionType: "match",
+                selectedPredictionType: predictionType, // "win_home" | "win_away" | "draw"
+                fee: 1.3,
+                quotaType: "daily",
+                date: getDate(date),
+            },
+            matchData: {
+                id_apiMatch: String(fixtureId),
+                home_team: homeTeamName,
+                home_team_img: homeTeamLogo,
+                away_team: awayTeamName,
+                away_team_img: awayTeamLogo,
+                league: leagueName,
+                league_id: String(leagueId),
+                league_img: leagueLogo,
+                match_date: getDate(date)
+            },
+            type: "simple",
+        }
+    }
+
     const handleSubmitPrediction = e => {
-        e.preventDefault()
+        e.preventDefault();
         if (!selectedOption) return
 
-        console.log('prediccion enviada: ' + selectedOption)
+        const newUserPrediction = createUserPrediction()
+        console.log(newUserPrediction)
 
-        setShowAlert(true)
-
-        setSelectedOption(null)
-
-        // CERRAR TODOS LOS MODALES
-        setVisiblePredictResult(false)
-        setVisiblePredictResultOrGoal(false)
-        setVisible(false)
+        setLoading(true)
+        axios.post(`${API_URL}/api/prediction/createPrediction`, newUserPrediction)
+            .then(res => {
+                console.log(res.data)
+                setShowAlert(true)
+                setSelectedOption(null)
+                // CERRAR TODOS LOS MODALES
+                setVisiblePredictResult(false)
+                setVisiblePredictResultOrGoal(false)
+                setVisible(false)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false))
     }
 
     return (
@@ -41,7 +112,7 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
             <Dialog
                 visible={visiblePredictResult}
                 onHide={closeAllModalsPredictions}
-                className="w-[50vw] min-h-[100vh] !important"
+                className="w-[50vw] min-h-[97vh] !important"
                 breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
                 <ArrowBackPurpleIcon onClick={() => { if (!visiblePredictResult) return; setVisiblePredictResult(false); }} />
 
@@ -55,13 +126,13 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
 
                         <div className='rounded-lg'>
                             <div className='flex justify-between text-[18px] font-semibold'>
-                                <div onClick={() => setSelectedOption(selectedMatch.homeTeam)} className={`h-[122px] w-[150px] flex flex-col justify-center items-center shadow-soft rounded-lg ${selectedOption == selectedMatch?.homeTeam ? 'border border-2 border-blue' : ''}`}>
-                                    <img className="w-[53px] h-[53px]" src={selectedMatch?.team_home_badge} alt={`imagen ${selectedMatch?.homeTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
-                                    <span className="text-center max-w-[143px] overflow-hidden text-ellipsis whitespace-nowrap">{selectedMatch?.homeTeam}</span>
+                                <div onClick={() => setSelectedOption(selectedMatch?.teams.home.name)} className={`h-[122px] w-[150px] flex flex-col justify-center items-center shadow-soft rounded-lg ${selectedOption == selectedMatch?.teams.home.name ? 'border border-2 border-blue' : ''}`}>
+                                    <img className="w-[53px] h-[53px]" src={selectedMatch?.teams.home.logo} alt={`imagen ${selectedMatch?.teams.home.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                                    <span className="text-center max-w-[143px] overflow-hidden text-ellipsis whitespace-nowrap">{selectedMatch?.teams.home.name}</span>
                                 </div>
-                                <div onClick={() => setSelectedOption(selectedMatch.awayTeam)} className={`h-[122px] w-[150px] flex flex-col justify-center items-center shadow-soft rounded-lg ${selectedOption == selectedMatch?.awayTeam ? 'border border-2 border-blue' : ''}`}>
-                                    <img className="w-[53px] h-[53px]" src={selectedMatch?.team_away_badge} alt={`imagen ${selectedMatch?.awayTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
-                                    <span className="text-center max-w-[143px] overflow-hidden text-ellipsis whitespace-nowrap">{selectedMatch?.awayTeam}</span>
+                                <div onClick={() => setSelectedOption(selectedMatch?.teams.away.name)} className={`h-[122px] w-[150px] flex flex-col justify-center items-center shadow-soft rounded-lg ${selectedOption == selectedMatch?.teams.away.name ? 'border border-2 border-blue' : ''}`}>
+                                    <img className="w-[53px] h-[53px]" src={selectedMatch?.teams.away.logo} alt={`imagen ${selectedMatch?.teams.away.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                                    <span className="text-center max-w-[143px] overflow-hidden text-ellipsis whitespace-nowrap">{selectedMatch?.teams.away.name}</span>
                                 </div>
                             </div>
 
@@ -72,8 +143,8 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                     </div>
 
                     <div className='flex mt-5 gap-1 justify-between'>
-                        <ButtonSolid onClick={() => setVisiblePredictResult(false)} className='w-full'>Predecir</ButtonSolid>
-                        <ButtonOutline className='w-full'>Hacer combinada</ButtonOutline>
+                        <ButtonSolid onClick={closeAllModalsPredictions} className='w-full'>Predecir</ButtonSolid>
+                        <ButtonOutline onClick={closeAllModalsPredictions} className='w-full'>Hacer combinada</ButtonOutline>
                     </div>
                 </form>
 
@@ -81,13 +152,13 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                     <span className='text-black text-regular font-semibold'>Resumen:</span>
                     <div className='flex gap-2 text-regular text-black'>
                         <div className="flex gap-2">
-                            <span>{selectedMatch?.homeTeam}</span>
-                            <img className="w[21px] h-[21px]" src={selectedMatch?.team_home_badge} alt={`imagen ${selectedMatch?.homeTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                            <span>{selectedMatch?.teams.home.name}</span>
+                            <img className="w[21px] h-[21px]" src={selectedMatch?.teams.home.logo} alt={`imagen ${selectedMatch?.teams.home.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
                         </div>
                         <span>vs.</span>
                         <div className="flex gap-2">
-                            <span>{selectedMatch?.awayTeam}</span>
-                            <img className="w[21px] h-[21px]" src={selectedMatch?.team_away_badge} alt={`imagen ${selectedMatch?.awayTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                            <span>{selectedMatch?.teams.away.name}</span>
+                            <img className="w[21px] h-[21px]" src={selectedMatch?.teams.away.logo} alt={`imagen ${selectedMatch?.teams.away.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
                         </div>
                     </div>
                     <div className='flex justify-between text-regular-14 mb-3'>
@@ -100,9 +171,23 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                         <span>15</span>
                     </div>
                 </div>
+
+                <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage>
+
             </Dialog>
 
-            <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage>
+            {/* MODAL PARA INICIAR UNA COMBINADA */}
+            {/* <ModalMakeChained
+                visibleMakeChained={visibleMakeChained}
+                setVisibleMakeChained={setVisibleMakeChained}
+                selectedMatch={selectedMatch}
+                visiblePredictResult={visiblePredictResult}
+                setVisiblePredictResult={setVisiblePredictResult}
+                setVisiblePredictResultOrGoal={setVisiblePredictResultOrGoal}
+                setVisible={setVisible}
+            /> */}
+
+            {/* ALERT PREDICCION SIMPLE */}
         </div>
     )
 }

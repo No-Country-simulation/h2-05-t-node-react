@@ -1,178 +1,59 @@
+import { useEffect, useState } from "react"
 import FlagIcon from "../assets/icons/FlagIcon"
 import Container from "../components/common/Container"
+import axios from "axios"
 
 const ClassificationPage = () => {
+  const [loading, setLoading] = useState(false)
+  const [rankingTeams, setRankingTeams] = useState([])
+
+  useEffect(() => {
+    setLoading(true)
+    axios.get(`https://apifootboll.onrender.com/api_standings?season=2024&id=128`)
+      .then(res => {
+        setRankingTeams(res.data.data)
+      })
+      .catch(error => console.log(error))
+      .finally(() => setLoading(false))
+  }, [])
+
   return (
     <Container>
-      <div className="flex justify-between py-2 mt-4 mb-1">
-        <span className="font-medium capitalize">la liga</span>
+      <div className="flex justify-between mb-4">
+        <span className="font-medium capitalize">La Liga</span>
       </div>
 
-      <div className="flex flex-col justify-center mb-5 shadow-soft rounded-xl">
-        <div className='flex justify-around text-soft-gray'>
-          <span className="w-30 py-2 px-5 text-secondary text-sm">Equipo</span>
-          <span className="py-2 px-5 text-secondary text-sm">P</span>
-          <span className="py-2 px-5 text-secondary text-sm">Goles</span>
-          <span className="py-2 px-5 text-secondary text-sm">GD</span>
-          <span className="py-2 px-5 text-secondary text-sm">PTS</span>
-        </div>
-
-
-        <div className='w-full bg-soft-gray py-3 flex justify-around gap-10'>
-          <div className="flex flex-col items-start gap-1">
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Barcelona</span>
-            </div>
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Real Madrid</span>
-            </div>
-          </div>
-
-          <div className='flex items-center gap-3'>
-            <div className="flex flex-col items-center">
-              <span className="text-regular">3</span>
-              <span className="text-regular">3</span>
-            </div>
-            <FlagIcon />
-          </div>
-
-          <div>
-            {/* COMPLETAR CONTENIDO */}
-            <span className='text-regular'></span> 
-          </div>
-        </div>
-
-
-
-
-
-
-
-
-
-        {/* BORRAR DUPLICADOS */}
-
-        <div className='w-full bg-soft-gray py-3 flex justify-around gap-10'>
-          <div className="flex flex-col items-start gap-1">
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Barcelona</span>
-            </div>
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Real Madrid</span>
-            </div>
-          </div>
-
-          <div className='flex items-center gap-3'>
-            <div className="flex flex-col items-center">
-              <span className="text-regular">3</span>
-              <span className="text-regular">3</span>
-            </div>
-            <FlagIcon />
-          </div>
-
-          <div>
-            {/* COMPLETAR CONTENIDO */}
-            <span className='text-regular'></span> 
-          </div>
-        </div>
-
-        <div className='w-full bg-soft-gray py-3 flex justify-around gap-10'>
-          <div className="flex flex-col items-start gap-1">
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Barcelona</span>
-            </div>
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Real Madrid</span>
-            </div>
-          </div>
-
-          <div className='flex items-center gap-3'>
-            <div className="flex flex-col items-center">
-              <span className="text-regular">3</span>
-              <span className="text-regular">3</span>
-            </div>
-            <FlagIcon />
-          </div>
-
-          <div>
-            {/* COMPLETAR CONTENIDO */}
-            <span className='text-regular'></span> 
-          </div>
-        </div>
-
-        <div className='w-full bg-soft-gray py-3 flex justify-around gap-10'>
-          <div className="flex flex-col items-start gap-1">
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Barcelona</span>
-            </div>
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Real Madrid</span>
-            </div>
-          </div>
-
-          <div className='flex items-center gap-3'>
-            <div className="flex flex-col items-center">
-              <span className="text-regular">3</span>
-              <span className="text-regular">3</span>
-            </div>
-            <FlagIcon />
-          </div>
-
-          <div>
-            {/* COMPLETAR CONTENIDO */}
-            <span className='text-regular'></span> 
-          </div>
-        </div>
-
-        <div className='w-full bg-soft-gray py-3 flex justify-around gap-10'>
-          <div className="flex flex-col items-start gap-1">
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Barcelona</span>
-            </div>
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Real Madrid</span>
-            </div>
-          </div>
-
-          <div className='flex items-center gap-3'>
-            <div className="flex flex-col items-center">
-              <span className="text-regular">3</span>
-              <span className="text-regular">3</span>
-            </div>
-            <FlagIcon />
-          </div>
-
-          <div>
-            {/* COMPLETAR CONTENIDO */}
-            <span className='text-regular'></span> 
-          </div>
-        </div>
-
-        <div className='w-full bg-soft-gray py-3 flex justify-around gap-10'>
-          <div className="flex flex-col items-start gap-1">
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Barcelona</span>
-            </div>
-            <div className='flex gap-2'>
-              <span className="text-regular text-secondary capitalize">Real Madrid</span>
-            </div>
-          </div>
-
-          <div className='flex items-center gap-3'>
-            <div className="flex flex-col items-center">
-              <span className="text-regular">3</span>
-              <span className="text-regular">3</span>
-            </div>
-            <FlagIcon />
-          </div>
-
-          <div>
-            {/* COMPLETAR CONTENIDO */}
-            <span className='text-regular'></span> 
-          </div>
-        </div>
+      {/* Tabla de clasificación */}
+      <div className="overflow-x-auto rounded-xl shadow-soft mb-5">
+        <table className="table-auto w-full">
+          <thead>
+            <tr className="bg-white text-regular">
+              <th className="py-2 px-4 font-normal text-left text-secondary">Equipo</th>
+              <th className="py-2 px-4 font-normal text-center text-secondary">P</th>
+              <th className="py-2 px-4 font-normal text-center text-secondary">Goles</th>
+              <th className="py-2 px-4 font-normal text-center text-secondary">GD</th>
+              <th className="py-2 px-4 font-normal text-center text-secondary">PTS</th>
+            </tr>
+          </thead>
+          <tbody className="bg-soft-gray">
+            {rankingTeams?.map(item => (
+              <tr key={item.team.id} className="h-[43px] text-regular border-t border-b border-gray-400">
+                <td className="py-2 px-3 flex items-center gap-3">
+                  <span>{item.rank}</span>
+                  <img className="w-[20px] h-[20px]" src={item?.team.logo} alt={item.team.name} />
+                  <p className="w-[100px] truncate">{item.team.name}</p>
+                </td>
+                <td className="py-2 px-0 text-center">-</td>
+                <td className="py-2 px-0 text-center">-</td>
+                <td className="py-2 px-0 text-center">{item.goalsDiff}</td>
+                <td className="py-2 px-0 text-center">{item.points}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </Container>
   )
 }
+
 export default ClassificationPage

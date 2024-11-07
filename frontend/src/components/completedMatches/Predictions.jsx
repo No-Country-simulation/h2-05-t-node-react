@@ -8,6 +8,7 @@ import { isFutureDate } from '../../utils/isFutureDate'
 import axios from "axios"
 import { getCurrentDate } from "../../utils/getCurrentDate"
 import ModalPredictResultOrGoal from "../predictions/ModalPredictResultOrGoal"
+import API_URL from "../../config"
 
 // const API_URL = import.meta.env.VITE_API_URL;
 
@@ -15,43 +16,67 @@ const Predictions = () => {
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(false)
     // const [selectedOption, setSelectedOption] = useState('')
-    const [specificMatch, setSpecificMatch] = useState()
-    const [completedMatch, setCompletedMatch] = useState(null)
+    const [odds, setOdds] = useState([])
+    const [selectedMatch, setSelectedMatch] = useState(null)
+    const [userPredictions, setUserPredictions] = useState([])
     // const [showAlert, setShowAlert] = useState(false)
     const [visiblePredictResultOrGoal, setVisiblePredictResultOrGoal] = useState(false)
     const currentDate = getCurrentDate()
+    const [user, setUser] = useState(null)
 
-    // console.log(specificMatch)
     useEffect(() => {
-        const storedMatch = localStorage.getItem('completedMatch');
+        const storedMatch = localStorage.getItem('selectedMatch');
         if (storedMatch) {
-            setCompletedMatch(JSON.parse(storedMatch));
+            setSelectedMatch(JSON.parse(storedMatch));
         }
     }, []);
 
-    // console.log(completedMatch)
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user')
+        if (storedUser) {
+            const { token, user } = JSON.parse(storedUser)
+            setUser(user)
+        }
+    }, [])
+
+    // useEffect(() => {
+    //     if (!user?.id) return
+
+    //     setLoading(true)
+    //     axios.post(`${API_URL}/api/prediction-record/history`, {
+    //         userId: user?.id,
+    //         filters: {
+    //             status: "pending"
+    //         }
+    //     })
+    //         .then(res => {
+    //             console.log(res.data.data)
+    //             setUserPredictions(res.data.data)
+    //         })
+    //         .catch(error => console.log(error))
+    //         .finally(() => setLoading(false))
+    // }, [user?.id])
 
     useEffect(() => {
         setLoading(true)
-        if (completedMatch?.homeTeam && completedMatch?.awayTeam) {
-            axios.get(`https://apifootboll.onrender.com/api_match?from=${completedMatch.match_date}&to=${completedMatch.match_date}&league=${completedMatch.league_id}&match_id=${completedMatch.match_id}`)
+
+        // Verifica que selectedMatch esté correctamente inicializado antes de hacer la petición
+        if (selectedMatch?.fixtureId && selectedMatch?.leagueId) {
+            axios.get(`https://apifootboll.onrender.com/api_odds?league=${selectedMatch.leagueId}&season=2024&fixture=${selectedMatch.fixtureId}`)
                 .then(res => {
-                    const filteredMatch = res.data.data.filter(match => match.match_id === completedMatch.match_id);
-                    setSpecificMatch(filteredMatch.length > 0 ? filteredMatch[0] : null);
+                    console.log(res.data.data.odds)
+                    setOdds(res.data.data.odds)
                 })
                 .catch(error => console.log(error.message))
                 .finally(() => setLoading(false))
+        } else {
+            setLoading(false); // En caso de que falten datos
         }
-    }, [completedMatch]);
+    }, [selectedMatch]); // La petición se vuelve a hacer cuando selectedMatch cambie
 
-    // const handleSubmitPrediction = e => {
-    //     e.preventDefault();
-    //     if (!selectedOption) return
-
-    //     setSelectedOption(null)
-    //     setShowAlert(true)
-    //     console.log('prediccion enviada: ', selectedOption)
-    // }
+    const getTime = (dateTimeString) => {
+        return dateTimeString.split("T")[1].split(":").slice(0, 2).join(":");
+    }
 
     return (
         <Container>
@@ -75,15 +100,15 @@ const Predictions = () => {
                         {/* Partido en vivo */}
 
                         {
-                            completedMatch?.match_status == 'Finished'
+                            selectedMatch?.status.long == 'Match Finished'
                                 ?
                                 'Suerte la próxima'
                                 :
-                                isFutureDate(currentDate, completedMatch?.match_date)
-                                    ?
-                                    'Puedes hacer un máximo de 2 predicciones para días futuros'
-                                    :
-                                    'Predice antes de que termine el partido'
+                                // isFutureDate(currentDate, selectedMatch?.date)
+                                //     ?
+                                //     'Puedes hacer un máximo de 2 predicciones para días futuros'
+                                // :
+                                'Predice antes de que termine el partido'
                         }
                     </span>
                 </div>
@@ -99,7 +124,7 @@ const Predictions = () => {
                 <div className="flex justify-between items-center py-3 px-5">
                     <div className="flex flex-col text-regular-14">
                         <span className="text-secondary">Resultado final</span>
-                        <span className="capitalize">Barcelona</span>
+                        <span className="capitalize">Nombre Equipo</span>
                     </div>
                     <span className="text-blue">13 puntos</span>
                 </div>
@@ -114,7 +139,7 @@ const Predictions = () => {
                 <div className="flex justify-between items-center py-3 px-5">
                     <div className="flex flex-col text-regular-14">
                         <span className="text-secondary">Gol</span>
-                        <span className="capitalize">Lionel Messi</span>
+                        <span className="capitalize">Nombre Jugador</span>
                     </div>
                     <span className="text-secondary line-through">13 puntos</span>
                 </div>
@@ -126,9 +151,8 @@ const Predictions = () => {
 
             {/* SI ES UN PARTIDO EN VIVO O UN PARTIDO FUTURO */}
             {/* SI EL USUARIO NO TIENE PREDICCIONES DISPONIBLES SE INHABILITARA EL BOTON Y SE MOSTRARA MENSAJE */}
-
             {
-                completedMatch?.match_status !== 'Finished' &&
+                selectedMatch?.status.long !== 'Match Finished' &&
 
                 <div className="mx-auto mt-5">
                     <ButtonSolid onClick={() => setVisiblePredictResultOrGoal(true)} >Hacer Predicción</ButtonSolid>
@@ -144,22 +168,22 @@ const Predictions = () => {
 
                 <div className="w-full bg-soft-gray flex justify-center gap-10 py-5">
                     <div className="flex flex-col items-center">
-                        <span className="text-center text-regular text-secondary w-[90px] overflow-hidden text-ellipsis whitespace-nowrap">{completedMatch?.homeTeam}</span>
-                        <span className="text-title font-semibold text-blue mt-1.5">{parseInt(specificMatch?.home_prob) || ' - '}%</span>
+                        <span className="text-center text-regular text-secondary w-[90px] overflow-hidden text-ellipsis whitespace-nowrap">{selectedMatch?.teams.home.name || '-'}</span>
+                        <span className="text-title font-semibold text-blue mt-1.5">{odds[0]?.odd || ' - '}%</span>
                     </div>
                     <div className="flex flex-col items-center">
                         <span className="text-regular text-secondary">Empate</span>
-                        <span className="text-title font-semibold text-blue mt-1.5">{parseInt(specificMatch?.draw_prob) || ' - '}%</span>
+                        <span className="text-title font-semibold text-blue mt-1.5">{odds[1]?.odd || ' - '}%</span>
                     </div>
                     <div className="flex flex-col items-center">
-                        <span className="text-center text-regular text-secondary w-[90px] overflow-hidden text-ellipsis whitespace-nowrap">{completedMatch?.awayTeam}</span>
-                        <span className="text-title font-semibold text-blue mt-1.5">{parseInt(specificMatch?.away_prob) || ' - '}%</span>
+                        <span className="text-center text-regular text-secondary w-[90px] overflow-hidden text-ellipsis whitespace-nowrap">{selectedMatch?.teams.away.name || '-'}</span>
+                        <span className="text-title font-semibold text-blue mt-1.5">{odds[2]?.odd || ' - '}%</span>
                     </div>
                 </div>
             </div>
 
             <ModalPredictResultOrGoal
-                selectedMatch={completedMatch}
+                selectedMatch={selectedMatch}
                 setVisible={setVisible}
                 visiblePredictResultOrGoal={visiblePredictResultOrGoal}
                 setVisiblePredictResultOrGoal={setVisiblePredictResultOrGoal} />

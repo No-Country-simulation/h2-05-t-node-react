@@ -1,11 +1,14 @@
-import { useState } from "react"
-import InProgressIcon from "../../assets/icons/InProgressIcon"
+import { useEffect, useState } from "react"
 import { Dialog } from "primereact/dialog"
+import { useNavigate } from "react-router-dom"
+import InProgressIcon from "../../assets/icons/InProgressIcon"
 import ButtonSolid from "../common/ButtonSolid"
 import ButtonOutline from "../common/ButtonOutline"
 import DefaultTeam from '../../assets/img/defaultTeam.png'
-import { useNavigate } from "react-router-dom"
-import AlertMessage from "../common/AlertMessage"
+import AlertSuccessMessage from "../common/AlertSuccessMessage"
+import axios from "axios"
+import API_URL from "../../config"
+import AlertTimeOut from "../common/AlertTimeOut"
 
 const initialSelectedPredictionData = {
     teamHomeLogo: '',
@@ -19,50 +22,135 @@ const MatchDetail = ({ league }) => {
     const [selectedPredictionData, setSelectedPredictionData] = useState(initialSelectedPredictionData)
     const [visible, setVisible] = useState(false)
     const [selectedOption, setSelectedOption] = useState('')
+    const [selectedMatch, setselectedMatch] = useState(null)
     const [showAlert, setShowAlert] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [user, setUser] = useState(null)
+    const [userPrediction, setUserPrediction] = useState(null)
+    const [finishedMatch, setFinishedMatch] = useState(false)
     const navigate = useNavigate()
 
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user')
+        if (storedUser) {
+            const { token, user } = JSON.parse(storedUser)
+            setUser(user)
+        }
+    }, [])
+
     const handleSelectedMatch = (match) => {
-        localStorage.setItem('completedMatch', JSON.stringify(match))
+        console.log('League ID:', league?.id)
+        const matchWithLeagueId = { ...match, leagueId: league?.league.id, leagueName: league?.league.name, leagueLogo: league?.league.logo }
+        localStorage.setItem('selectedMatch', JSON.stringify(matchWithLeagueId))
         navigate('/matches-completed');
     }
- 
+
+
+    const createUserPrediction = () => {
+        const {
+            fixtureId,
+            date,
+            teams: {
+                home: { name: homeTeamName, logo: homeTeamLogo },
+                away: { name: awayTeamName, logo: awayTeamLogo }
+            }
+        } = selectedMatch || {};
+
+        const {
+            id,
+            name,
+            logo
+        } = league?.league || {};
+
+        let predictionType = ''
+        if (homeTeamName == selectedOption) {
+            predictionType = 'win_home'
+        } else if (awayTeamName == selectedOption) {
+            predictionType = 'win_away'
+        } else {
+            predictionType = 'draw'
+        }
+
+        return {
+            userId: user?.id,
+            prediction: {
+                predictionType: "match",
+                selectedPredictionType: predictionType, // "win_home" | "win_away" | "draw"
+                fee: 1.3,
+                quotaType: "daily",
+                date: getDate(date),
+            },
+            matchData: {
+                id_apiMatch: String(fixtureId),
+                home_team: homeTeamName,
+                home_team_img: homeTeamLogo,
+                away_team: awayTeamName,
+                away_team_img: awayTeamLogo,
+                league: name,
+                league_id: String(id),
+                league_img: logo,
+                match_date: getDate(date)
+            },
+            type: "simple",
+        }
+    }
+
     const handleSubmitPrediction = e => {
         e.preventDefault();
         if (!selectedOption) return
 
-        setShowAlert(true)
-        console.log('prediccion enviada: ', selectedOption)
+        const newUserPrediction = createUserPrediction()
+        console.log(newUserPrediction)
+
+        setLoading(true)
+        axios.post(`${API_URL}/api/prediction/createPrediction`, newUserPrediction)
+            .then(res => {
+                console.log(res.data)
+                setShowAlert(true)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false))
     }
 
     const handleShowPredictionModal = (match, predictionSelected) => {
-        if (match.match_status == 'Finished') return
+        if (match.status.long == 'Match Finished') return setFinishedMatch(true)
 
         setVisible(true)
         setSelectedOption(predictionSelected)
         setSelectedPredictionData({
-            teamHomeLogo: match.team_home_badge,
-            teamAwayLogo: match.team_away_badge,
-            teamHome: match.homeTeam,
-            teamAway: match.awayTeam,
+            teamHomeLogo: match.teams.home.logo,
+            teamAwayLogo: match.teams.away.logo,
+            teamHome: match.teams.home.name,
+            teamAway: match.teams.away.name,
         })
+    }
+
+    const getTime = (dateTimeString) => {
+        return dateTimeString.split("T")[1].split(":").slice(0, 2).join(":");
+    }
+
+    const getDate = (dateString) => {
+        const date = new Date(dateString)
+        return date.toISOString().split('T')[0]
     }
 
     return (
         <>
             {
                 matches.map((item) => (
-                    <div key={item.match_id} className="p-[18px] bg-[#F3F4F5] border-b-gray border">
+                    <div key={item.fixtureId} className="p-[18px] bg-[#F3F4F5] border-b-gray border">
 
                         <div onClick={() => handleSelectedMatch(item)} className="flex items-center justify-around text-center">
+                            {/* Equipo local */}
                             <div className="w-[83px]">
                                 <div>
-                                    <img className="mx-auto w-[54px] h-[54px] object-contain" src={item.team_home_badge} alt={`img ${item.homeTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
-                                    <p className="capitalize text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{item.homeTeam}</p>
+                                    <img className="mx-auto w-[54px] h-[54px] object-contain" src={item.teams.home.logo} alt={`img ${item.teams.home.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                                    <p className="capitalize text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{item.teams.home.name}</p>
                                 </div>
                                 <div onClick={(e) => {
                                     e.stopPropagation()
-                                    handleShowPredictionModal(item, item.homeTeam);
+                                    setselectedMatch(item)
+                                    handleShowPredictionModal(item, item.teams.home.name);
                                 }}
                                     className="h-[27px] text-sm mt-3 shadow-soft-md border rounded-md bg-white flex items-center justify-center">
                                     1.2
@@ -72,19 +160,29 @@ const MatchDetail = ({ league }) => {
                             <div className="w-[83px]">
                                 <div className="flex flex-col justify-center items-center">
                                     <InProgressIcon />
-                                    <span className="text-xl font-bold mt-2">{item.hometeam_score} - {item.awayteam_score}</span>
+                                    <span className="text-[17px] font-bold mt-2">
+                                        {
+                                            item.status.elapsed == null
+                                                ? getTime(item.date)
+                                                : `${item.goals.home} - ${item.goals.away}`
+                                        }
+                                    </span>
                                     <span className="capitalize text-xs semibold">
                                         {
-                                            item.match_status == 'Finished' ? 'Finalizado'
-                                                : item.match_status == '' ? 'Pendiente'
-                                                    : item.match_status == 'Half Time' ? 'Medio tiempo'
-                                                        : `🔴 ` + item.match_status + `'`
+                                            item.status.long == 'Match Finished' ? 'Finalizado'
+                                                : item.status.long == 'Not Started' ? 'Pendiente'
+                                                    : item.status.long == 'First Half' ? '🔴 ' + item.status.elapsed + `'`
+                                                        : item.status.long == 'Second Half' ? '🔴 ' + item.status.elapsed + `'`
+                                                            : item.status.elapsed !== null ? 'M. tiempo'
+                                                                // : item.status.long == 'Postponed' ? 'Postergado'
+                                                                : 'Pendiente'
                                         }
                                     </span>
                                 </div>
                                 <div
                                     onClick={(e) => {
                                         e.stopPropagation()
+                                        setselectedMatch(item)
                                         handleShowPredictionModal(item, 'Empate');
                                     }}
                                     className="h-[27px] text-sm mt-3 shadow-soft-md border rounded-md bg-white flex items-center justify-center">
@@ -92,15 +190,17 @@ const MatchDetail = ({ league }) => {
                                 </div>
                             </div>
 
+                            {/* Equipo visitante */}
                             <div className="w-[83px]">
                                 <div>
-                                    <img className="mx-auto w-[54px] h-[54px] object-contain" src={item.team_away_badge} alt={`img ${item.awayTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
-                                    <p className="capitalize text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{item.awayTeam}</p>
+                                    <img className="mx-auto w-[54px] h-[54px] object-contain" src={item.teams.away.logo} alt={`img ${item.teams.away.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                                    <p className="capitalize text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{item.teams.away.name}</p>
                                 </div>
                                 <div
                                     onClick={(e) => {
                                         e.stopPropagation()
-                                        handleShowPredictionModal(item, item.awayTeam);
+                                        setselectedMatch(item)
+                                        handleShowPredictionModal(item, item.teams.away.name);
                                     }}
                                     className="h-[27px] text-sm mt-3 shadow-soft-md border rounded-md bg-white flex items-center justify-center">
                                     1.2
@@ -116,8 +216,9 @@ const MatchDetail = ({ league }) => {
             <div className="card flex justify-content-center">
                 <Dialog
                     visible={visible}
+                    position="bottom"
                     onHide={() => { if (!visible) return; setVisible(false); }}
-                    className="w-[50vw] min-h-[100vh] !important" // 92.5vh
+                    className="w-[50vw] min-h-[97vh] !important"
                     breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
 
                     <div className='flex flex-col items-center justify-center'>
@@ -177,7 +278,19 @@ const MatchDetail = ({ league }) => {
                     </div>
                 </Dialog>
 
-                <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage>
+                {/* {
+                    loading ?
+                        <AlertMessage redirect={false} showAlert={showAlert} loading={loading} setShowAlert={setShowAlert}>
+                            Realizando predicción...
+                        </AlertMessage>
+                        : */}
+                <AlertSuccessMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>
+                    Se ha añadido tu predicción
+                </AlertSuccessMessage>
+                <AlertTimeOut showAlert={finishedMatch} setShowAlert={setFinishedMatch}>
+                    No podés predecir un partido finalizado
+                </AlertTimeOut>
+                {/* } */}
             </div>
         </>
     )
