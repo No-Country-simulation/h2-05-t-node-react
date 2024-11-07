@@ -22,12 +22,18 @@ export class TokenInfo extends Model<TokenInfo, TokenInfoAttributesInterface> {
     allowNull: false,
   })
   name!: string;
-
+  
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
   photo!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  division!: string;
 
   @Column({
     type: DataType.INTEGER,
