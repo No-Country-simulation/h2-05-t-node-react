@@ -38,21 +38,30 @@ const MatchDetail = ({ league }) => {
         }
     }, [])
 
-    console.log(league)
     const handleSelectedMatch = (match) => {
-        console.log('League ID:', league?.id);
-        const matchWithLeagueId = { ...match, leagueId: league?.league.id, leagueName: league?.league.name, leagueLogo: league?.league.logo };
-        localStorage.setItem('selectedMatch', JSON.stringify(matchWithLeagueId));
+        console.log('League ID:', league?.id)
+        const matchWithLeagueId = { ...match, leagueId: league?.league.id, leagueName: league?.league.name, leagueLogo: league?.league.logo }
+        localStorage.setItem('selectedMatch', JSON.stringify(matchWithLeagueId))
         navigate('/matches-completed');
-    };
+    }
 
     const createUserPrediction = () => {
-        const { match_id, match_date, homeTeam, awayTeam, team_home_badge, team_away_badge, league_name, league_id } = selectedMatch || {}
+        const {
+            fixtureId,
+            date,
+            leagueName,
+            leagueId,
+            leagueLogo,
+            teams: {
+                home: { name: homeTeamName, logo: homeTeamLogo },
+                away: { name: awayTeamName, logo: awayTeamLogo }
+            }
+        } = selectedMatch || {};
 
         let predictionType = ''
-        if (selectedMatch.homeTeam == selectedOption) {
+        if (homeTeamName == selectedOption) {
             predictionType = 'win_home'
-        } else if (selectedMatch.awayTeam == selectedOption) {
+        } else if (awayTeamName == selectedOption) {
             predictionType = 'win_away'
         } else {
             predictionType = 'draw'
@@ -65,18 +74,18 @@ const MatchDetail = ({ league }) => {
                 selectedPredictionType: predictionType, // "win_home" | "win_away" | "draw"
                 fee: 1.3,
                 quotaType: "daily",
-                date: match_date,
+                date: date,
             },
             matchData: {
-                id_apiMatch: match_id,
-                home_team: homeTeam,
-                home_team_img: team_home_badge,
-                away_team: awayTeam,
-                away_team_img: team_away_badge,
-                league: league_name,
-                league_id: league_id,
-                league_img: "https://pbs.twimg.com/profile_images/545702389571784704/fYZ2mg85_400x400.png",
-                match_date: match_date
+                id_apiMatch: String(fixtureId),
+                home_team: homeTeamName,
+                home_team_img: homeTeamLogo,
+                away_team: awayTeamName,
+                away_team_img: awayTeamLogo,
+                league: leagueName,
+                league_id: leagueId,
+                league_img: leagueLogo,
+                match_date: date
             },
             type: "simple",
         }
@@ -92,8 +101,8 @@ const MatchDetail = ({ league }) => {
         setLoading(true)
         axios.post(`${API_URL}/api/prediction/createPrediction`, newUserPrediction)
             .then(res => {
-                setShowAlert(true)
                 console.log(res.data)
+                setShowAlert(true)
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false))

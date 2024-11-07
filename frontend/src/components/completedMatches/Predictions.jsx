@@ -75,6 +75,10 @@ const Predictions = () => {
         }
     }, [selectedMatch]); // La petición se vuelve a hacer cuando selectedMatch cambie
 
+    const getTime = (dateTimeString) => {
+        return dateTimeString.split("T")[1].split(":").slice(0, 2).join(":");
+    }
+
     return (
         <Container>
             <div className="flex justify-between py-2">
@@ -97,15 +101,15 @@ const Predictions = () => {
                         {/* Partido en vivo */}
 
                         {
-                            selectedMatch?.match_status == 'Finished'
+                            selectedMatch?.status.long == 'Match Finished'
                                 ?
                                 'Suerte la próxima'
                                 :
-                                isFutureDate(currentDate, selectedMatch?.match_date)
-                                    ?
-                                    'Puedes hacer un máximo de 2 predicciones para días futuros'
-                                    :
-                                    'Predice antes de que termine el partido'
+                                // isFutureDate(currentDate, selectedMatch?.date)
+                                //     ?
+                                //     'Puedes hacer un máximo de 2 predicciones para días futuros'
+                                // :
+                                'Predice antes de que termine el partido'
                         }
                     </span>
                 </div>

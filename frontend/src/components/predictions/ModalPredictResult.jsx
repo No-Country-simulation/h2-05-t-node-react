@@ -107,7 +107,7 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
             <Dialog
                 visible={visiblePredictResult}
                 onHide={closeAllModalsPredictions}
-                className="w-[50vw] min-h-[100vh] !important"
+                className="w-[50vw] min-h-[97vh] !important"
                 breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
                 <ArrowBackPurpleIcon onClick={() => { if (!visiblePredictResult) return; setVisiblePredictResult(false); }} />
 
@@ -166,6 +166,9 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                         <span>15</span>
                     </div>
                 </div>
+
+                <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage>
+
             </Dialog>
 
             {/* MODAL PARA INICIAR UNA COMBINADA */}
@@ -180,7 +183,6 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
             /> */}
 
             {/* ALERT PREDICCION SIMPLE */}
-            <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage>
         </div>
     )
 }

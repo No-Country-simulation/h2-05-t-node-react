@@ -118,7 +118,6 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
         <div className="card flex justify-content-center">
             <Dialog
                 visible={visiblePredictGoal}
-                position="bottom"
                 onHide={closeAllModalsPredictions}
                 className="w-[50vw] min-h-[97vh] !important"
                 breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
@@ -176,11 +175,11 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
                         <span>15</span>
                     </div>
                 </div>
-            </Dialog>
 
-            <AlertSuccessMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>
-                Se ha añadido tu predicción
-            </AlertSuccessMessage>
+                <AlertSuccessMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>
+                    Se ha añadido tu predicción
+                </AlertSuccessMessage>
+            </Dialog>
         </div>
     )
 }
