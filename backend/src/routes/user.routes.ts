@@ -6,6 +6,7 @@ import {
   deleteOneUser,
   updateOneUser,
   login,
+  getCountUsers,
 } from "../controllers/user.controller";
 import {
   handleUserValidationErrors,
@@ -82,6 +83,7 @@ const router = Router();
  *         description: Error en el servidor
  */
 router.get("/", getAllUsers);
+router.get("/count", getCountUsers);
 
 /**
  * @swagger

@@ -1,8 +1,10 @@
 import { Ranking } from "../models/ranking.model";
 import { Op } from "sequelize";
 import  sequelize  from "../config/database";
+
 //Asigna las divisiones de todos los usuarios con puntos
 export async function assignDivisions() {
+  try {
     const usersWithPoints = await Ranking.findAll({
       where: {
         points: { [Op.gt]: 0 },
@@ -13,7 +15,7 @@ export async function assignDivisions() {
     const totalUsers = usersWithPoints.length;
     const divisionSize = Math.floor(totalUsers / 3);
   
-    usersWithPoints.forEach((ranking, index) => {
+    for (const [index, ranking] of usersWithPoints.entries()) {
       let division;
       if (index < divisionSize) {
         division = 1;
@@ -23,15 +25,22 @@ export async function assignDivisions() {
         division = 3;
       }
   
-      ranking.update({ division });
-    });
+      await ranking.update({ division });
+    }
   
     // Actualizar usuarios sin puntos
     await Ranking.update(
       { division: 4 }, // "No clasificado"
       { where: { points: 0 } }
     );
+    return { usersWithPoints };
+
+  } catch (error) {
+    throw new Error(
+      `Error al actualizar las divisiones: ${(error as Error).message}`
+    );
   }
+}
 
 // Función para añadir puntos a un usuario
 export async function addPoints(userId: string, points: number) {
@@ -49,6 +58,7 @@ export async function addPoints(userId: string, points: number) {
       }
   
       await transaction.commit();
+      return { msg: "Puntos actualizados correctamente" };
     } catch (error) {
       await transaction.rollback();
       throw error; 

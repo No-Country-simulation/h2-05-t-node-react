@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { getRankingByDivision, getRankingByUserId } from '../controllers/ranking.controller';
-import { populateRankingForExistingUsers } from '../services/user.service';
+//import { populateRankingForExistingUsers } from '../services/user.service';
+import { assignDivisions } from '../services/ranking.service';
 
 const router = Router();
 
@@ -92,6 +93,6 @@ router.get('/division/:division', getRankingByDivision);
  *       500:
  *         description: Error del servidor.
  */
-router.post('/assignDivision', populateRankingForExistingUsers);
+router.post('/assignDivision', assignDivisions);
 
 export default router;

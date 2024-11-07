@@ -317,11 +317,11 @@ export const getPOnePlayer = async (name: any) => {
     );
   }
 };
-
+//-----------------------Token--------------------------
 export const getPlayerByName = async (name: any) => {
   try {
     const apiUrl = API_URL;
-    const url = `${apiUrl}players/profiles?search=${name}`;
+    const url = `${apiUrl}/players/profiles?search=${name}`;
     const apiKey = process.env.API_KEY_APIFOOTBALL;
 
     const respuesta = await fetch(url, {
@@ -343,9 +343,7 @@ export const getPlayerByName = async (name: any) => {
       lastname: item.player.lastname
         ? item.player.lastname
         : "No hay datos ingresados en la api",
-      age: item.player.age
-        ? item.player.age
-        : "No hay datos ingresados en la api",
+      age: item.player.age ? item.player.age : "-",
       photo: item.player.photo
         ? item.player.photo
         : "No hay datos ingresados en la api",
@@ -366,7 +364,7 @@ export const getPlayerByName = async (name: any) => {
 export const getPlayerSeasonById = async (id: any) => {
   try {
     const apiUrl = API_URL;
-    const url = `${apiUrl}players/seasons?player=${id}`;
+    const url = `${apiUrl}/players/seasons?player=${id}`;
     const apiKey = process.env.API_KEY_APIFOOTBALL;
 
     const respuesta = await fetch(url, {
@@ -390,7 +388,7 @@ export const getPlayerSeasonById = async (id: any) => {
 export const getPlayerByIdAndSeason = async (id: any, season: any) => {
   try {
     const apiUrl = API_URL;
-    const url = `${apiUrl}players?id=${id}&season=${season}`;
+    const url = `${apiUrl}/players?id=${id}&season=${season}`;
     const apiKey = process.env.API_KEY_APIFOOTBALL;
 
     const response = await fetch(url, {
@@ -468,7 +466,7 @@ export const getPlayerByIdAndTotalSeason = async (id: any, seasons: any) => {
     console.log("Seasons:", seasons);
     // Loop through each season and fetch data
     for (const season of seasons) {
-      const url = `${apiUrl}players?id=${id}&season=${season}`;
+      const url = `${apiUrl}/players?id=${id}&season=${season}`;
 
       const response = await fetch(url, {
         method: "GET",
@@ -488,7 +486,10 @@ export const getPlayerByIdAndTotalSeason = async (id: any, seasons: any) => {
         // Set player info once (assuming it doesn't change across seasons)
         if (!playerInfo) {
           playerInfo = {
+            apiID: id,
+            position: statistics[0]?.games.position || "no definido",
             name: player.name,
+            nationality: player.nationality,
             photo: player.photo,
             age: player.age,
           };
@@ -521,32 +522,7 @@ export const getPlayerByIdAndTotalSeason = async (id: any, seasons: any) => {
 export const getPlayerTrophyById = async (id: any) => {
   try {
     const apiUrl = API_URL;
-    const url = `${apiUrl}trophies?player=${id}`;
-    const apiKey = process.env.API_KEY_APIFOOTBALL;
-
-    const respuesta = await fetch(url, {
-      method: "GET",
-      headers: {
-        "x-rapidapi-host": "v3.football.api-sports.io",
-        "x-rapidapi-key": `${apiKey}`,
-      },
-    });
-
-    const result = await respuesta.json();
-    //Se da formato de la respuesta
-    const player = result.response;
-    if (player.length === 0) {
-      return { msg: "No hay datos de trofeos" };
-    }
-    return player;
-  } catch (error) {
-    throw new Error(`Error al buscar el jugador: ${(error as Error).message}`);
-  }
-};
-export const postPlayerInfoToken = async (id: any) => {
-  try {
-    const apiUrl = API_URL;
-    const url = `${apiUrl}trophies?player=${id}`;
+    const url = `${apiUrl}/trophies?player=${id}`;
     const apiKey = process.env.API_KEY_APIFOOTBALL;
 
     const respuesta = await fetch(url, {

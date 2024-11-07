@@ -2,6 +2,7 @@ import {
   createPrediction,
   deletePrediction,
   getPrediction,
+  getPredictionCountByStatus,
   getPredictions,
   updatePrediction,
 } from "../services/prediction.service";
@@ -10,6 +11,22 @@ import { Request, Response } from "express";
 
 const HttpResponse = new httpResponse();
 
+export const getAllPredictionCountByStatus = async (req: Request, res: Response) => {
+  try {
+    const { status  } = req.query;
+     // Verificamos que `status` esté definido y sea válido
+     if (status !== "completed" && status !== "pending") {
+      return HttpResponse.BAD_REQUEST_ERROR(res, "El estado debe ser 'completed' o 'pending'");
+    }
+    const prediction = await getPredictionCountByStatus(status);
+    if (!prediction) {
+      return HttpResponse.DATA_BASE_ERROR(res, "Predicciones no encontradas");
+    }
+    return HttpResponse.OK(res, prediction);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+};
 export const getAllPredictions = async (req: Request, res: Response) => {
   try {
     const prediction = await getPredictions();

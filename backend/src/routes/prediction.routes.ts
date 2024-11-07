@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { deleteOnePrediction, getAllPredictions, getOnePrediction, postCreatePrediction, updateOnePrediction } from '../controllers/prediction.controller';
+import { deleteOnePrediction, getAllPredictionCountByStatus, getAllPredictions, getOnePrediction, postCreatePrediction, updateOnePrediction } from '../controllers/prediction.controller';
 import { handleUserValidationErrors } from '../middlewares/prediction.validator';
 
 const router = Router();
@@ -53,6 +53,7 @@ const router = Router();
  *                 $ref: '#/components/schemas/Prediction'
  */
 router.get('', getAllPredictions);
+router.get('/count', getAllPredictionCountByStatus);
 
 /**
  * @swagger

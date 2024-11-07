@@ -7,6 +7,7 @@ import {
   createUser,
   deleteUser,
   updateUser,
+  getUserCount,
 } from "../services/user.service";
 import { httpResponse } from "../utils/enumsErrors";
 import { userInterface } from "../interfaces/user.interface";
@@ -15,6 +16,16 @@ import { getPredictionQuota } from "../services/prediction_quota.service";
 
 const HttpResponse = new httpResponse();
 
+export const getCountUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await getUserCount();
+    if (!users)
+      return HttpResponse.DATA_BASE_ERROR(res, "Usuarios no encontrados");
+    return HttpResponse.OK(res, users);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+};
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await getUsers();

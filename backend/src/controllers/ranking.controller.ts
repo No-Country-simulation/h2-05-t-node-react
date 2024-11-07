@@ -1,7 +1,8 @@
 import { Ranking } from "../models/ranking.model";
 import { User } from "../models/user.model";
 import { Request, Response } from "express";
-import { populateRankingForExistingUsers } from "../services/user.service";
+//import { populateRankingForExistingUsers } from "../services/user.service";
+import { assignDivisions } from "../services/ranking.service";
 
 export const getRankingByUserId = async (req: Request, res: Response) => {
   try {
@@ -22,7 +23,7 @@ export const getRankingByUserId = async (req: Request, res: Response) => {
 };
 export const postAsignDivision = async (req: Request, res: Response) => {
   try {
-    const ranking = await populateRankingForExistingUsers();
+    const ranking = await assignDivisions();
 
     res.status(200).json({ ranking });
   } catch (error) {
@@ -40,8 +41,12 @@ export const getRankingByDivision = async (req: Request, res: Response) => {
 
     const rankings = await Ranking.findAll({
       where: { division },
-      include: [User], // para incluir la información del usuario
+      include: {
+        model: User, // Incluir el modelo Match
+        attributes: ["id", "username"],
+      }, // para incluir la información del usuario
       order: [["points", "DESC"]],
+      attributes: ["id", "points"],
     });
 
     res.json(rankings);

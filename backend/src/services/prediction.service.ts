@@ -10,6 +10,22 @@ import { getPredictionQuota } from "./prediction_quota.service";
 import sequelize from "../config/database";
 import { CreateOneMatch } from "./match.service";
 
+export const getPredictionCountByStatus = async (status: "completed" | "pending"): Promise<number> => {
+  try {
+    const totalPredictions = await Prediction.count({
+      where: {
+        status: status,
+      },
+    });
+    return totalPredictions;
+  } catch (error) {
+    throw new Error(
+      `Error al obtener el total de predicciones con estado "${status}": ${(error as Error).message}`
+    );
+  }
+};
+
+
 export const getPredictions = async (): Promise<Prediction[]> => {
   try {
     const prediction = await Prediction.findAll();

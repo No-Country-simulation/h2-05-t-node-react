@@ -23,6 +23,7 @@ import Players from './pages/scoutPlayers/PlayersPage';
 import PlayersPage from './pages/scoutPlayers/PlayersPage';
 import PlayerDetails from './pages/scoutPlayers/players/PlayerDetails';
 import PlayerToken from './pages/scoutPlayers/players/PlayerToken';
+import AdminDashboard from './pages/admin/DashboardAdmin';
 
 function App() {
 
@@ -69,6 +70,7 @@ function App() {
 
             <Route path="/me/predictions" element={<MyPredictionsPage />} />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="/dashboardAdmin" element={<AdminDashboard />} />
 
           </Routes>
         </div>

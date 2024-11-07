@@ -2,6 +2,17 @@ import { userInterface } from "../interfaces/user.interface";
 import { Ranking } from "../models/ranking.model";
 import { User } from "../models/user.model";
 
+export const getUserCount = async (): Promise<number> => {
+  try {
+    const totalUsers = await User.count();
+    return totalUsers;
+  } catch (error) {
+    throw new Error(
+      `Error al obtener el total de usuarios: ${(error as Error).message}`
+    );
+  }
+};
+
 export const getUsers = async (): Promise<User[]> => {
   try {
     const user = await User.findAll();
