@@ -1,6 +1,6 @@
 FROM node:20.9.0-alpine
 
-WORKDIR /usr/dist
+WORKDIR /dist
 
 COPY package*.json ./
 RUN npm install
