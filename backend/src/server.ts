@@ -1,9 +1,8 @@
 // src/server.ts
 import app from './app';
 import sequelize from './config/database';
+import { PORT } from './config/enviroment';
 import { createDatabaseStructures } from './utils/createDatabaseStructures';
-
-dotenv.config();
 
 
 sequelize.sync({ alter: false }) // false para no sobrescribir tablas

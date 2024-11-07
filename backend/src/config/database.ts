@@ -8,8 +8,6 @@ import { Ranking } from '../models/ranking.model';
 import { Prize } from '../models/prize.model';
 import { PredictionRecord } from '../models/prediction_record.model';
 import { PredictionQuota } from '../models/prediction_quota.model';
-import { DB_URL } from './enviroment';
-import pg from 'pg';
 import { TokenInfo } from '../models/token_info.model';
 import { Token } from '../models/token.model';
 import { TokenRecord } from '../models/token_record';
@@ -18,31 +16,34 @@ import { TokenRecord } from '../models/token_record';
   throw new Error('Faltan variables de entorno para la configuración de la base de datos.');
 } */
 
-const sequelize = new Sequelize(DB_URL, {
+const sequelize = new Sequelize({
+  database: process.env.DB_NAME || 'mydb',
+  username: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'password',
+  host: process.env.DB_HOST || 'localhost',
   dialect: 'postgres',
-  dialectModule: pg,
+  port: 5432, // Asegúrate de especificar el puerto correcto para PostgreSQL
   dialectOptions: {
     ssl: {
-      require: false,
-      rejectUnauthorized: false
+      require: true, // Esto es necesario para Render
+      rejectUnauthorized: false // Esto evita problemas con certificados no verificados
     }
-  }
+  },
+  models: [
+    User,
+    Match,
+    League,
+    PredictionInfo,
+    Prediction,
+    Ranking,
+    Prize,
+    PredictionRecord,
+    PredictionQuota,
+    TokenInfo,
+    Token,
+    TokenRecord
+  ]
 });
-
-sequelize.addModels([
-  User,
-  Match,
-  League,
-  PredictionInfo,
-  Prediction,
-  Ranking,
-  Prize,
-  PredictionRecord,
-  PredictionQuota,
-  TokenInfo,
-  Token,
-  TokenRecord
-]);
 
 // Relacionar los modelos
 User.hasOne(Ranking);
