@@ -6,16 +6,16 @@ export async function createDatabaseStructures(sequelize: Sequelize) {
     const createViewQuery = `
       DO $$
       BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'bets_match_prediction') THEN
-          CREATE VIEW bets_match_prediction AS
+        IF NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'predictions_match_prediction') THEN
+          CREATE VIEW predictions_match_prediction AS
           SELECT 
-            bets.id AS bet_id,
-            bets.user_id,
-            bets.type AS bet_type,
-            bets.bet_points,
-            bets.date AS bet_date,
-            bets.status AS bet_status,
-            bets.total_points,
+            predictions.id AS bet_id,
+            predictions.user_id,
+            predictions.type AS bet_type,
+            predictions.bet_points,
+            predictions.date AS bet_date,
+            predictions.status AS bet_status,
+            predictions.total_points,
             prediction_info.id AS prediction_info_id,
             prediction_info."predictionType",
             prediction_info."predictionQuotaType",
@@ -24,16 +24,16 @@ export async function createDatabaseStructures(sequelize: Sequelize) {
             prediction_info.prediction_date,
             prediction_info.status AS prediction_status,
             matches.id AS match_id,
-            matches.team_a,
-            matches.team_b,
+            matches.home_team,
+            matches.away_team,
             matches.match_date,
             matches.result,
             matches."id_apiMatch",
             matches.status AS match_status
           FROM 
-            bets
+            predictions
           JOIN 
-            prediction_info ON bets.id = prediction_info.prediction_id
+            prediction_info ON predictions.id = prediction_info.prediction_id
           JOIN 
             matches ON prediction_info.match_id = matches.id;
         END IF;

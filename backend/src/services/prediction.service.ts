@@ -45,19 +45,18 @@ export const createPrediction = async (
     date: Date;
   },
   type: "simple" | "chained",
-  matchData : {
+  matchData: {
     id_apiMatch: string;
     home_team: string;
     home_team_img: string;
-    away_team:string;
-    away_team_img:string;
+    away_team: string;
+    away_team_img: string;
     league: string;
     league_id: string;
     league_img: string;
-    match_date: Date,
+    match_date: Date;
   },
-  predictionId?: string,
-
+  predictionId?: string
 ) => {
   const transaction = await sequelize.transaction();
   try {
@@ -295,24 +294,27 @@ export const updatePrediction = async (
   }
 };
 
-export const updateBet = async (id:any, data: any) => {
+export const updateBet = async (id: any, data: any) => {
   try {
     const bet = await Prediction.findOne(id);
-    if(!bet){
-      throw new Error('No existe la predicción')
+    if (!bet) {
+      throw new Error("No existe la predicción");
     }
     const update = await Prediction.update(data, { where: { id: id } });
-    return { data:update, msg: "Predicción actualizado" };
+    return { data: update, msg: "Predicción actualizado" };
   } catch (error) {
     throw new Error(
       `Error al actualizado la Predicción: ${(error as Error).message}`
     );
   }
-}
+};
 
-export const predictionRecordByMatch = async (userId:any, matchId:any) => {
+export const predictionRecordByMatch = async (
+  userId: any,
+  id_apiMatch: any
+) => {
   try {
-    const prediction = await Prediction.findAll({
+    const prediction = await Prediction.findAndCountAll({
       where: {
         user_id: userId,
       },
@@ -326,28 +328,31 @@ export const predictionRecordByMatch = async (userId:any, matchId:any) => {
             "prediction_date",
             "status",
           ],
-          where: {
-            match_id: matchId, // Filtrar por match_id en PredictionInfo
-          },
           include: [
             {
-              model: Match,
+              model: Match, // Incluir el modelo Match
               attributes: [
-                "team_a",
-                "team_b",
+                "home_team",
+                "home_team_img",
+                "away_team",
+                "away_team_img",
                 "match_date",
-                "league_id",
+                "league",
+                "league_img",
                 "result",
                 "status",
               ],
+              where: { id_apiMatch },
+              required: true,
             },
           ],
         },
       ],
       attributes: ["id", "total_points", "status", "type"],
-     })
-     if(!prediction){
-      throw new Error('No existe la predicción')
+    });
+
+    if (!prediction) {
+      throw new Error("No existe la predicción");
     }
     return prediction;
   } catch (error) {
@@ -355,4 +360,4 @@ export const predictionRecordByMatch = async (userId:any, matchId:any) => {
       `Error al obtener la Predicción: ${(error as Error).message}`
     );
   }
-}
+};

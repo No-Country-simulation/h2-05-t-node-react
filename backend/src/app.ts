@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.routes";
 import matchRoutes from "./routes/match.routes";
 import rankingRoutes from "./routes/ranking.routes";
 import prizeRouter from "./routes/prize.routes";
+import token_infoRouter from "./routes/token_info.routes";
 import { errorHandler } from "./middlewares/errorHandler";
 import cors from "cors";
 import predictionRouter from "./routes/prediction.routes";
@@ -37,6 +38,7 @@ app.use("/api/match", matchRoutes);
 app.use("/api/prediction", predictionRouter);
 app.use("/api/prize", prizeRouter);
 app.use("/", apiRoutes); // Ruta general o fallback
+app.use("/api/token", token_infoRouter);
 
 // Manejo de errores
 app.use(errorHandler);

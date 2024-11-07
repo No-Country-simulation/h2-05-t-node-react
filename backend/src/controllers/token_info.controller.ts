@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { httpResponse } from "../utils/enumsErrors";
-import { createTokenInfo, deleteTokenInfoById, getTokenInfobyId, getTokensInfos, updateTokenInfobyId } from "../services/token_info.service";
+import { createTokenInfo, deleteTokenInfoById, getTokenInfobyId, getTokensInfos, tokenByName, updateTokenInfobyId } from "../services/token_info.service";
 
 
 const HttpResponse = new httpResponse();
@@ -51,7 +51,7 @@ export const deleteTokenInfo = async (req: Request, res: Response) => {
     const { id } = req.params;
     const tokenInfo = await deleteTokenInfoById(id);
     if (!tokenInfo)
-      return HttpResponse.DATA_BASE_ERROR(res, "Error al eliminar predición");
+      return HttpResponse.DATA_BASE_ERROR(res, "Error al eliminar token");
     return HttpResponse.OK(res, tokenInfo);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
@@ -64,10 +64,26 @@ export const putUpdateTokenInfo = async (req: Request, res: Response) => {
     const data = req.body;
     const tokenInfo = await updateTokenInfobyId(id, data);
     if (!tokenInfo) {
-      return HttpResponse.DATA_BASE_ERROR(res, "Error al actualizar predición");
+      return HttpResponse.DATA_BASE_ERROR(res, "Error al actualizar token");
     }
     return HttpResponse.OK(res, tokenInfo);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);
   }
 };
+
+export const TokenByFullName = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.query;
+    if(!name){
+      return HttpResponse.BAD_REQUEST_ERROR(res, "Nombre de token no proporcionado");
+    }
+    const token = await tokenByName(name);
+    if (!token) {
+      return HttpResponse.DATA_BASE_ERROR(res, "Error al obtener el token");
+    }
+    return HttpResponse.OK(res, token);
+  } catch (error) {
+    return HttpResponse.Error(res, (error as Error).message);
+  }
+}

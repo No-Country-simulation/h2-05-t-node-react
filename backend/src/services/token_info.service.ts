@@ -28,54 +28,70 @@ export const createTokenInfo = async (player: any, trophies: any) => {
 };
 
 export const getTokensInfos = async (): Promise<TokenInfo[]> => {
-    try {
-      const tokensInfo = await TokenInfo.findAll();
-      if (!tokensInfo) throw new Error("Tokens no encontrados");
-      return tokensInfo;
-    } catch (error) {
-      throw new Error(
-        `Error al obtener las Predicciones: ${(error as Error).message}`
-      );
-    }
-  };
-  
-  export const getTokenInfobyId = async (id: any): Promise<TokenInfo> => {
-    try {
-      const tokenInfo = await TokenInfo.findOne(id);
-      if (!tokenInfo) throw new Error("Predicción no encontrados");
-      return tokenInfo;
-    } catch (error) {
-      throw new Error(
-        `Error al obtener las Predicciones: ${(error as Error).message}`
-      );
-    }
-  };
-  
-  export const updateTokenInfobyId = async (id: any, data: any) => {
-    try {
-      const tokenInfo = await TokenInfo.update(data, { where: { id: id } });
+  try {
+    const tokensInfo = await TokenInfo.findAll();
+    if (!tokensInfo) throw new Error("Tokens no encontrados");
+    return tokensInfo;
+  } catch (error) {
+    throw new Error(
+      `Error al obtener las Predicciones: ${(error as Error).message}`
+    );
+  }
+};
 
-      if (!tokenInfo) throw new Error("Informacion del token no actualizado");
-      return { msg: "Informacion del token actualizada" };
+export const getTokenInfobyId = async (id: any): Promise<TokenInfo> => {
+  try {
+    const tokenInfo = await TokenInfo.findOne(id);
+    if (!tokenInfo) throw new Error("Predicción no encontrados");
+    return tokenInfo;
+  } catch (error) {
+    throw new Error(
+      `Error al obtener las Predicciones: ${(error as Error).message}`
+    );
+  }
+};
 
-    } catch (error) {
-      throw new Error(
-        `Error al actualizar la Informacion del token: ${(error as Error).message}`
-      );
-    }
-  };
+export const updateTokenInfobyId = async (id: any, data: any) => {
+  try {
+    const tokenInfo = await TokenInfo.update(data, { where: { id: id } });
 
-  export const deleteTokenInfoById = async (id: any) => {
-    try {
-      const tokenInfo = await TokenInfo.destroy({ where: { id: id } });
+    if (!tokenInfo) throw new Error("Informacion del token no actualizado");
+    return { msg: "Informacion del token actualizada" };
+  } catch (error) {
+    throw new Error(
+      `Error al actualizar la Informacion del token: ${
+        (error as Error).message
+      }`
+    );
+  }
+};
 
-      if (!tokenInfo) throw new Error("Error al borrar la Informacion del token");
+export const deleteTokenInfoById = async (id: any) => {
+  try {
+    const tokenInfo = await TokenInfo.destroy({ where: { id: id } });
 
-      return { msg: "Informacion del token eliminada" };
+    if (!tokenInfo) throw new Error("Error al borrar la Informacion del token");
 
-    } catch (error) {
-      throw new Error(
-        `Error al eliminar el partido: ${(error as Error).message}`
-      );
-    }
-  };  
+    return { msg: "Informacion del token eliminada" };
+  } catch (error) {
+    throw new Error(
+      `Error al eliminar el token: ${(error as Error).message}`
+    );
+  }
+};
+
+export const tokenByName = async (name:any) => {
+  try {
+    const token = await TokenInfo.findOne({
+      where: { name }
+    });
+    console.log(token);
+    
+    if (!token) throw new Error("Error al trear la Informacion del token");
+    return token;
+  } catch (error) {
+    throw new Error(
+      `Error al trear el token: ${(error as Error).message}`
+    );
+  }
+}
