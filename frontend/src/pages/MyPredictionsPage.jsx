@@ -49,17 +49,7 @@ const MyPredictionsPage = () => {
             .finally(() => setLoading(false))
     }, [user?.id])
 
-    // let predictionId = 'd10859a9-c45a-47c4-9a57-10336703d286'
-
-    // useEffect(() => {
-    //     setLoading(true)
-    //     axios.get(`${API_URL}/api/prediction/${predictionId}`)
-    //         .then(res => {
-    //             console.log(res.data.data)
-    //         })
-    //         .catch(error => console.log(error))
-    //         .finally(() => setLoading(false))
-    // }, [])
+    console.log(userPredictions)
 
     return (
         <main className="flex flex-col min-h-screen bg-gradiente">

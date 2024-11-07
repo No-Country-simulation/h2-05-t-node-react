@@ -45,18 +45,22 @@ const MatchDetail = ({ league }) => {
         navigate('/matches-completed');
     }
 
+
     const createUserPrediction = () => {
         const {
             fixtureId,
             date,
-            leagueName,
-            leagueId,
-            leagueLogo,
             teams: {
                 home: { name: homeTeamName, logo: homeTeamLogo },
                 away: { name: awayTeamName, logo: awayTeamLogo }
             }
         } = selectedMatch || {};
+
+        const {
+            id,
+            name,
+            logo
+        } = league?.league || {};
 
         let predictionType = ''
         if (homeTeamName == selectedOption) {
@@ -74,7 +78,7 @@ const MatchDetail = ({ league }) => {
                 selectedPredictionType: predictionType, // "win_home" | "win_away" | "draw"
                 fee: 1.3,
                 quotaType: "daily",
-                date: date,
+                date: getDate(date),
             },
             matchData: {
                 id_apiMatch: String(fixtureId),
@@ -82,10 +86,10 @@ const MatchDetail = ({ league }) => {
                 home_team_img: homeTeamLogo,
                 away_team: awayTeamName,
                 away_team_img: awayTeamLogo,
-                league: leagueName,
-                league_id: leagueId,
-                league_img: leagueLogo,
-                match_date: date
+                league: name,
+                league_id: String(id),
+                league_img: logo,
+                match_date: getDate(date)
             },
             type: "simple",
         }
@@ -123,6 +127,11 @@ const MatchDetail = ({ league }) => {
 
     const getTime = (dateTimeString) => {
         return dateTimeString.split("T")[1].split(":").slice(0, 2).join(":");
+    }
+
+    const getDate = (dateString) => {
+        const date = new Date(dateString)
+        return date.toISOString().split('T')[0]
     }
 
     return (

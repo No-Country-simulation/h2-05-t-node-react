@@ -39,7 +39,7 @@ const ModalMakePrediction = ({ currentDate, dateFormatDM, predictionDate, visibl
       })
       .catch(error => console.error('Error fetching data:', error))
       .finally(() => setLoading(false));
-  }, [date]);
+  }, [predictionDate]);
 
   const handleSearch = (e) => {
     setSearchData(e.target.value)

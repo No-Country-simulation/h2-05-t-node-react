@@ -24,6 +24,11 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
         }
     }, [])
 
+    const getDate = (dateString) => {
+        const date = new Date(dateString)
+        return date.toISOString().split('T')[0]
+    }
+
     const closeAllModalsPredictions = () => {
         if (!visiblePredictResult) return
 
@@ -63,7 +68,7 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                 selectedPredictionType: predictionType, // "win_home" | "win_away" | "draw"
                 fee: 1.3,
                 quotaType: "daily",
-                date: date,
+                date: getDate(date),
             },
             matchData: {
                 id_apiMatch: String(fixtureId),
@@ -72,9 +77,9 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                 away_team: awayTeamName,
                 away_team_img: awayTeamLogo,
                 league: leagueName,
-                league_id: leagueId,
+                league_id: String(leagueId),
                 league_img: leagueLogo,
-                match_date: date
+                match_date: getDate(date)
             },
             type: "simple",
         }

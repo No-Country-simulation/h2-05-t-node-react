@@ -39,7 +39,6 @@ const Predictions = () => {
         }
     }, [])
 
-
     // useEffect(() => {
     //     if (!user?.id) return
 
