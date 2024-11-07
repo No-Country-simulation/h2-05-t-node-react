@@ -1,3 +1,4 @@
+import cloudinary from "../config/cloudinary.config";
 import { userInterface } from "../interfaces/user.interface";
 import { Ranking } from "../models/ranking.model";
 import { User } from "../models/user.model";
@@ -40,8 +41,8 @@ export const createUser = async (data: userInterface): Promise<any> => {
     // Crear un registro en la tabla de Ranking con 0 puntos por defecto
     await Ranking.create({
       user_id: user.id, // Usa el ID del usuario recién creado
-      points: 0,       // Puntos iniciales (opcional)
-      division: 4,     // División inicial (opcional)
+      points: 0, // Puntos iniciales (opcional)
+      division: 4, // División inicial (opcional)
     });
 
     return { msg: "Usuario creado" };
@@ -49,7 +50,6 @@ export const createUser = async (data: userInterface): Promise<any> => {
     throw new Error(`Error al crear el usuario: ${(error as Error).message}`);
   }
 };
-
 
 export const populateRankingForExistingUsers = async () => {
   try {
@@ -72,8 +72,8 @@ export const populateRankingForExistingUsers = async () => {
       // Crear el registro en Ranking sin casting
       await Ranking.create({
         user_id: user.id, // Usa el ID del usuario recién creado
-        points: 0,       // Puntos iniciales (opcional)
-        division: 4,     // División inicial (opcional)
+        points: 0, // Puntos iniciales (opcional)
+        division: 4, // División inicial (opcional)
       });
     }
 
@@ -97,15 +97,29 @@ export const deleteUser = async (id: any): Promise<any> => {
   }
 };
 
-export const updateUser = async (id: any, data: any): Promise<any> => {
+export const updateUser = async (
+  id: any,
+  data: any,
+  image: any
+): Promise<any> => {
   try {
+   console.log(image);
+    
+   const imageStore = await cloudinary.uploader.upload(image.path, {
+    resource_type: "image",
+    folder: `Tracks/Singles`
+  });
+
+    // Añade la URL de la imagen al objeto data si la imagen se subió con éxito
+    if (imageStore) {
+      data.photo = (imageStore as any).secure_url;
+    }
     const user = await User.update(data, { where: { id: id } });
     if (!user) throw new Error("Usuario no actualizado");
     return { msg: "Usuario actualizado" };
   } catch (error) {
     throw new Error(
-      `Error al eliminar el usuario: ${(error as Error).message}`
+      `Error al actualizar el usuario: ${(error as Error).message}`
     );
   }
 };
-

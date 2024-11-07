@@ -74,11 +74,12 @@ export const updateOneUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const data = req.body;
+    const image = req.file
     if (data.password) {
       const hashedPassword = await bcrypt.hash(data.password, 10);
       data.password = hashedPassword;
     }
-    const user = await updateUser(id, req.body);
+    const user = await updateUser(id, req.body, image);
     if (!user)
       return HttpResponse.DATA_BASE_ERROR(
         res,

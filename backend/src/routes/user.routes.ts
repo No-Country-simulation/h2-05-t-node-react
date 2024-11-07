@@ -1,4 +1,5 @@
 import { Router } from "express";
+import multer from "multer";
 import {
   getAllUsers,
   getOneUser,
@@ -14,6 +15,8 @@ import {
 import { authenticateToken } from "../middlewares/auth.middeware";
 
 const router = Router();
+const upload = multer({ dest: "uploads/" });
+
 
 router.get("/", getAllUsers);
 router.get("/:id", getOneUser);
@@ -25,7 +28,7 @@ router.post(
 );
 router.post("/login", login);
 router.delete("/:id", authenticateToken, deleteOneUser);
-router.put("/:id", authenticateToken, updateOneUser);
+router.put("/:id", upload.single('image'), /* authenticateToken, */ updateOneUser);
 
 /**
  * @swagger
