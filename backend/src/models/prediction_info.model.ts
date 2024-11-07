@@ -9,7 +9,7 @@ import {
 } from "sequelize-typescript";
 import { Match } from "./match.model";
 import { Prediction } from "./prediction.model";
-import { predictionInfo } from "../interfaces/predictionInfo.interface";
+import { predictionInfo } from "../interfaces/prediction_info.interface";
 
 @Table({
   tableName: "prediction_info",
@@ -50,13 +50,13 @@ export class PredictionInfo extends Model<PredictionInfo, predictionInfo> {
   predictionQuotaType!: string;
 
   @Column({
-    type: DataType.ENUM("win_home", "win_away", "draw", "player"),
-    allowNull: true,
+    type: DataType.STRING,
+    allowNull: false
   })
   selectedPredictionType!: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.FLOAT,
     allowNull: false,
     defaultValue: 1,
   })

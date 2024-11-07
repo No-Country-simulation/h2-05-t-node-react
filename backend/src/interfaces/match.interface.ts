@@ -1,10 +1,13 @@
 export interface matchInterface {
-  id?: string;
-  team_a: string;
-  team_b: string;
+  home_team: string;
+  home_team_img?: string;
+  away_team: string;
+  away_team_img?: string;
+  league?: string;
+  league_id?: string;
+  league_img?: string;
   match_date: Date;
   result?: string;
   status?: string;
-  league_id: string;
-  id_apiMatch?: string;
+  id_apiMatch: string;
 }

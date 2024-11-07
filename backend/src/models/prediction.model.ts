@@ -11,10 +11,10 @@ import {
 import { User } from "./user.model";
 import { predictionInterface } from "../interfaces/prediction.interface";
 import { PredictionInfo } from "./prediction_info.model";
-import { PredictionRecord } from "./predictionRecord.model";
+import { PredictionRecord } from "./prediction_record.model";
 
 @Table({
-  tableName: "bets",
+  tableName: "predictions",
   timestamps: true,
 })
 export class Prediction extends Model<Prediction, predictionInterface> {
@@ -56,11 +56,12 @@ export class Prediction extends Model<Prediction, predictionInterface> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
+    defaultValue: "pending",
   })
   status!: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.FLOAT,
     allowNull: true,
     defaultValue: 0,
   })

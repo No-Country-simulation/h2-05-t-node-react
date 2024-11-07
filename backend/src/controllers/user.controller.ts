@@ -11,6 +11,7 @@ import {
 import { httpResponse } from "../utils/enumsErrors";
 import { userInterface } from "../interfaces/user.interface";
 import { User } from "../models/user.model";
+import { getPredictionQuota } from "../services/prediction_quota.service";
 
 const HttpResponse = new httpResponse();
 
@@ -95,6 +96,8 @@ export const login = async (req: Request, res: Response) => {
   try {
     const JWT_KEY = process.env.JWT_KEY;
     const { email, password }: { email: string; password: string } = req.body;
+    //console.log(req.body);
+    
     if (!(email && password)) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
@@ -103,6 +106,8 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const user = await User.findOne({where:{email:email}});
+    //console.log(user);
+    
     if (!user) {
       return HttpResponse.INVALID_TYPE_ERROR(
         res,
@@ -115,11 +120,18 @@ export const login = async (req: Request, res: Response) => {
       return HttpResponse.INVALID_TYPE_ERROR(res, "contraseña invalidos");
     }
     const id = user.id;
+     const today = new Date();
+     //const todayString = today.toISOString().split("T")[0]; // Formatear la fecha en 'YYYY-MM-DD'
+
+    // Verificar cuántas predicciones disponibles tiene el usuario para hoy
+    let predictionQuota = await getPredictionQuota(id, today);
+
     const token = jwt.sign({ email, id }, JWT_KEY!, {
       expiresIn: "24h",
     });
     const response = {
       token: token,
+      quota: predictionQuota,
       user: {
         id: user.id,
         name: user.username,
@@ -131,12 +143,6 @@ export const login = async (req: Request, res: Response) => {
         registration_date: user.registration_date,
       },
     };
-    // Configurar la cookie con el token
-    res.cookie(process.env.PASS_COOKIE as string, token, {
-      maxAge: 1000 * 60 * 60, // 1 hora
-      httpOnly: false,
-      sameSite: "none",
-    });
     return HttpResponse.OK(res, response);
   } catch (error) {
     return HttpResponse.Error(res, (error as Error).message);

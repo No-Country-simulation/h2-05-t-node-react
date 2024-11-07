@@ -1,17 +1,15 @@
-import { predictionInterface } from "../interfaces/prediction.interface";
 import { Prediction } from "../models/prediction.model";
-import { PredictionRecord } from "../models/predictionRecord.model";
+import { PredictionRecord } from "../models/prediction_record.model";
 import { Match } from "../models/match.model";
 //import { Ranking } from "../models/ranking.model";
 import { addPoints } from "./ranking.service";
-import { User } from "../models/user.model";
 import { PredictionInfo } from "../models/prediction_info.model";
-import { calculatePoints } from "../utils/pointCalculation";
-import { calculatePredictionsByDay } from "../utils/predictionByDay";
-import {
-  getPredictionQuota,
-  updateFuturePredictionQuota,
-} from "./predictionQuota.service";
+import { calculateChainedPoints } from "../utils/pointCalculation";
+
+import { getPredictionQuota } from "./prediction_quota.service";
+
+import sequelize from "../config/database";
+import { CreateOneMatch } from "./match.service";
 
 export const getPredictions = async (): Promise<Prediction[]> => {
   try {
@@ -38,110 +36,202 @@ export const getPrediction = async (id: any): Promise<Prediction> => {
 };
 
 export const createPrediction = async (
-  data: predictionInterface
-): Promise<any> => {
-  try {
-    const prediction = await Prediction.create(data);
-    if (!prediction) throw new Error("Predicción no creado");
-    if (!prediction.user_id || !prediction.id) {
-      throw new Error(
-        "Datos faltantes para crear el registro de la predicción."
-      );
-    }
-    const dataRecord: any = {
-      user_id: prediction.user_id,
-      prediction_id: prediction.id,
-    };
-    const predRecord = await PredictionRecord.create(dataRecord);
-    if (!predRecord) throw new Error("Registro no creado");
-    return prediction;
-  } catch (error) {
-    throw new Error(
-      `Error al crear la Predicción: ${(error as Error).message}`
-    );
-  }
-};
-
-export const createPredictions = async (
-  user: User,
-  predictions: {
-    match_id: string;
+  userId: string,
+  prediction: {
     predictionType: "match" | "player";
-    selectedPredictionType: "win_home" | "win_away" | "draw" | "player";
+    selectedPredictionType: "win_home" | "win_away" | "draw" | string;
     fee: number;
     quotaType: "daily" | "future";
     date: Date;
-  }[],
-  type: "simple" | "chained"
+  },
+  type: "simple" | "chained",
+  matchData : {
+    id_apiMatch: string;
+    home_team: string;
+    home_team_img: string;
+    away_team:string;
+    away_team_img:string;
+    league: string;
+    league_id: string;
+    league_img: string;
+    match_date: Date,
+  },
+  predictionId?: string,
+
 ) => {
+  const transaction = await sequelize.transaction();
   try {
-    const today = new Date();
-    const todayString = today.toISOString().split("T")[0]; // Formatear la fecha en 'YYYY-MM-DD'
+    //const today = new Date();
+    // const todayString = today.toISOString().split("T")[0]; // Formatear la fecha en 'YYYY-MM-DD'
 
     // Verificar cuántas predicciones disponibles tiene el usuario para hoy
-    let predictionQuota = await getPredictionQuota(user, today);
+    let predictionQuota = await getPredictionQuota(userId, prediction.date);
 
-    const { totalDailyPredictions, futurePredictionsByDay } =
-      calculatePredictionsByDay(predictions, todayString);
+    // Validar existencia de `predictionQuota`
+    if (!predictionQuota)
+      throw new Error("No se pudo obtener la cuota de predicciones.");
 
-    // Verificar si se exceden los límites diarios
-    if (totalDailyPredictions > predictionQuota.daily_predictions_left) {
+    // Validar límites de predicciones
+    if (
+      (prediction.quotaType === "daily" &&
+        predictionQuota.daily_predictions_left === 0) ||
+      (prediction.quotaType === "future" &&
+        predictionQuota.future_predictions_left === 0)
+    ) {
       throw new Error(
-        `No tienes suficientes predicciones diarias disponibles (${predictionQuota.daily_predictions_left} restantes).`
+        `No tienes suficientes predicciones ${
+          prediction.quotaType === "daily" ? "diarias" : "futuras"
+        } disponibles.`
       );
     }
+    let newPrediction;
+    let totalPoints = prediction.fee;
 
-    // Calcular los puntos totales basados en el tipo de predicción
-    const totalPoints = calculatePoints(predictions, type);
+    const match = await CreateOneMatch(matchData);
 
-    // Crear la predicción principal y el registro en una sola transacción
-    const newPrediction = await Prediction.create({
-      user_id: user.id,
-      type: type,
-      total_points: totalPoints,
-      status: "pending",
-    });
+    if (type === "simple") {
+      // Crear la predicción principal y el registro en una sola transacción
+      newPrediction = await Prediction.create(
+        {
+          user_id: userId,
+          type: type,
+          total_points: totalPoints,
+        },
+        { transaction }
+      );
 
-    if (!newPrediction) throw new Error("Error al crear la predicción.");
+      // Crear el registro de predicción
 
-    // Crear el registro de predicción
-    await PredictionRecord.create({
-      user_id: user.id,
-      prediction_id: newPrediction.id,
-    });
+      await PredictionRecord.create(
+        {
+          user_id: userId,
+          prediction_id: newPrediction.id,
+        },
+        { transaction }
+      );
 
-    // Crear múltiples PredictionInfo en una sola operación
-    const predictionInfos = predictions.map((prediction) => ({
-      match_id: prediction.match_id,
-      prediction_id: newPrediction.id, // Relacionar con la predicción creada
-      predictionType: prediction.predictionType,
-      predictionQuotaType: prediction.quotaType,
-      selectedPredictionType: prediction.selectedPredictionType,
-      fee: prediction.fee,
-      prediction_date: prediction.date,
-      status: "pending",
-    }));
+      // Crear PredictionInfo con su relacion
+      const newPredictionInfo = await PredictionInfo.create(
+        {
+          match_id: match.id,
+          prediction_id: newPrediction.id, // Relacionar con la predicción creada
+          predictionType: prediction.predictionType,
+          predictionQuotaType: prediction.quotaType,
+          selectedPredictionType: prediction.selectedPredictionType,
+          fee: prediction.fee,
+          prediction_date: prediction.date,
+        },
+        { transaction }
+      );
 
-    await PredictionInfo.bulkCreate(predictionInfos);
+      await predictionQuota.update(
+        {
+          daily_predictions_left:
+            prediction.quotaType === "daily"
+              ? predictionQuota.daily_predictions_left - 1
+              : predictionQuota.daily_predictions_left,
+          future_predictions_left:
+            prediction.quotaType === "future"
+              ? predictionQuota.future_predictions_left - 1
+              : predictionQuota.future_predictions_left,
+        },
+        { transaction }
+      );
 
-    // Si la predicción es encadenada, actualizar los puntos totales
-    if (type === "chained") {
-      await newPrediction.update({ total_points: totalPoints });
+      await transaction.commit();
+
+      return {
+        predicInfoId: newPredictionInfo.id,
+        msg: "Has creado la predicciones simple con éxito.",
+      };
+    } else if (type === "chained") {
+      // Verifica si `predictionId` es nulo o undefined
+      if (!predictionId) {
+        // Crear la predicción principal y el registro en una sola transacción
+        const newPrediction = await Prediction.create(
+          {
+            user_id: userId,
+            type: type,
+            total_points: 0,
+          },
+          { transaction }
+        );
+
+        // Guardar el id de la predicción para relacionarlo con la predicción creada
+        if (newPrediction && newPrediction.id) {
+          predictionId = newPrediction.id;
+        } else {
+          throw new Error("No se pudo crear una nueva predicción principal.");
+        }
+        console.log("Id de la nueva predicción:", predictionId);
+
+        // Crear el registro de predicción con el mismo `transaction`
+        await PredictionRecord.create(
+          {
+            user_id: userId,
+            prediction_id: predictionId, // Usa predictionId de forma consistente
+          },
+          { transaction }
+        );
+      }
+
+      // Crear PredictionInfo y vincularlo a `predictionId`
+      await PredictionInfo.create(
+        {
+          match_id: match.id,
+          prediction_id: predictionId, // Relacionar con la predicción creada
+          predictionType: prediction.predictionType,
+          predictionQuotaType: prediction.quotaType,
+          selectedPredictionType: prediction.selectedPredictionType,
+          fee: prediction.fee,
+          prediction_date: prediction.date,
+        },
+        { transaction }
+      );
+      // Realiza el commit antes de calcular los puntos
+      await transaction.commit();
+      // Cargar de nuevo `newPrediction` usando `predictionId` para cálculos de puntos
+      const newPrediction = await Prediction.findByPk(predictionId);
+      totalPoints = await calculateChainedPoints(predictionId);
+
+      // Ahora inicia una nueva transacción para actualizar `total_points`
+      const updateTransaction = await sequelize.transaction();
+
+      if (newPrediction) {
+        await newPrediction.update(
+          { total_points: totalPoints },
+          { transaction: updateTransaction }
+        );
+      }
+
+      // Actualizar la cuota de predicciones
+      await predictionQuota.update(
+        {
+          daily_predictions_left:
+            prediction.quotaType === "daily"
+              ? predictionQuota.daily_predictions_left - 1
+              : predictionQuota.daily_predictions_left,
+          future_predictions_left:
+            prediction.quotaType === "future"
+              ? predictionQuota.future_predictions_left - 1
+              : predictionQuota.future_predictions_left,
+        },
+        { transaction: updateTransaction }
+      );
+
+      await updateTransaction.commit();
+
+      return {
+        predictionId,
+        msg: "Has creado la predicción chained con éxito.",
+      };
     }
-
-    // Actualizar las cuotas de predicción futuras
-    await updateFuturePredictionQuota(user, futurePredictionsByDay);
-
-    // Actualizar las cuotas diarias después de crear las predicciones
-    await predictionQuota.update({
-      daily_predictions_left:
-        predictionQuota.daily_predictions_left - totalDailyPredictions,
-    });
-
-    return `Has creado ${predictionInfos.length} predicciones con éxito.`;
   } catch (error) {
-    console.error("Error al crear predicciones:", error);
-    throw new Error(`Error al crear predicciones: ${(error as Error).message}`);
+    await transaction.rollback();
+    console.error("Error al crear la predicciones:", error);
+    throw new Error(
+      `Error al crear la prediccion: ${(error as Error).message}`
+    );
   }
 };
 

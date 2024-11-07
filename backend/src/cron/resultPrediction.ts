@@ -1,31 +1,29 @@
-import sequelize from "../config/database";
+/* import sequelize from "../config/database";
 import { QueryTypes } from "sequelize";
-import { updateBet } from "../services/prediction.service";
-
+//import { getFirstDate, getSecondDate } from "./days";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const predictionResult = async () => {
   try {
+    const firstDate = getFirstDate();
+    const secondDate = getSecondDate();
     const result = await sequelize.query(
-      `SELECT * FROM mydb.bets_match_prediction WHERE total_points is NULL`,
+      `SELECT * FROM mydb.bets_match_prediction WHERE bet_status = 'pending'`,
       {
         type: QueryTypes.SELECT,
       }
     );
+    console.log(firstDate);
+    console.log(secondDate);
     const resultMap = result.map(async (item: any) =>{
-        if(item.bets_status === 'successful' || item.bet_type === 'simple'){
-          const point = 1 * item.fee;
-          const bet = await updateBet(item.bet_id, {total_points: point});
-          return bet;
-        } 
-      if(item.bets_status === 'failed' || item.bet_type === 'simple'){
-          const bet = await updateBet(item.bet_id, {total_points: 0});
-          return bet;
-      }
+        console.log(item.bet_status);
+        
     })
     return  resultMap;
 
     
-  } catch (error) {
+/*   } catch (error) {
     console.error(
         `Error al consultar los resultados: ${(error as Error).message}`
       );
@@ -34,4 +32,4 @@ export const predictionResult = async () => {
       );
   }
 };
-predictionResult();
+predictionResult();  */

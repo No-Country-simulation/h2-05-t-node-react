@@ -1,4 +1,4 @@
-import sequelize from "../config/database";
+/* import sequelize from "../config/database";
 import { QueryTypes } from "sequelize";
 import { getAllMatches } from "../services/api.service";
 import { updateOneMatch } from "../services/match.service";
@@ -53,4 +53,4 @@ export const matchResult = async () => {
     );
   }
 };
-matchResult();
+matchResult(); */

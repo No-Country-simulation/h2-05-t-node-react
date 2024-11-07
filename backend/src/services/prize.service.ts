@@ -4,7 +4,7 @@ import { Prize } from "../models/prize.model";
 export const getPrize = async () => {
   try {
     const prize = await Prize.findAll();
-    if (!prize) {
+    if (!prize || prize.length === 0) {
       throw new Error("Premios no encontrados");
     }
     return prize;
