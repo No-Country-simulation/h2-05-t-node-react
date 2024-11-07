@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import AlertTickIcon from '../../assets/icons/AlertTickIcon';
 
-const AlertMessage = ({ children, showAlert, setShowAlert, redirect, route, loading }) => {
-    const navigate = useNavigate();
-
+const AlertTimeOut = ({ children, showAlert, setShowAlert }) => {
     useEffect(() => {
-        if (!loading && showAlert) {
-            setShowAlert(false);
-            if (redirect) {
-                navigate(route);
-            }
+        let timer;
+        if (showAlert) {
+            timer = setTimeout(() => {
+                setShowAlert(false);
+            }, 1200); 
         }
-    }, [loading, showAlert, setShowAlert, navigate, redirect, route]);
+        return () => clearTimeout(timer);
+    }, [showAlert, setShowAlert]);
 
     return (
         <div className="flex items-center justify-center">
@@ -36,4 +34,4 @@ const AlertMessage = ({ children, showAlert, setShowAlert, redirect, route, load
     );
 };
 
-export default AlertMessage;
+export default AlertTimeOut;

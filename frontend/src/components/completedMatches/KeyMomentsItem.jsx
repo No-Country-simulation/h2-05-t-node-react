@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ArrowIcon from "../../assets/icons/ArrowIcon";
 
-const KeyMomentsItem = ({ index, item, completedMatch }) => {
+const KeyMomentsItem = ({ index, item, selectedMatch }) => {
     const [openIndexes, setOpenIndexes] = useState([])
 
     const toggleAccordion = (index) => {
@@ -11,8 +11,6 @@ const KeyMomentsItem = ({ index, item, completedMatch }) => {
             setOpenIndexes([...openIndexes, index])
         }
     }
-
-    console.log({completedMatch})
 
     return (
         <div className={`border border-gray-300 ${index == 0 && 'rounded-t-lg'}`}>
@@ -34,8 +32,8 @@ const KeyMomentsItem = ({ index, item, completedMatch }) => {
                     <div className="flex flex-col justify-center items-start text-center">
                         {
                             item.title === 'Goles' ? (
-                                completedMatch?.goalscorer && completedMatch.goalscorer.length > 0 ? (
-                                    completedMatch.goalscorer.map((goal, i) => (
+                                selectedMatch?.goals && selectedMatch?.goals.length > 0 ? (
+                                    selectedMatch.goals.map((goal, i) => (
                                         <div key={i} className="w-full px-[45px] py-1 mx-auto flex items-center justify-between border-b border-gray-300">
                                             <div>
                                                 <span>{goal.time}'</span>
@@ -47,7 +45,7 @@ const KeyMomentsItem = ({ index, item, completedMatch }) => {
                                 ) : (
                                     <div className="w-full px-[45px] py-1 mx-auto flex items-center justify-between border-b border-gray-300">
                                         <div>
-                                            <span className="text-secondary">{completedMatch?.goalscorer.length == 0 && completedMatch?.match_status == 'Finished' ? 'Sin Goles' : 'Pendiente'}</span>
+                                            <span className="text-secondary">{(selectedMatch?.goals.home == null && selectedMatch?.goals.away == null) && selectedMatch?.status == 'Match Finished' ? 'Sin Goles' : 'Pendiente'}</span>
                                         </div>
                                     </div>
                                 )

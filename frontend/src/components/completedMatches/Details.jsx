@@ -5,7 +5,23 @@ import StadiumIcon from '../../assets/icons/StadiumIcon'
 import WhistleIcon from '../../assets/icons/WhistleIcon'
 import { formatDateToDMY } from '../../utils/formatDateToDMY'
 
-const Details = ({ completedMatch }) => {
+const Details = ({ selectedMatch }) => {
+    const dateTimeData = extractDateTime(selectedMatch?.date)
+
+    console.log(selectedMatch)
+
+    function extractDateTime(dateTimeString) {
+        if (!dateTimeString) return { date: 'Fecha no disponible', time: 'Hora no disponible' };
+
+        // Extraemos la parte de la fecha (antes de la 'T') y la parte de la hora (después de la 'T')
+        const [datePart, timePart] = dateTimeString.split('T');
+
+        // Devolvemos la fecha y solo la hora en formato hh:mm (sin segundos)
+        const time = timePart.split(':').slice(0, 2).join(':');  // Tomamos solo hh:mm
+
+        return { date: datePart, time: time };
+    }
+
     return (
         <>
             <div className="flex justify-between py-2 mb-1">
@@ -19,8 +35,9 @@ const Details = ({ completedMatch }) => {
                     </div>
                     <div className="flex flex-col justify-center items-start h-[54px]">
                         <span>Fecha y hora</span>
-                        <span className="text-secondary">
-                            {completedMatch?.match_date ? formatDateToDMY(completedMatch?.match_date) : 'Fecha no disponible'}
+                        <span className="text-secondary flex gap-3">
+                            <p>{formatDateToDMY(dateTimeData?.date)}</p>
+                            <p>{dateTimeData?.time + 'hs'}</p>
                         </span>
                     </div>
                 </div>
@@ -32,7 +49,7 @@ const Details = ({ completedMatch }) => {
                     <div className="flex flex-col justify-center items-start h-[54px]">
                         <span>Torneo</span>
                         <span className="text-secondary">
-                            {completedMatch?.league_name?.split(' - ')[0] || completedMatch?.league_name}
+                            {selectedMatch?.leagueName || '-'}
                         </span>
                     </div>
                 </div>
@@ -53,7 +70,7 @@ const Details = ({ completedMatch }) => {
                     </div>
                     <div className="flex flex-col justify-center items-start h-[54px]">
                         <span>Estadio</span>
-                        <span className="text-secondary">-</span>
+                        <span className="text-secondary">{selectedMatch?.venue.name || '-'}</span>
                     </div>
                 </div>
 
@@ -63,7 +80,7 @@ const Details = ({ completedMatch }) => {
                     </div>
                     <div className="flex flex-col justify-center items-start h-[54px]">
                         <span>Arbitro</span>
-                        <span className="text-secondary">-</span>
+                        <span className="text-secondary">{selectedMatch?.referee || '-'}</span>
                     </div>
                 </div>
             </div>
