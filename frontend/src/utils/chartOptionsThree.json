@@ -1,0 +1,48 @@
+{
+  "maintainAspectRatio": false,
+  "aspectRatio": 1,
+  "plugins": {
+    "legend": {
+      "display": true,
+      "position": "top",
+      "labels": {
+        "color": "var(--text-color)"
+      }
+    }
+  },
+  "scales": {
+    "x": {
+      "title": {
+        "display": true,
+        "text": "Año",
+        "color": "var(--text-color)"
+      },
+      "min": 2004,
+      "max": 2023,
+      "ticks": {
+        "color": "var(--text-color-secondary)"
+      },
+      "grid": {
+        "color": "var(--surface-border)"
+      },
+      "stacked": false
+    },
+    "y": {
+      "title": {
+        "display": true,
+        "text": "Tokens",
+        "color": "var(--text-color)"
+      },
+      "min": 0,
+      "max": 13000,
+      "ticks": {
+        "color": "var(--text-color-secondary)",
+        "stepSize": 1000
+      },
+      "grid": {
+        "color": "var(--surface-border)"
+      },
+      "stacked": false
+    }
+  }
+}

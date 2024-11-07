@@ -1,7 +1,9 @@
-export const getNextFiveDays = (startDate) => {
+export const getNextFiveDays = (startDate, showAll) => {
     const daysList = [];
     const currentDate = new Date(`${startDate}T00:00:00`);
-    daysList.push("Todas");
+    if(showAll){
+        daysList.push("Todas");
+    }
 
     const formatDate = (date) => {
         return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
