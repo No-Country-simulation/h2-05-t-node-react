@@ -23,7 +23,7 @@ const sequelize = new Sequelize(DB_URL, {
   dialectModule: pg,
   dialectOptions: {
     ssl: {
-      require: false,
+      require: true,
       rejectUnauthorized: false
     }
   }
