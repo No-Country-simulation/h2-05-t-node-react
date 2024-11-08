@@ -10,6 +10,7 @@ import ModalMakePrediction from "../components/predictions/ModalMakePrediction"
 import axios from "axios"
 import API_URL from "../config"
 import ModalChainNewPrediction from "../components/predictions/ModalChainNewPrediction"
+import AlertMessage from "../components/common/AlertMessage"
 
 const MyPredictionsPage = () => {
     const [selectedDate, setSelectedDate] = useState(0)
@@ -19,6 +20,7 @@ const MyPredictionsPage = () => {
     const [visible, setVisible] = useState(false)
     const [loading, setLoading] = useState(false)
     const [userPredictions, setUserPredictions] = useState([])
+    const [showAlert, setShowAlert] = useState(false)
 
     const [user, setUser] = useState(null)
     const [quota, setQuota] = useState(null)
@@ -26,11 +28,25 @@ const MyPredictionsPage = () => {
     useEffect(() => {
         const storedUser = localStorage.getItem('user')
         if (storedUser) {
-            const { quota, token, user } = JSON.parse(storedUser)
+            const { token, user } = JSON.parse(storedUser)
             setUser(user)
-            setQuota(quota)
         }
     }, [])
+
+    useEffect(() => {
+        if (!user?.id) return;
+
+        // setLoading(true);
+        axios.post(`${API_URL}/api/prediction-qouta`, {
+            userId: user.id,
+            date: currentDate
+        })
+            .then(res => {
+                setQuota(res.data.data.daily_predictions_left);
+            })
+            .catch(error => console.log(error))
+            // .finally(() => setLoading(false));
+    }, [user?.id, currentDate]);
 
     useEffect(() => {
         if (!user?.id) return
@@ -54,11 +70,13 @@ const MyPredictionsPage = () => {
     return (
         <main className="flex flex-col min-h-screen bg-gradiente">
             <HeaderPredictions quota={quota} dateList={dateList} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-            <div className="flex-grow pb-5 bg-white rounded-t-lg">
+            <div className="flex-grow pb-5 bg-white rounded-t-lg h-[300px] overflow-scroll scrollbar-hide">
                 <ActivePredictions setVisible={setVisible} userPredictions={userPredictions} loading={loading} />
                 {/* AGREGAR LAS QUE TENGAN ESTADO DE PASADAS O FINISHED */}
                 {/* <LastPredictions /> */}
             </div>
+
+            {/* <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage> */}
             <Footer />
 
             <ModalMakePrediction

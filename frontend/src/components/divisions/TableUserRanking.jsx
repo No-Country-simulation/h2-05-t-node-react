@@ -1,6 +1,18 @@
+import { useEffect, useState } from "react"
 import UserRanking from "./UserRanking"
+import SkeletonList from "../common/SkeletonList"
 
-const TableUserRanking = ({ usersList, UserImg }) => {
+const TableUserRanking = ({ divisionUserList, UserImg, loading }) => {
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user')
+        if (storedUser) {
+            const { token, user } = JSON.parse(storedUser)
+            setUser(user)
+        }
+    }, [])
+
     return (
         <section className="shadow-soft mt-3 rounded-2xl">
             <div className="py-2 px-6 flex justify-between text-regular text-secondary">
@@ -11,9 +23,13 @@ const TableUserRanking = ({ usersList, UserImg }) => {
                 <div>Puntos</div>
             </div>
             {
-                usersList.map(item => (
-                    <UserRanking key={item.id} item={item} imgProfileUser={UserImg} />
-                ))
+
+                loading ?
+                    <SkeletonList length={5} height='60px' />
+                    :
+                    divisionUserList?.map((item, index) => (
+                        <UserRanking key={item.id} index={index} item={item} user={user} imgProfileUser={UserImg} />
+                    ))
             }
         </section>
     )

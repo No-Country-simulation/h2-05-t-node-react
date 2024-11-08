@@ -17,6 +17,15 @@ const Statistics = () => {
   const [chartOptionsStateTwo, setChartOptionsStateTwo] = useState({});
   const [chartOptionsStateThree, setChartOptionsStateThree] = useState({});
 
+  const [playerData, setPlayerData] = useState(null);
+
+  useEffect(() => {
+    const storedPlayerData = localStorage.getItem("playerData");
+    if (storedPlayerData) {
+      setPlayerData(JSON.parse(storedPlayerData))
+    }
+  }, [])
+
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
@@ -178,7 +187,10 @@ const Statistics = () => {
       <div className="flex items-center">
         <button className="flex items-center gap-3 focus:outline-none ">
           <h2 className="text-black text-title font-semibold uppercase">
-            messi / usdt
+            {playerData?.name.trim().includes(' ')
+              ? playerData?.name.trim().split(' ').slice(-1)
+              : playerData?.name.trim()
+            } / usdt
           </h2>
           <span className={`transition-transform duration-300`}>
             <ArrowIcon />

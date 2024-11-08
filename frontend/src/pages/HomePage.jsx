@@ -16,6 +16,10 @@ import RewardPriceOfTheMonthImg from "../assets/img/rewardPrizeOfTheMonth.png";
 import Carrousel from "../components/common/Carrousel";
 import Footer from "../components/layout/Footer";
 import ArrowIcon from "../assets/icons/ArrowIcon";
+import axios from "axios";
+import { getCurrentDate } from "../utils/getCurrentDate";
+import API_URL from "../config";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const favouriteMatches = [
     { id: 1, homeTeam: "Barcelona", awayTeam: "Real Madrid", date: "Nov 30", hour: "17:00" },
@@ -32,6 +36,7 @@ const recommendedMatches = [
 const HomePage = () => {
     const [visible, setVisible] = useState(false);
     const [user, setUser] = useState(null);
+    const currentDate = getCurrentDate()
     const [quota, setQuota] = useState(null);
     const [openIndexes, setOpenIndexes] = useState([]);
     const navigate = useNavigate();
@@ -39,11 +44,23 @@ const HomePage = () => {
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
-            const { quota, token, user } = JSON.parse(storedUser);
+            const { token, user } = JSON.parse(storedUser);
             setUser(user);
-            setQuota(quota);
         }
     }, []);
+
+    useEffect(() => {
+        if (!user?.id) return;
+
+        axios.post(`${API_URL}/api/prediction-qouta`, {
+            userId: user.id,
+            date: currentDate
+        })
+            .then(res => {
+                setQuota(res.data.data.daily_predictions_left);
+            })
+            .catch(error => console.log(error))
+    }, [user?.id, currentDate]);
 
     const toggleAccordion = (index) => {
         if (openIndexes.includes(index)) {
@@ -76,7 +93,12 @@ const HomePage = () => {
                 <div className="w-[90%] mx-auto mt-6 flex flex-col">
                     <div className="text-white flex flex-col items-center mb-5 mt-1">
                         <h1 className="font-semibold text-title">Mis Predicciones</h1>
-                        <span className="text-[59px] h-[60px]">{quota?.daily_predictions_left}</span>
+                        {
+                            quota ?
+                                <span className="text-[59px] h-[60px]">{quota}</span>
+                                :
+                                <ProgressSpinner style={{ width: '60px', height: '60px' }} className="spinner-white" strokeWidth="3" />
+                        }
                         <span className="mt-3.5 text-primary">Predicciones disponibles</span>
                     </div>
 
@@ -91,7 +113,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            <section className="flex-grow mb-5">
+            <section className="flex-grow mb-5 h-[300px] overflow-scroll scrollbar-hide">
                 <Container>
                     <h2 className="font-medium text-black mb-3">Favoritos</h2>
                     {favouriteMatches.map((match, index) => (

@@ -35,14 +35,15 @@ const MatchesCompletedPage = () => {
                 </Link>
 
                 <div className="flex items-center py-[18px] justify-around gap-8 text-center">
+                    {/* Equipo local */}
                     <div className="w-[83px]">
                         <img className="mx-auto w-[88px] h-[88px] object-contain" src={selectedMatch?.teams.home.logo} alt={`Img ${selectedMatch?.teams.home.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
                         <p className="capitalize text-secondary text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{selectedMatch?.teams.home.name}</p>
                     </div>
 
+                    {/* Estado partido */}
                     <div className="flex flex-col mb-3 justify-top">
                         <span className="text-base text-secondary font-semibold capitalize">
-                            {/* ESTADO DEL PARTIDO */}
                             {
                                 selectedMatch?.status.long == 'Match Finished' ? 'Finalizado'
                                     : selectedMatch?.status.long == 'Not Started' ? formatDateToMD(getDate(selectedMatch?.date))
@@ -54,16 +55,17 @@ const MatchesCompletedPage = () => {
                         </span>
                         <span className="text-medium ">
                             {
-                                selectedMatch?.status.long === 'Not Started' ? (
-                                    getTime(selectedMatch?.date)
+                                selectedMatch?.status.long === 'Not Started' && selectedMatch?.date ? (
+                                    getTime(selectedMatch.date)
                                 ) : (
-                                    `${selectedMatch?.score.fulltime.home ?? selectedMatch?.score.halftime.home} - 
-        ${selectedMatch?.score.fulltime.away ?? selectedMatch?.score.halftime.away}`
+                                    `${selectedMatch?.score.fulltime.home ?? selectedMatch?.score.halftime.home ?? "-"} - 
+            ${selectedMatch?.score.fulltime.away ?? selectedMatch?.score.halftime.away ?? "-"}`
                                 )
                             }
                         </span>
                     </div>
 
+                    {/* Equipo visitante */}
                     <div className="w-[83px]">
                         <img className="mx-auto w-[88px] h-[88px] object-contain" src={selectedMatch?.teams.away.logo} alt={`Img ${selectedMatch?.teams.away.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
                         <p className="capitalize text-secondary text-xs mt-[2px] max-w-[80px] truncate overflow-hidden whitespace-nowrap">{selectedMatch?.teams.away.name}</p>
@@ -89,7 +91,7 @@ const MatchesCompletedPage = () => {
                 </NavLink>
             </nav>
 
-            <div className="flex-grow">
+            <div className="flex-grow h-[300px] overflow-scroll scrollbar-hide">
                 <Outlet />
             </div>
 

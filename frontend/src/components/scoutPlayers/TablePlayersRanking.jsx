@@ -14,8 +14,8 @@ const TablePlayersRanking = ({ playersList }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {playersList.map(item => (
-                        <PlayersRanking key={item.id} item={item} />
+                    {playersList?.map((item, index) => (
+                        <PlayersRanking key={item.id} item={item} index={index} />
                     ))}
                 </tbody>
             </table>

@@ -35,11 +35,11 @@ const Quests = () => {
             <div className="w-full h-[198.22px] mt-3 flex flex-col justify-center bg-gradiente rounded-lg text-white text-center">
                 <div>
                     <p className="text-regular-18 font-medium">Tus Puntos</p>
-                    <p className="text-[48px] leading-none mb-2 font-medium">9000</p>
+                    <p className="text-[48px] leading-none mb-2 font-medium">60</p>
                 </div>
 
                 <div className="w-[90%] mx-auto">
-                    <p className="text-start ms-2 mb-1.5">200 de 300 puntos</p>
+                    <p className="text-start ms-2 mb-1.5">60 de 90 puntos</p>
                     <div className="card relative">
                         <ProgressBar value={value} showValue={false} className="bg-[#BBBBBB] h-[44.74px] rounded-full custom-progress-bar-quests" />
                         <div className="absolute left-12 transform -translate-x-1/2 top-1/2 -translate-y-1/2 text-black">

@@ -13,6 +13,8 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
     const [selectedOption, setSelectedOption] = useState(null)
     const [visibleMakeChained, setVisibleMakeChained] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
+    const [leagueData, setLeagueData] = useState({})
+
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(false)
 
@@ -23,6 +25,15 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
             setUser(user)
         }
     }, [])
+
+    useEffect(() => {
+        if (selectedMatch && selectedMatch.league) {
+            const { id, name, logo } = selectedMatch.league;
+            setLeagueData({ id, name, logo });
+        }
+    }, [selectedMatch]);
+
+    console.log(selectedMatch)
 
     const getDate = (dateString) => {
         const date = new Date(dateString)
@@ -43,9 +54,9 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
         const {
             fixtureId,
             date,
-            leagueName,
-            leagueId,
-            leagueLogo,
+            // leagueName,
+            // leagueId,
+            // leagueLogo,
             teams: {
                 home: { name: homeTeamName, logo: homeTeamLogo },
                 away: { name: awayTeamName, logo: awayTeamLogo }
@@ -76,9 +87,9 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                 home_team_img: homeTeamLogo,
                 away_team: awayTeamName,
                 away_team_img: awayTeamLogo,
-                league: leagueName,
-                league_id: String(leagueId),
-                league_img: leagueLogo,
+                league: leagueData?.name,
+                league_id: String(leagueData?.id),
+                league_img: leagueData?.logo,
                 match_date: getDate(date)
             },
             type: "simple",
@@ -99,9 +110,9 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                 setShowAlert(true)
                 setSelectedOption(null)
                 // CERRAR TODOS LOS MODALES
-                setVisiblePredictResult(false)
-                setVisiblePredictResultOrGoal(false)
-                setVisible(false)
+                // setVisiblePredictResult(false)
+                // setVisiblePredictResultOrGoal(false)
+                // setVisible(false)
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false))
@@ -175,6 +186,9 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                 <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage>
 
             </Dialog>
+
+            {/* <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage> */}
+
 
             {/* MODAL PARA INICIAR UNA COMBINADA */}
             {/* <ModalMakeChained

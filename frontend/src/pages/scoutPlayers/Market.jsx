@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "../../components/common/Container";
 import MarketSectionOne from "../../components/scoutPlayers/MarketSectionOne";
 import MarketSectionTwo from "../../components/scoutPlayers/MarketSectionTwo";
@@ -17,11 +17,19 @@ const initialTablaOne = [
 const Market = () => {
   const [tableSectionOne] = useState(initialTablaOne)
   const [initialPrice, setInitialPrice] = useState(67378)
+  const [playerData, setPlayerData] = useState(null);
+
+  useEffect(() => {
+    const storedPlayerData = localStorage.getItem("playerData");
+    if (storedPlayerData) {
+      setPlayerData(JSON.parse(storedPlayerData))
+    }
+  }, [])
 
   return (
     <>
       <Container>
-        <MarketSectionOne initialPrice={initialPrice} setInitialPrice={setInitialPrice} tableSectionOne={tableSectionOne} />
+        <MarketSectionOne playerData={playerData} initialPrice={initialPrice} setInitialPrice={setInitialPrice} tableSectionOne={tableSectionOne} />
         <MarketSectionTwo initialPrice={initialPrice} tableSectionTwo={tableSectionOne} />
       </Container>
       <MarketOrdersHoldings />

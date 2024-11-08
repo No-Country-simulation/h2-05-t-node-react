@@ -27,6 +27,7 @@ const MatchDetail = ({ league }) => {
     const [loading, setLoading] = useState(false)
     const [user, setUser] = useState(null)
     const [userPrediction, setUserPrediction] = useState(null)
+    const [leagueData, setLeagueData] = useState({})
     const [finishedMatch, setFinishedMatch] = useState(false)
     const navigate = useNavigate()
 
@@ -38,13 +39,19 @@ const MatchDetail = ({ league }) => {
         }
     }, [])
 
+    useEffect(() => {
+        if (league && league.league) {
+            const { id, name, logo } = league.league;
+            setLeagueData({ id, name, logo });
+        }
+    }, [league]);
+
     const handleSelectedMatch = (match) => {
         console.log('League ID:', league?.id)
         const matchWithLeagueId = { ...match, leagueId: league?.league.id, leagueName: league?.league.name, leagueLogo: league?.league.logo }
         localStorage.setItem('selectedMatch', JSON.stringify(matchWithLeagueId))
         navigate('/matches-completed');
     }
-
 
     const createUserPrediction = () => {
         const {
@@ -55,12 +62,6 @@ const MatchDetail = ({ league }) => {
                 away: { name: awayTeamName, logo: awayTeamLogo }
             }
         } = selectedMatch || {};
-
-        const {
-            id,
-            name,
-            logo
-        } = league?.league || {};
 
         let predictionType = ''
         if (homeTeamName == selectedOption) {
@@ -86,9 +87,9 @@ const MatchDetail = ({ league }) => {
                 home_team_img: homeTeamLogo,
                 away_team: awayTeamName,
                 away_team_img: awayTeamLogo,
-                league: name,
-                league_id: String(id),
-                league_img: logo,
+                league: leagueData?.name,
+                league_id: String(leagueData?.id),
+                league_img: leagueData.logo,
                 match_date: getDate(date)
             },
             type: "simple",
@@ -249,7 +250,7 @@ const MatchDetail = ({ league }) => {
 
                         <div className='flex mt-5 gap-1 justify-between'>
                             <ButtonSolid onClick={() => setVisible(false)} className='w-full'>Predecir</ButtonSolid>
-                            <ButtonOutline className='w-full'>Hacer combinada</ButtonOutline>
+                            <ButtonOutline onClick={() => setVisible(false)} className='w-full'>Hacer combinada</ButtonOutline>
                         </div>
                     </form>
 

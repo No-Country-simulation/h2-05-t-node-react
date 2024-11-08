@@ -15,6 +15,11 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
     const [selectedOption, setSelectedOption] = useState(null)
     const [showAlert, setShowAlert] = useState(false)
 
+    const getDate = (dateString) => {
+        const date = new Date(dateString)
+        return date.toISOString().split('T')[0]
+    }
+
     useEffect(() => {
         const storedUser = localStorage.getItem('user')
         if (storedUser) {
@@ -31,21 +36,20 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
 
         const fetchPlayers = async () => {
             try {
-                const awayTeamResponse = await axios.get(
-                    `${API_URL}/api_players?id=${selectedMatch?.league.id}&tid=${selectedMatch?.teams.home.id}`
+                const homeTeamResponse = await axios.get(
+                    `https://apifootboll.onrender.com/api_NewTeam?team=${selectedMatch?.teams.home.id}&season=2024&page=1`
                 )
 
-                const homeTeamResponse = await axios.get(
-                    `${API_URL}/api_players?id=${selectedMatch?.league.id}&tid=${selectedMatch?.teams.away.id}`
+                const awayTeamResponse = await axios.get(
+                    `https://apifootboll.onrender.com/api_NewTeam?team=${selectedMatch?.teams.away.id}&season=2024&page=1`
                 )
 
                 const combinedPlayersList = [
-                    ...awayTeamResponse.data.data[0].team_players,
-                    ...homeTeamResponse.data.data[0].team_players
+                    ...homeTeamResponse.data.data.filteredData,
+                    ...awayTeamResponse.data.data.filteredData
                 ]
 
                 setPlayersList(combinedPlayersList)
-                console.log(combinedPlayersList)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -67,7 +71,17 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
     }
 
     const createUserPrediction = (type) => {
-        const { match_id, match_date, homeTeam, awayTeam, team_home_badge, team_away_badge, league_name, league_id } = selectedMatch || {}
+        const {
+            fixtureId,
+            date,
+            leagueId,
+            leagueLogo,
+            leagueName,
+            teams: {
+                home: { name: homeTeamName, logo: homeTeamLogo },
+                away: { name: awayTeamName, logo: awayTeamLogo }
+            }
+        } = selectedMatch || {};
 
         return {
             userId: user?.id,
@@ -76,18 +90,18 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
                 selectedPredictionType: selectedOption, // nombre del jugador
                 fee: 1.3,
                 quotaType: "daily",
-                date: match_date,
+                date: getDate(date),
             },
             matchData: {
-                id_apiMatch: match_id,
-                home_team: homeTeam,
-                home_team_img: team_home_badge,
-                away_team: awayTeam,
-                away_team_img: team_away_badge,
-                league: league_name,
-                league_id: league_id,
-                league_img: "https://pbs.twimg.com/profile_images/545702389571784704/fYZ2mg85_400x400.png",
-                match_date: match_date
+                id_apiMatch: String(fixtureId),
+                home_team: homeTeamName,
+                home_team_img: homeTeamLogo,
+                away_team: awayTeamName,
+                away_team_img: awayTeamLogo,
+                league: leagueName,
+                league_id: String(leagueId),
+                league_img: leagueLogo,
+                match_date: getDate(date)
             },
             type: type,
         }
@@ -99,6 +113,7 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
 
         const newUserPrediction = createUserPrediction(type)
 
+        console.log(newUserPrediction)
         setLoading(true)
         axios.post(`${API_URL}/api/prediction/createPrediction`, newUserPrediction)
             .then(res => {
@@ -132,13 +147,13 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
                     <div className="max-h-[480px] p-1 flex flex-col gap-1.5 rounded-lg overflow-y-scroll scrollbar-hide">
                         {playersList?.map(item => (
                             <div
-                                key={item.player_name + item.player_number}
-                                onClick={() => setSelectedOption(item.player_name)}
-                                className={`h-[54px] min-h-[54px] max-h-[54px] px-5 flex items-center gap-3 rounded-lg shadow-soft ${selectedOption == item.player_name ? 'border border-2 border-blue' : ''}`}>
-                                <BlueSoccerJerseyIcon playerNumber={item.player_number} />
+                                key={item.player.id}
+                                onClick={() => setSelectedOption(item.player.name)}
+                                className={`h-[54px] min-h-[54px] max-h-[54px] px-5 flex items-center gap-3 rounded-lg shadow-soft ${selectedOption == item.player.name ? 'border border-2 border-blue' : ''}`}>
+                                <BlueSoccerJerseyIcon playerNumber={''} />
                                 <div className="flex flex-col">
-                                    <p className="text-regular-18 text-secondary font-semibold capitalize">{item.player_name}</p>
-                                    <span className="text-xs text-tertiary">{item.player_number}</span>
+                                    <p className="text-regular-18 text-secondary font-semibold capitalize">{item.player.name}</p>
+                                    <span className="text-xs text-tertiary"></span>
                                 </div>
                             </div>
                         ))}
@@ -154,13 +169,13 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
                     <span className='text-black text-regular font-semibold'>Resumen:</span>
                     <div className='flex gap-2 text-regular text-black'>
                         <div className="flex gap-2">
-                            <span>{selectedMatch?.homeTeam}</span>
-                            <img className="w[21px] h-[21px]" src={selectedMatch?.team_home_badge} alt={`imagen ${selectedMatch?.homeTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                            <span>{selectedMatch?.teams.home.name}</span>
+                            <img className="w[21px] h-[21px]" src={selectedMatch?.teams.home.logo} alt={`imagen ${selectedMatch?.teams.home.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
                         </div>
                         <span>vs.</span>
                         <div className="flex gap-2">
-                            <span>{selectedMatch?.awayTeam}</span>
-                            <img className="w[21px] h-[21px]" src={selectedMatch?.team_away_badge} alt={`imagen ${selectedMatch?.awayTeam}`} onError={(e) => { e.target.src = DefaultTeam }} />
+                            <span>{selectedMatch?.teams.away.name}</span>
+                            <img className="w[21px] h-[21px]" src={selectedMatch?.teams.away.logo} alt={`imagen ${selectedMatch?.teams.away.name}`} onError={(e) => { e.target.src = DefaultTeam }} />
                         </div>
                     </div>
                     <div className='flex justify-between text-regular-14 mb-3'>

@@ -4,18 +4,26 @@ import Container from "../components/common/Container"
 import axios from "axios"
 
 const ClassificationPage = () => {
+  const [selectedMatch, setSelectedMatch] = useState(null)
   const [loading, setLoading] = useState(false)
   const [rankingTeams, setRankingTeams] = useState([])
 
   useEffect(() => {
+    const storedMatch = localStorage.getItem('selectedMatch')
+    if (storedMatch) {
+      setSelectedMatch(JSON.parse(storedMatch))
+    }
+  }, [])
+
+  useEffect(() => {
     setLoading(true)
-    axios.get(`https://apifootboll.onrender.com/api_standings?season=2024&id=128`)
+    axios.get(`https://apifootboll.onrender.com/api_standings?season=2024&id=${selectedMatch?.leagueId}`)
       .then(res => {
         setRankingTeams(res.data.data)
       })
       .catch(error => console.log(error))
       .finally(() => setLoading(false))
-  }, [])
+  }, [selectedMatch?.leagueId])
 
   return (
     <Container>

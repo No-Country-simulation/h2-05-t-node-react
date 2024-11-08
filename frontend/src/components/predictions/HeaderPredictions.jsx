@@ -3,6 +3,7 @@ import ArrowBackIcon from "../../assets/icons/ArrowBackIcon"
 import ButtonOutline from "../common/ButtonOutline";
 import NavbarNextFiveDays from "../common/NavbarNextFiveDays";
 import ButtonSolid from "../common/ButtonSolid";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const HeaderPredictions = ({ quota, dateList, selectedDate, setSelectedDate }) => {
 
@@ -16,7 +17,12 @@ const HeaderPredictions = ({ quota, dateList, selectedDate, setSelectedDate }) =
 
                 <div className="text-white flex flex-col items-center mb-5 mt-1">
                     <h1 className="font-semibold text-title">Tus predicciones</h1>
-                    <span className="text-[59px] h-[60px]">{quota?.daily_predictions_left}</span>
+                    {
+                        quota ?
+                            <span className="text-[59px] h-[60px]">{quota}</span>
+                            :
+                            <ProgressSpinner style={{ width: '60px', height: '60px' }} className="spinner-white" strokeWidth="3" />
+                    }
                     <span className="mt-3.5 text-primary">Predicciones disponibles</span>
                 </div>
 

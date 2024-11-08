@@ -1,52 +1,62 @@
 import Container from "../../../components/common/Container"
 import PlayerDataItem from "../../../components/scoutPlayers/PlayerDataItem"
-import WhistleIcon from "../../../assets/icons/WhistleIcon"
-import StadiumIcon from "../../../assets/icons/StadiumIcon"
-import CalendarIcon from "../../../assets/icons/CalendarIcon"
+
 import YellowCardIcon from "../../../assets/icons/YellowCardIcon"
 import RedCardIcon from "../../../assets/icons/RedCardIcon"
-
-const playerInfoList = [
-  { id: 1, imgCountry: 'flag', titleData: 'Nacionalidad', textData: 'Argentina' },
-  { id: 2, iconData: CalendarIcon, titleData: 'Edad', textData: 33 },
-  { id: 3, iconData: StadiumIcon, titleData: 'Posición', textData: 'Delantero' },
-  { id: 4, iconData: WhistleIcon, titleData: 'Posición', textData: 'Delantero' },
-]
+import { useEffect, useState } from "react"
 
 const PlayerDetails = () => {
+  const [playerData, setPlayerData] = useState(null);
+
+  useEffect(() => {
+    const storedPlayerData = localStorage.getItem("playerData");
+    if (storedPlayerData) {
+      setPlayerData(JSON.parse(storedPlayerData))
+    }
+  }, [])
+
+  // Solo logros con 1er puesto
+  const filteredAchievements = Array.isArray(playerData?.achievements)
+    ? playerData.achievements
+      .filter(achievement => achievement?.place === "Winner")
+      .sort((a, b) => {
+        const seasonA = parseInt(a.season.split('/')[0], 10); // Extraer el año de la temporada
+        const seasonB = parseInt(b.season.split('/')[0], 10); // Extraer el año de la temporada
+        return seasonB - seasonA; // Ordenar de más reciente a más antiguo
+      })
+    : [];
+
+  console.log(filteredAchievements)
+
   return (
     <Container>
       <div className="flex flex-col gap-3">
         <h2 className="font-medium text-black">Datos del jugador</h2>
         <section className="shadow-soft rounded-lg">
-          {
-            playerInfoList.map(item => (
-              <PlayerDataItem key={item.id} item={item} />
-            ))
-          }
+          <PlayerDataItem playerData={playerData || {}} />
         </section>
 
         <div className="flex justify-between mt-3">
           <h2 className="font-medium text-black">Estadísticas</h2>
-          <span className="text-red-500">Filtrar</span>
+          {/* <span className="text-red-500">Filtrar</span> */}
         </div>
         <section>
           <div className="flex justify-between mt-2">
             <div className="w-[86px] h-[74px] flex justify-center items-center flex-col shadow-soft rounded-lg">
               <p className="text-tertiary">Goles</p>
-              <p className="text-regular-18 font-medium">672</p>
+              <p className="text-regular-18 font-medium">{playerData?.goals}</p>
             </div>
             <div className="w-[86px] h-[74px] flex justify-center items-center flex-col shadow-soft rounded-lg">
               <p className="text-tertiary">Partidos</p>
-              <p className="text-regular-18 font-medium">779</p>
+              <p className="text-regular-18 font-medium">{playerData?.games}</p>
             </div>
             <div className="w-[86px] h-[74px] flex justify-center items-center flex-col shadow-soft rounded-lg">
               <p className="text-tertiary">Minutos</p>
-              <p className="text-regular-18 font-medium">672</p>
+              <p className="text-regular-18 font-medium">{playerData?.minutes_played}</p>
             </div>
             <div className="w-[86px] h-[74px] flex justify-center items-center flex-col shadow-soft rounded-lg">
               <p className="text-tertiary">Asistencia</p>
-              <p className="text-regular-18 font-medium">672</p>
+              <p className="text-regular-18 font-medium">{playerData?.assists_goals}</p>
             </div>
           </div>
 
@@ -56,7 +66,7 @@ const PlayerDetails = () => {
                 <YellowCardIcon />
                 <p className="text-regular-14">Tarjetas amarillas</p>
               </div>
-              <p>12</p>
+              <p>{playerData?.cards_yellow}</p>
             </div>
 
             <div className="h-[36px] flex justify-between items-center px-3 border-t border-t-primary">
@@ -64,25 +74,24 @@ const PlayerDetails = () => {
                 <RedCardIcon />
                 <p className="text-regular-14">Tarjetas rojas</p>
               </div>
-              <p>12</p>
+              <p>{playerData?.cards_red}</p>
             </div>
           </div>
         </section>
 
         <div className="flex justify-between mt-3">
           <h2 className="font-medium text-black">Logros</h2>
-          <span className="text-red-500">Filtrar</span>
+          {/* <span className="text-red-500">Filtrar</span> */}
         </div>
         <div className="shadow-soft rounded-lg my-4">
-          <div className="h-[36px] flex justify-between items-center px-5">
-            <p className="text-regular-14">Balón de oro</p>
-            <p className="text-tertiary text-regular">2019</p>
-          </div>
-
-          <div className="h-[36px] flex justify-between items-center px-5 border-t border-t-primary">
-            <p className="text-regular-14">Copa america</p>
-            <p className="text-tertiary text-regular">2019</p>
-          </div>
+          {
+            filteredAchievements?.map((item, index) => (
+              <div key={index} className="h-[36px] flex justify-between items-center px-5 border-t-primary border-t">
+                <p className="text-regular-14">{item?.league}</p>
+                <p className="text-tertiary text-regular">{item?.season}</p>
+              </div>
+            ))
+          }
         </div>
       </div>
     </Container>

@@ -1,11 +1,19 @@
-import { Link, NavLink, Outlet, useNavigate, useParams } from "react-router-dom"
+import { Link, NavLink, Outlet, useLocation, useParams } from "react-router-dom"
 import Footer from "../../components/layout/Footer"
 import ArrowBackBlueIcon from "../../assets/icons/ArrowBackBlueIcon"
 import DefaultUser from "../../assets/img/user.png"
+import { useEffect, useState } from "react"
 
 const PlayersPage = () => {
     const { id } = useParams()
-    console.log({ idPlayer: id })
+    const [playerData, setPlayerData] = useState(null);
+
+    useEffect(() => {
+        const storedPlayerData = localStorage.getItem("playerData");
+        if (storedPlayerData) {
+            setPlayerData(JSON.parse(storedPlayerData))
+        }
+    }, [])
 
     return (
         <main className="flex flex-col min-h-screen">
@@ -16,8 +24,13 @@ const PlayersPage = () => {
                 </Link>
 
                 <div className="flex flex-col items-center pt-[30px] pb-[18px] justify-around gap-3 text-center">
-                    <img className="w-[125.31px] h-[125.31px]" src={DefaultUser} alt="Player" onError={(e) => { e.target.src = DefaultUser }} />
-                    <h1 className="text-title font-semibold uppercase">messi / usdt</h1>
+                    <img className="w-[125.31px] h-[125.31px]" src={playerData?.photo} alt="Player" onError={(e) => { e.target.src = DefaultUser }} />
+                    <h1 className="text-title font-semibold uppercase">
+                        {playerData?.name.trim().includes(' ')
+                            ? playerData?.name.trim().split(' ').slice(-1)
+                            : playerData?.name.trim()
+                        } / usdt
+                    </h1>
                 </div>
             </section>
 
@@ -34,7 +47,7 @@ const PlayersPage = () => {
                 </NavLink>
             </nav>
 
-            <div className="flex-grow">
+            <div className="flex-grow h-[300px] overflow-scroll scrollbar-hide">
                 <Outlet />
             </div>
 

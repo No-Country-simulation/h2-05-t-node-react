@@ -12,7 +12,7 @@ const DivisionsPage = () => {
                 <NavbarDivisions />
             </header>
 
-            <div className="flex-grow mb-5">
+            <div className="flex-grow mb-4 h-[300px] overflow-scroll scrollbar-hide">
                 <Outlet />
             </div>
             <Footer />

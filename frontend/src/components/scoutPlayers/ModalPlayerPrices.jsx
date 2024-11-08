@@ -3,7 +3,7 @@ import SearchBar from "../common/SearchBar";
 import CardPlayerPrice from "./CardPlayerPrice";
 import FilterOptionsSP from './FilterOptionsSP';
 
-const ModalPlayerPrices = ({ visible, setVisible }) => {
+const ModalPlayerPrices = ({ playerName, visible, setVisible }) => {
 
     return (
         <div className="card flex justify-center">
@@ -19,18 +19,18 @@ const ModalPlayerPrices = ({ visible, setVisible }) => {
 
                 <p className="my-3 text-tertiary">Visto recientemente</p>
 
-                <CardPlayerPrice />
-                <CardPlayerPrice />
+                <CardPlayerPrice playerName={playerName} />
+                <CardPlayerPrice playerName={playerName} />
 
                 <div className="flex justify-between items-center mb-3">
                     <p className="text-tertiary">Todos</p>
                     <FilterOptionsSP price={true} />
                 </div>
 
-                <CardPlayerPrice />
-                <CardPlayerPrice />
-                <CardPlayerPrice />
-                <CardPlayerPrice />
+                <CardPlayerPrice playerName={playerName} />
+                <CardPlayerPrice playerName={playerName} />
+                <CardPlayerPrice playerName={playerName} />
+                <CardPlayerPrice playerName={playerName} />
             </Dialog>
         </div>
     )

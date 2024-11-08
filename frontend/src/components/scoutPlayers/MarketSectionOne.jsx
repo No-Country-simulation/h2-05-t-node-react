@@ -4,7 +4,7 @@ import ButtonSolid from "../common/ButtonSolid"
 import ButtonOutline from "../common/ButtonOutline"
 import ModalPlayerPrices from "./ModalPlayerPrices"
 
-const MarketSectionOne = ({ tableSectionOne, initialPrice, setInitialPrice }) => {
+const MarketSectionOne = ({ playerData, tableSectionOne, initialPrice, setInitialPrice }) => {
     const [isOpenPriceMount, setIsOpenPriceMount] = useState(true)
     const [visible, setVisible] = useState(false)
 
@@ -23,7 +23,10 @@ const MarketSectionOne = ({ tableSectionOne, initialPrice, setInitialPrice }) =>
                     className="flex items-center gap-3 focus:outline-none "
                 >
                     <h2 className="text-black text-title font-semibold uppercase">
-                        messi / usdt
+                        {playerData?.name.trim().includes(' ')
+                            ? playerData?.name.trim().split(' ').slice(-1)
+                            : playerData?.name.trim()
+                        } / usdt
                     </h2>
                     <span className={`transition-transform duration-300`}>
                         <ArrowIcon />
@@ -102,7 +105,7 @@ const MarketSectionOne = ({ tableSectionOne, initialPrice, setInitialPrice }) =>
                 </div>
             </div>
 
-            <ModalPlayerPrices visible={visible} setVisible={setVisible} />
+            <ModalPlayerPrices playerName={playerData?.name} visible={visible} setVisible={setVisible} />
         </section>
     )
 }

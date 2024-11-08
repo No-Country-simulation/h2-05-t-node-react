@@ -6,7 +6,6 @@ import chartDataThree from '../../../utils/chartDataThree.json'; // Importa el n
 import chartOptions from '../../../utils/chartOptions.json';
 import chartOptionsTwo from '../../../utils/chartOptionsTwo.json';
 import { Chart } from "primereact/chart";
-import ArrowIcon from "../../../assets/icons/ArrowIcon";
 import ButtonSolid from "../../../components/common/ButtonSolid";
 import ButtonOutline from "../../../components/common/ButtonOutline";
 

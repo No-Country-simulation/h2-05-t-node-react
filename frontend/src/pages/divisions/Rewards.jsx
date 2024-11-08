@@ -10,15 +10,16 @@ import CardRewardDivision from "../../components/divisions/CardRewardDivision"
 const Rewards = () => {
     const [value, setValue] = useState(0);
     const interval = useRef(null);
+    const maxProgress = 60; // % Carga de la barra
 
     useEffect(() => {
         let _val = value;
 
         interval.current = setInterval(() => {
-            _val += Math.floor(Math.random() * 15) + 5;
+            _val += Math.floor(Math.random() * 100) + 5;
 
             if (_val >= 100) {
-                _val = 100;
+                _val = maxProgress;
                 clearInterval(interval.current);
             }
 
@@ -33,13 +34,12 @@ const Rewards = () => {
         };
     }, [value])
 
-
     return (
         <Container>
             <div className="mx-auto text-center">
-                <img className="w-[79px] h-[105.33px] mx-auto" src={GoldImg} alt="Ranking" />
+                <img className="w-[79px] h-[105.33px] mx-auto" src={BronzeImg} alt="Ranking" />
                 <p className="text-regular-18 mt-3">Estás en la</p>
-                <span className="text-title text-blue font-bold">División Oro</span>
+                <span className="text-title text-blue font-bold">División Bronce</span>
             </div>
 
             <section className="shadow-soft rounded-lg mt-8">
@@ -49,13 +49,13 @@ const Rewards = () => {
                         <p className="text-regular-18">Tus Puntos</p>
                     </div>
 
-                    <span className="text-[28px] semibold">9000</span>
+                    <span className="text-[28px] semibold">60</span>
                 </div>
 
                 <div className="w-[90%] mx-auto pb-8 pt-7">
                     <div className="flex justify-between mb-4 text-regular-14">
                         <p>Desbloquear división</p>
-                        <p>9000 de 9000 puntos</p>
+                        <p>60 de 90 puntos</p>
                     </div>
                     <div className="card relative">
                         <ProgressBar value={value} showValue={false} className="h-[44.74px] rounded-full custom-progress-bar-rewards" />
