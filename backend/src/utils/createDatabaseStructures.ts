@@ -55,12 +55,12 @@ export async function createDatabaseStructures(sequelize: Sequelize) {
         -- Verificar si el selectedPredictionType coincide con el nuevo result
         IF pred_type = NEW."result" THEN
           -- Actualizar el estatus de la apuesta a 'successful'
-          UPDATE "bets"
+          UPDATE "predictions"
           SET "status" = 'successful'
           WHERE "id" = (SELECT "prediction_id" FROM "prediction_info" WHERE "match_id" = NEW."id");
         ELSE
           -- Actualizar el estatus de la apuesta a 'failed'
-          UPDATE "bets"
+          UPDATE "predictions"
           SET "status" = 'failed'
           WHERE "id" = (SELECT "prediction_id" FROM "prediction_info" WHERE "match_id" = NEW."id");
         END IF;

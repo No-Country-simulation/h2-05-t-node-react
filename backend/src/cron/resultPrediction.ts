@@ -1,6 +1,6 @@
-/* import sequelize from "../config/database";
+import sequelize from "../config/database";
 import { QueryTypes } from "sequelize";
-//import { getFirstDate, getSecondDate } from "./days";
+import { getFirstDate, getSecondDate } from "./days";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -23,7 +23,7 @@ export const predictionResult = async () => {
     return  resultMap;
 
     
-/*   } catch (error) {
+ } catch (error) {
     console.error(
         `Error al consultar los resultados: ${(error as Error).message}`
       );
@@ -32,4 +32,4 @@ export const predictionResult = async () => {
       );
   }
 };
-predictionResult();  */
+/* predictionResult();  */

@@ -15,8 +15,7 @@ import './cron/adjustPredictionsCron';
 import predictionRecordRoutes from "./routes/prediction_record.routes";
 import predictionQuotaRoutes from "./routes/prediction_quota.routes";
 import swaggerConfig from "./config/swaggerConfig";
-/* import './cron/cron.module'; */
-
+import './cron/cron.module';
 const app = express();
 
 // Middlewares globales
