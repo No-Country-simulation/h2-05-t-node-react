@@ -1,4 +1,4 @@
-import DefaultTeam from '../../assets/img/DefaultTeam.png'
+import DefaultTeam from '../../assets/img/defaultTeam.png'
 import ButtonSolid from '../common/ButtonSolid'
 import Container from "../common/Container"
 import { ProgressSpinner } from 'primereact/progressspinner'
