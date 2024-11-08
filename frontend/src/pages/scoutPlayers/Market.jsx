@@ -30,7 +30,7 @@ const Market = () => {
     <>
       <Container>
         <MarketSectionOne playerData={playerData} initialPrice={initialPrice} setInitialPrice={setInitialPrice} tableSectionOne={tableSectionOne} />
-        <MarketSectionTwo initialPrice={initialPrice} tableSectionTwo={tableSectionOne} />
+        <MarketSectionTwo playerData={playerData} initialPrice={initialPrice} tableSectionTwo={tableSectionOne} />
       </Container>
       <MarketOrdersHoldings />
     </>

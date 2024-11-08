@@ -9,6 +9,8 @@ import AlertSuccessMessage from "../common/AlertSuccessMessage"
 import axios from "axios"
 import API_URL from "../../config"
 import AlertTimeOut from "../common/AlertTimeOut"
+import { getCurrentDate } from "../../utils/getCurrentDate"
+import { compareDates } from "../../utils/compareDates"
 
 const initialSelectedPredictionData = {
     teamHomeLogo: '',
@@ -29,6 +31,7 @@ const MatchDetail = ({ league }) => {
     const [userPrediction, setUserPrediction] = useState(null)
     const [leagueData, setLeagueData] = useState({})
     const [finishedMatch, setFinishedMatch] = useState(false)
+    const currentDate = getCurrentDate()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -72,13 +75,15 @@ const MatchDetail = ({ league }) => {
             predictionType = 'draw'
         }
 
+        let quotaTypeResult = compareDates(currentDate, selectedMatch?.date) // daily || future
+
         return {
             userId: user?.id,
             prediction: {
                 predictionType: "match",
                 selectedPredictionType: predictionType, // "win_home" | "win_away" | "draw"
                 fee: 1.3,
-                quotaType: "daily",
+                quotaType: quotaTypeResult,
                 date: getDate(date),
             },
             matchData: {
@@ -107,6 +112,7 @@ const MatchDetail = ({ league }) => {
         axios.post(`${API_URL}/api/prediction/createPrediction`, newUserPrediction)
             .then(res => {
                 console.log(res.data)
+                setVisible(false)
                 setShowAlert(true)
             })
             .catch(error => console.log(error))
@@ -249,7 +255,8 @@ const MatchDetail = ({ league }) => {
                         </div>
 
                         <div className='flex mt-5 gap-1 justify-between'>
-                            <ButtonSolid onClick={() => setVisible(false)} className='w-full'>Predecir</ButtonSolid>
+                            {/* onClick={() => setVisible(false)} */}
+                            <ButtonSolid disabled={loading} className='w-full'>{loading ? 'Guardando..' : 'Predecir'}</ButtonSolid>
                             <ButtonOutline onClick={() => setVisible(false)} className='w-full'>Hacer combinada</ButtonOutline>
                         </div>
                     </form>

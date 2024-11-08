@@ -45,7 +45,7 @@ const Carrousel = ({ imageOne, imageTwo, className }) => {
                     <div
                         className="w-[100%] h-[100%] bg-transparent rounded-lg"
                         style={{
-                            backgroundImage: `url(${imageOne})`,
+                            backgroundImage: `url(${imageTwo})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                         }}

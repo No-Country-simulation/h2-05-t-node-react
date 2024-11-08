@@ -2,7 +2,7 @@ import { useState } from "react"
 import ArrowIcon from "../../assets/icons/ArrowIcon"
 import ButtonSolid from "../common/ButtonSolid"
 
-const MarketSectionTwo = ({ initialPrice, tableSectionTwo }) => {
+const MarketSectionTwo = ({ playerData, initialPrice, tableSectionTwo }) => {
     const [isOpen, setIsOpen] = useState(true)
     const [isOpenPriceMount, setIsOpenPriceMount] = useState(true)
 
@@ -90,7 +90,12 @@ const MarketSectionTwo = ({ initialPrice, tableSectionTwo }) => {
                     </span>
                 </div>
 
-                <ButtonSolid className='w-[48%] h-[38px]'>Vender MESSI</ButtonSolid>
+                <ButtonSolid className='w-[48%] h-[38px] uppercase'>{`Vender
+                    ${playerData?.name.trim().includes(' ')
+                        ? playerData?.name.trim().split(' ').slice(-1)
+                        : playerData?.name.trim()
+                    }`}
+                </ButtonSolid>
             </div>
         </section>
     )

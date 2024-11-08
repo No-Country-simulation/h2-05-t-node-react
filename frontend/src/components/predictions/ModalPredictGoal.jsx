@@ -7,6 +7,9 @@ import ArrowBackPurpleIcon from "../../assets/icons/ArrowBackPurpleIcon"
 import axios from "axios"
 import API_URL from "../../config"
 import AlertSuccessMessage from "../common/AlertSuccessMessage"
+import { useNavigate } from "react-router-dom"
+import { compareDates } from "../../utils/compareDates"
+import { getCurrentDate } from "../../utils/getCurrentDate"
 
 const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedMatch, visiblePredictGoal, setVisiblePredictGoal }) => {
     const [user, setUser] = useState(null)
@@ -14,6 +17,8 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
     const [loading, setLoading] = useState(false)
     const [selectedOption, setSelectedOption] = useState(null)
     const [showAlert, setShowAlert] = useState(false)
+    const currentDate = getCurrentDate()
+    const navigate = useNavigate()
 
     const getDate = (dateString) => {
         const date = new Date(dateString)
@@ -83,13 +88,15 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
             }
         } = selectedMatch || {};
 
+        let quotaTypeResult = compareDates(currentDate, selectedMatch?.date) // daily || future
+
         return {
             userId: user?.id,
             prediction: {
                 predictionType: "player",
                 selectedPredictionType: selectedOption, // nombre del jugador
                 fee: 1.3,
-                quotaType: "daily",
+                quotaType: quotaTypeResult,
                 date: getDate(date),
             },
             matchData: {
@@ -119,9 +126,10 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
             .then(res => {
                 setShowAlert(true)
                 setSelectedOption(null)
-                setVisiblePredictGoal(false);
-                setVisiblePredictResultOrGoal(false);
-                setVisible(false);
+                // setVisiblePredictGoal(false);
+                // setVisiblePredictResultOrGoal(false);
+                // setVisible(false);
+                navigate('/me/predictions')
                 console.log(res.data)
             })
             .catch(error => console.log(error))
@@ -160,7 +168,7 @@ const ModalPredictGoal = ({ setVisible, setVisiblePredictResultOrGoal, selectedM
                     </div>
 
                     <div className='flex mt-7 gap-1 justify-between'>
-                        <ButtonSolid onClick={(e) => handleSubmitPrediction('simple', e)} disabled={!selectedOption || loading} className='w-full'>Predecir</ButtonSolid>
+                        <ButtonSolid onClick={(e) => handleSubmitPrediction('simple', e)} disabled={!selectedOption || loading} className='w-full'>{loading ? 'Guardando..' : 'Predecir'}</ButtonSolid>
                         <ButtonOutline onClick={(e) => handleSubmitPrediction('chained', e)} disabled={!selectedOption || loading} className='w-full'>Hacer combinada</ButtonOutline>
                     </div>
                 </form>

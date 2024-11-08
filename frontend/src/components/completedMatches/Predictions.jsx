@@ -120,7 +120,7 @@ const Predictions = () => {
             </div>
 
             {/* SI GANO */}
-            <div className="shadow-soft rounded-xl mb-2">
+            {/* <div className="shadow-soft rounded-xl mb-2">
                 <div className="flex justify-between items-center py-3 px-5">
                     <div className="flex flex-col text-regular-14">
                         <span className="text-secondary">Resultado final</span>
@@ -132,10 +132,10 @@ const Predictions = () => {
                     <TickIcon />
                     <span className="text-sm text-secondary ms-2 mt-0.5">Ganaste 13 puntos con esta predicción</span>
                 </div>
-            </div>
+            </div> */}
 
             {/* SI PERDIO */}
-            <div className="shadow-soft rounded-xl">
+            {/* <div className="shadow-soft rounded-xl">
                 <div className="flex justify-between items-center py-3 px-5">
                     <div className="flex flex-col text-regular-14">
                         <span className="text-secondary">Gol</span>
@@ -147,7 +147,7 @@ const Predictions = () => {
                     <RedMarkIcon />
                     <span className="text-sm text-secondary ms-2 mt-0.5">No ganaste puntos con esta predicción</span>
                 </div>
-            </div>
+            </div> */}
 
             {/* SI ES UN PARTIDO EN VIVO O UN PARTIDO FUTURO */}
             {/* SI EL USUARIO NO TIENE PREDICCIONES DISPONIBLES SE INHABILITARA EL BOTON Y SE MOSTRARA MENSAJE */}

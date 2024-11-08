@@ -7,12 +7,13 @@ import RankingIcon from "../assets/icons/RankingIcon";
 import BarcelonaImg from "../assets/img/barcelona.png";
 import SerieAImg from "../assets/img/SerieA.png";
 import LigaProfArgImg from "../assets/img/LigaProfesionalArg.png";
-import RealMadridImg from "../assets/img/realMadrid.png";
+import AtleticoImg from "../assets/img/atletico.png";
 import LaLigaImg from "../assets/img/LaLiga.png";
 import ScoreIcon from "../assets/icons/ScoreIcon";
 import Container from "../components/common/Container";
 import ModalMakePrediction from "../components/predictions/ModalMakePrediction";
-import RewardPriceOfTheMonthImg from "../assets/img/rewardPrizeOfTheMonth.png";
+import AnualPrizeImg from "../assets/img/premioAnual.png";
+import MonthlyPrizeImg from "../assets/img/premioMensual.png";
 import Carrousel from "../components/common/Carrousel";
 import Footer from "../components/layout/Footer";
 import ArrowIcon from "../assets/icons/ArrowIcon";
@@ -22,7 +23,7 @@ import API_URL from "../config";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 const favouriteMatches = [
-    { id: 1, homeTeam: "Barcelona", awayTeam: "Real Madrid", date: "Nov 30", hour: "17:00" },
+    { id: 1, homeTeam: "Barcelona", awayTeam: "Atlético Madrid", date: "Dic 22", hour: "17:00" },
     // { id: 2, homeTeam: "Real Madrid", awayTeam: "Valencia", date: "Dec 5", hour: "20:00" },
 ];
 
@@ -84,9 +85,9 @@ const HomePage = () => {
                     </div>
                     <div className="flex items-center">
                         <RankingIcon />
-                        <span className="ms-1">1</span>
+                        <span className="ms-1">47</span>
                         <ScoreIcon className="ms-3" />
-                        <span className="ms-1">13 ptos.</span>
+                        <span className="ms-1">60 ptos.</span>
                     </div>
                 </div>
 
@@ -103,7 +104,8 @@ const HomePage = () => {
                     </div>
 
                     <div className="w-full bg-white py-2.5 px-5 flex items-center justify-between rounded-lg gap-4 responsive-div">
-                        <ButtonSolid onClick={() => setVisible(true)} className="shadow-soft w-full">
+                        {/* onClick={() => setVisible(true)} */}
+                        <ButtonSolid className="shadow-soft w-full">
                             Hacer Predicción
                         </ButtonSolid>
                         <ButtonOutline onClick={() => navigate("/me/predictions")} className="bg-white shadow-soft w-full">
@@ -147,7 +149,7 @@ const HomePage = () => {
                                             </span>
                                         </div>
                                         <div className="flex gap-3">
-                                            <img className="w-[18px] h-[18px] object-contain" src={RealMadridImg} alt="" />
+                                            <img className="w-[18px] h-[18px] object-contain" src={AtleticoImg} alt="" />
                                             <span className="text-sm font-medium text-gray-700">
                                                 {match.awayTeam}
                                             </span>
@@ -192,8 +194,8 @@ const HomePage = () => {
                     <h2 className="font-medium text-black mt-5 mb-3">Suscripciones Premium</h2>
                     <Carrousel
                         className="w-[294.82px] h-[199.04px]"
-                        imageOne={RewardPriceOfTheMonthImg}
-                        imageTwo={RewardPriceOfTheMonthImg}
+                        imageOne={AnualPrizeImg}
+                        imageTwo={MonthlyPrizeImg}
                     />
                 </Container>
             </section>

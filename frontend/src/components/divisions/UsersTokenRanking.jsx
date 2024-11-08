@@ -1,4 +1,8 @@
-const UsersTokenRanking = ({ usersTokenRankingList }) => {
+const UsersTokenRanking = ({ playersList, divisionNumber }) => {
+    const filteredPlayersByDivision = playersList?.filter(item => Number(item.division) === Number(divisionNumber));
+
+    // console.log(playersList)
+    console.log(filteredPlayersByDivision)
     return (
         <section className="shadow-soft rounded-2xl overflow-x-auto">
 
@@ -12,12 +16,12 @@ const UsersTokenRanking = ({ usersTokenRankingList }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {usersTokenRankingList.map((item) => (
+                    {filteredPlayersByDivision?.map((item, index) => (
                         <tr key={item.id} className="border-b border-gray-400">
-                            <td className="py-2 px-4 text-blue text-center text-[24px]">{item.id}</td>
+                            <td className="py-2 px-4 text-blue text-center text-[24px]">{index + 1}</td>
                             <td className="py-2 px-4 text-regular-16">{item.name}</td>
-                            <td className="py-2 px-4 text-center text-tertiary text-regular-14">{item.released}</td>
-                            <td className="py-2 px-4 text-center text-tertiary text-regular-14">{item.price}</td>
+                            <td className="py-2 px-4 text-center text-tertiary text-regular-14">80k</td>
+                            <td className="py-2 px-4 text-center text-tertiary text-regular-14">120</td>
                         </tr>
                     ))}
                 </tbody>

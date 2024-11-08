@@ -8,12 +8,18 @@ import ArrowBackPurpleIcon from "../../assets/icons/ArrowBackPurpleIcon";
 import ModalMakeChained from "./ModalMakeChained";
 import axios from "axios";
 import API_URL from "../../config";
+import AlertSuccessMessage from "../common/AlertSuccessMessage";
+import { useNavigate } from "react-router-dom";
+import { getCurrentDate } from "../../utils/getCurrentDate";
+import { compareDates } from "../../utils/compareDates";
 
 const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selectedMatch, visiblePredictResult, setVisiblePredictResult }) => {
     const [selectedOption, setSelectedOption] = useState(null)
     const [visibleMakeChained, setVisibleMakeChained] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [leagueData, setLeagueData] = useState({})
+    const currentDate = getCurrentDate()
+    const navigate = useNavigate()
 
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -33,7 +39,6 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
         }
     }, [selectedMatch]);
 
-    console.log(selectedMatch)
 
     const getDate = (dateString) => {
         const date = new Date(dateString)
@@ -72,13 +77,15 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
             predictionType = 'draw'
         }
 
+        let quotaTypeResult = compareDates(currentDate, selectedMatch?.date) // daily || future
+       
         return {
             userId: user?.id,
             prediction: {
                 predictionType: "match",
                 selectedPredictionType: predictionType, // "win_home" | "win_away" | "draw"
                 fee: 1.3,
-                quotaType: "daily",
+                quotaType: quotaTypeResult,
                 date: getDate(date),
             },
             matchData: {
@@ -103,20 +110,24 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
         const newUserPrediction = createUserPrediction()
         console.log(newUserPrediction)
 
+        console.log(currentDate)
+
         setLoading(true)
         axios.post(`${API_URL}/api/prediction/createPrediction`, newUserPrediction)
             .then(res => {
                 console.log(res.data)
                 setShowAlert(true)
                 setSelectedOption(null)
-                // CERRAR TODOS LOS MODALES
-                // setVisiblePredictResult(false)
-                // setVisiblePredictResultOrGoal(false)
-                // setVisible(false)
+                navigate('/me/predictions')
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false))
     }
+
+     // CERRAR TODOS LOS MODALES
+                // setVisiblePredictResult(false)
+                // setVisiblePredictResultOrGoal(false)
+                // setVisible(false)
 
     return (
         <div className="card flex justify-content-center">
@@ -154,7 +165,8 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                     </div>
 
                     <div className='flex mt-5 gap-1 justify-between'>
-                        <ButtonSolid onClick={closeAllModalsPredictions} className='w-full'>Predecir</ButtonSolid>
+                        {/* onClick={closeAllModalsPredictions} */}
+                        <ButtonSolid disabled={loading} className='w-full'>{loading ? 'Guardando...' : 'Predecir'}</ButtonSolid>
                         <ButtonOutline onClick={closeAllModalsPredictions} className='w-full'>Hacer combinada</ButtonOutline>
                     </div>
                 </form>
@@ -183,8 +195,7 @@ const ModalPredictResult = ({ setVisible, setVisiblePredictResultOrGoal, selecte
                     </div>
                 </div>
 
-                <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage>
-
+                <AlertSuccessMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertSuccessMessage>
             </Dialog>
 
             {/* <AlertMessage redirect={false} showAlert={showAlert} setShowAlert={setShowAlert}>Se ha añadido tu predicción</AlertMessage> */}
